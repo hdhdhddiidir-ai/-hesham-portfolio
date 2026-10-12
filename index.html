@@ -291,32 +291,12 @@ body{overflow-x:hidden}
   #lightboxInfo{max-height:180px!important}
 }
 </style>
-
-<style id="hesham-reviews-navigation-update">
-/* One cohesive premium update: preserve the black/gold H identity. */
-.top-nav{background:rgba(4,4,4,.92)!important;border-bottom:1px solid #f5d76e35!important;box-shadow:0 12px 38px #0009!important}
-.top-logo{font-weight:900!important;letter-spacing:1px!important;color:var(--gold)!important;text-shadow:0 0 18px #f5d76e33}
-.top-links a{border:1px solid transparent!important;border-radius:12px!important;padding:10px 13px!important;font-weight:700!important;transition:all .25s ease!important}
-.top-links a:hover{background:#f5d76e0c!important;border-color:#f5d76e35!important;transform:translateY(-2px)!important}
-.top-links a.active-nav{background:linear-gradient(135deg,#f5d76e,#d6ad3b)!important;color:#090909!important;box-shadow:0 7px 24px #f5d76e20!important}
-.menu-toggle{display:none;background:#101010;border:1px solid #f5d76e55;color:var(--gold);border-radius:10px;width:42px;height:42px;font-size:22px;cursor:pointer}
-.typewriter-line{min-height:2.2em;display:flex;align-items:center;gap:4px}
-.typewriter-line:after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:typeCaret .8s steps(2,end) infinite}
-@keyframes typeCaret{50%{opacity:0}}
-.reviews-wrap>h2{margin-bottom:12px!important}.review-summary{display:flex;align-items:center;justify-content:space-between;gap:22px;margin:25px 0 28px;padding:20px 24px;border:1px solid #f5d76e35;border-radius:18px;background:radial-gradient(circle at 15% 50%,#f5d76e13,transparent 42%),linear-gradient(135deg,#111,#080808)}
-.summary-score{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:13px;row-gap:3px}.summary-score strong{font:800 35px Montserrat;color:var(--gold)}.summary-stars{color:var(--gold);font-size:22px;letter-spacing:2px;text-shadow:0 0 12px #f5d76e25}.summary-score small{grid-column:1/-1;color:#888;font-size:11px}.review-summary>p{color:#aaa;margin:0;line-height:1.8;font-size:13px}
-.review-form label,.rating-field legend{font-size:13px;color:#ddd;font-weight:700}.rating-field{border:0;padding:0;margin:3px 0 8px}.rating-field legend{margin-bottom:8px}.star-picker{display:flex;gap:5px;direction:ltr;justify-content:flex-start}.star-picker button{border:0;background:transparent;color:#4a432c;font-size:34px;line-height:1;cursor:pointer;padding:2px;transition:transform .15s,color .15s,text-shadow .15s}.star-picker button.selected,.star-picker button.preview{color:var(--gold);text-shadow:0 0 13px #f5d76e50}.star-picker button:hover{transform:scale(1.13)}#ratingLabel{display:block;color:#999;font-size:11px;margin-top:7px}.review-note{color:#9d8a4c;font-size:11px;line-height:1.7}.review-card .review-stars{color:var(--gold);letter-spacing:2px;font-size:15px}.review-card .review-head{align-items:flex-start}.review-status{line-height:1.7}.review-report{border:1px solid #ffffff18;border-radius:8px;background:#0c0c0c;color:#888;font:inherit;font-size:11px;padding:6px 9px;cursor:pointer;margin-top:12px}.review-report:hover{color:var(--gold);border-color:#f5d76e55}
-@media(max-width:900px){.menu-toggle{display:block;flex:0 0 auto}.top-nav-inner{position:relative;display:flex;flex-wrap:wrap!important}.top-links{display:none!important;position:absolute;top:calc(100% + 8px);left:10px;right:10px;z-index:9999;background:rgba(7,7,7,.98);border:1px solid #f5d76e40;border-radius:16px;padding:10px!important;box-shadow:0 20px 55px #000c;flex-direction:column;gap:5px!important;overflow:visible!important}.top-links.menu-open{display:flex!important}.top-links a{width:100%;padding:12px!important}.review-summary{align-items:flex-start;flex-direction:column}.reviews-layout{grid-template-columns:1fr!important}}
-@media(prefers-reduced-motion:reduce){.typewriter-line:after{animation:none}.top-links a,.star-picker button{transition:none!important}}
-</style>
-
 </head>
 <body>
 <header class="top-nav" id="topNav">
 <div class="top-nav-inner">
 <a href="#home" class="top-logo" aria-label="Hesham Hany - الرئيسية">H<span>HESHAM HANY</span></a>
-<button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNavigation" aria-label="فتح القائمة">☰</button>
-<nav class="top-links" id="mainNavigation" aria-label="التنقل الرئيسي">
+<nav class="top-links" aria-label="التنقل الرئيسي">
 <a href="#home">الرئيسية</a>
 <a href="#work">أعمالي</a>
 <a href="#services">خدماتي</a>
@@ -330,7 +310,7 @@ body{overflow-x:hidden}
 <main id="home" class="hero page-section home-modern"><div class="home-modern-glow"></div><div class="home-modern-ring"></div><div class="home-modern-inner">
 <div class="home-big-h" aria-hidden="true">H</div>
 <div class="home-modern-name">HESHAM HANY</div><div class="home-modern-sub">GRAPHIC DESIGNER</div>
-<p id="typewriterText" class="typewriter-line" aria-label="أحوّل الأفكار إلى تصاميم بصرية مؤثرة."></p>
+<p>أحوّل الأفكار إلى تصاميم بصرية مؤثرة.</p>
 <div class="buttons"><a class="btn primary" href="#work">مشاهدة أعمالي →</a><a class="btn" href="#contact">تواصل معي ✉</a></div>
 </div></main>
 <section id="work" class="section page-section"><div class="wrap"><div class="kicker">01 / PORTFOLIO</div><h2>شوية من شغلي.</h2><p class="work-intro">تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.</p><div class="portfolio-grid"><div class="review-empty" style="grid-column:1/-1">جاري تحميل أعمالي...</div></div></div></section>
@@ -364,36 +344,13 @@ body{overflow-x:hidden}
 <div class="about-tags"><span class="about-tag">Branding</span><span class="about-tag">Advertising</span><span class="about-tag">Social Media</span><span class="about-tag">Visual Design</span></div>
 <div class="buttons"><a class="btn primary" href="#work">اكتشف أعمالي →</a><a class="btn" href="#contact">خلينا نتكلم ✉</a></div><div class="about-signature"><span class="signature-dot" aria-hidden="true"></span><span class="signature-name">Hesham Hany</span></div></div></div></section>
 <section id="contact" class="section page-section"><div class="wrap"><div class="contact"><div class="kicker">04 / CONTACT</div><h2>عندك فكرة؟ خلينا نعملها مميزة.</h2><p>اختار الطريقة اللي تريحك وتواصل معايا مباشرة.</p><div class="contact-links"><a class="contact-card" href="mailto:heshamhane65@gmail.com"><span class="contact-icon">✉</span><strong>البريد الإلكتروني</strong><small>heshamhane65@gmail.com</small></a><a class="contact-card" href="https://wa.me/201118313357" target="_blank" rel="noopener"><span class="contact-icon">◉</span><strong>WhatsApp</strong><small>01118313357</small></a><a class="contact-card" href="https://www.facebook.com/share/1CDjmVhnjf/" target="_blank" rel="noopener"><span class="contact-icon">f</span><strong>Facebook</strong><small>صفحتي على فيسبوك</small></a></div></div></div></section>
-<section id="reviews" class="section page-section"><div class="wrap reviews-wrap">
-<div class="kicker">05 / CLIENT REVIEWS</div><h2>آراء العملاء</h2>
-<p class="services-intro">تجربتك تهمني. اكتب رأيك بصدق، وسيظهر بعد المراجعة والموافقة عليه.</p>
-<div class="review-summary" aria-live="polite"><div class="summary-score"><strong id="reviewAverage">—</strong><span class="summary-stars" id="averageStars" aria-label="متوسط التقييم">☆☆☆☆☆</span><small><span id="reviewCount">0</span> تقييم منشور</small></div><p>كل تقييم حقيقي بيساعدني أطور شغلي وأقدم تجربة أفضل.</p></div>
-<div class="reviews-layout"><form id="reviewForm" class="review-form" autocomplete="on">
-<label for="reviewName">اسمك</label><input id="reviewName" maxlength="80" placeholder="اكتب اسمك" required>
-<fieldset class="rating-field"><legend>تقييمك من 1 إلى 5 نجوم</legend><div class="star-picker" id="starPicker" role="radiogroup" aria-label="اختار عدد النجوم"><button type="button" data-rating="1" role="radio" aria-checked="false" aria-label="نجمة واحدة">★</button><button type="button" data-rating="2" role="radio" aria-checked="false" aria-label="نجمتان">★</button><button type="button" data-rating="3" role="radio" aria-checked="false" aria-label="3 نجوم">★</button><button type="button" data-rating="4" role="radio" aria-checked="false" aria-label="4 نجوم">★</button><button type="button" data-rating="5" role="radio" aria-checked="true" aria-label="5 نجوم">★</button></div><small id="ratingLabel">5 من 5 نجوم</small></fieldset>
-<label for="reviewText">تعليقك</label><textarea id="reviewText" maxlength="1000" minlength="3" placeholder="احكي عن تجربتك مع التصميم أو التعامل..." required></textarea>
-<div class="review-note">🛡️ التعليق مش هيظهر على الموقع إلا بعد مراجعته والموافقة عليه.</div>
-<button class="btn primary" type="submit">إرسال التقييم للمراجعة</button><div id="reviewStatus" class="review-status" role="status" aria-live="polite"></div>
-</form><div><div class="reviews-list" id="reviewsList"><div class="review-empty">جاري تحميل الآراء...</div></div></div></div>
-</div></section>
+<section id="reviews" class="section page-section"><div class="wrap"><div class="kicker">05 / REVIEWS</div><h2>آراء العملاء</h2><p class="services-intro">رأيك يهمني ❤️ اكتب تعليقك، وبعد المراجعة والموافقة هيظهر للناس كلها.</p><div class="reviews-layout"><form id="reviewForm" class="review-form"><input id="reviewName" maxlength="80" placeholder="اسمك" required><textarea id="reviewText" maxlength="1000" placeholder="اكتب رأيك في الشغل أو تجربتك..." required></textarea><button class="btn primary" type="submit">نشر رأيي</button><div id="reviewStatus" class="review-status"></div></form><div id="reviewsList" class="reviews-list"><div class="review-empty">جاري تحميل الآراء...</div></div></div></div></section>
 <footer><span>© 2026 Hesham Hany</span><span>Facebook · WhatsApp · Email</span></footer>
 <script>
 let firstPageLoad=true;
 function setPage(){const key=(location.hash||"#home").slice(1);if(firstPageLoad&&key!=="home"){history.replaceState(null,"",location.pathname+location.search);return setPage();}const allowed=["home","work","services","about","contact","reviews"];const page=allowed.includes(key)?key:"home";document.body.classList.add("page-mode");document.querySelectorAll(".page-section").forEach(s=>s.classList.toggle("active-page",s.id===page));document.querySelectorAll(".top-links a").forEach(a=>{const active=a.getAttribute("href")==="#"+page;a.classList.toggle("active-nav",active);if(active)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});window.scrollTo({top:0,behavior:"instant"});firstPageLoad=false;}
 window.addEventListener("hashchange",setPage);
 setPage();
-const menuToggle=document.getElementById('menuToggle');
-const mainNavigation=document.getElementById('mainNavigation');
-if(menuToggle&&mainNavigation){
-  menuToggle.addEventListener('click',()=>{const open=mainNavigation.classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(open));menuToggle.textContent=open?'×':'☰';});
-  mainNavigation.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mainNavigation.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');menuToggle.textContent='☰';}));
-}
-(function typeHeroText(){
- const el=document.getElementById('typewriterText'); if(!el)return;
- const text='أحوّل الأفكار إلى تصاميم بصرية مؤثرة.';
- if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=text;return;}
- let i=0; const tick=()=>{el.textContent=text.slice(0,i++);if(i<=text.length)setTimeout(tick,62);};tick();
-})();
 </script>
 <a class="floating-wa" href="https://wa.me/201118313357" target="_blank" rel="noopener" aria-label="تواصل معي على واتساب"><span class="wa-icon">◉</span><span>تواصل معي</span></a>
 <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -488,79 +445,157 @@ function escapeHtml(value){
 }
 loadWorksFromSupabase();
 const REVIEWS_TABLE = 'customer_reviews';
-const REPORTS_TABLE = 'customer_review_reports';
 let reviewsSignature = '';
 let reviewsTimer = null;
-let selectedRating = 5;
-const blockedReviewTerms = [
-  'كس ام','كس امك','كسمك','يا عرص','عرص','شرموط','شرموطة','متناك','منيوك','خول','قحبة','قحاب','ابن القحبة','يلعن دينك','يلعن ابو','fuck','fucker','motherfucker','bitch','bastard','asshole','shit','cunt','whore','slut'
-];
-function hasAbusiveLanguage(text){
- const normalized=String(text||'').toLowerCase().normalize('NFKC')
-   .replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/[٠-٩]/g,ch=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(ch)))
-   .replace(/[\u064B-\u065F\u0670]/g,'').replace(/[\s._*\-+|/\\!@#$%^&()\[\]{}:;،,.؟?]+/g,'');
- return blockedReviewTerms.some(term=>{
-   const t=term.toLowerCase().normalize('NFKC').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/[\s._*\-+|/\\!@#$%^&()\[\]{}:;،,.؟?]+/g,'');
-   return t && normalized.includes(t);
- });
-}
-function renderStars(rating){const n=Math.max(1,Math.min(5,Number(rating)||0));return '★'.repeat(n)+'☆'.repeat(5-n);}
-function updateRatingSummary(rows){
- const avg=rows.length?rows.reduce((sum,x)=>sum+(Number(x.rating)||0),0)/rows.length:0;
- document.getElementById('reviewAverage').textContent=rows.length?avg.toFixed(1):'—';
- document.getElementById('averageStars').textContent=rows.length?renderStars(Math.round(avg)):'☆☆☆☆☆';
- document.getElementById('reviewCount').textContent=String(rows.length);
-}
-function setSelectedRating(value){
- selectedRating=Math.max(1,Math.min(5,Number(value)||5));
- document.querySelectorAll('#starPicker button').forEach(btn=>{
-  const n=Number(btn.dataset.rating),on=n<=selectedRating;
-  btn.classList.toggle('selected',on);btn.setAttribute('aria-checked',String(n===selectedRating));
- });
- document.getElementById('ratingLabel').textContent=`${selectedRating} من 5 نجوم`;
-}
-const starPicker=document.getElementById('starPicker');
-if(starPicker){
- starPicker.querySelectorAll('button').forEach(btn=>{
-  btn.addEventListener('click',()=>setSelectedRating(btn.dataset.rating));
-  btn.addEventListener('mouseenter',()=>starPicker.querySelectorAll('button').forEach(b=>b.classList.toggle('preview',Number(b.dataset.rating)<=Number(btn.dataset.rating))));
- });
- starPicker.addEventListener('mouseleave',()=>starPicker.querySelectorAll('button').forEach(b=>b.classList.remove('preview')));
- starPicker.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown'].includes(e.key)){e.preventDefault();setSelectedRating(Math.max(1,selectedRating-1));}if(['ArrowRight','ArrowUp'].includes(e.key)){e.preventDefault();setSelectedRating(Math.min(5,selectedRating+1));}});
- setSelectedRating(5);
-}
-async function reportReview(id){
- if(!confirm('تبعت بلاغ عن التعليق ده للمراجعة؟'))return;
- try{
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/${REPORTS_TABLE}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({review_id:String(id),reason:'بلاغ من زائر الموقع'})});
-  if(!r.ok)throw new Error('report failed');alert('تم إرسال البلاغ للمراجعة، شكرًا لك.');
- }catch(e){alert('تعذر إرسال البلاغ حاليًا.');}
-}
+
 async function loadReviews(showError=true){
- const box=document.getElementById('reviewsList');if(!box)return;
- try{
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/${REVIEWS_TABLE}?select=id,name,review,rating,created_at&status=eq.approved&order=created_at.desc`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},cache:'no-store'});
-  if(!r.ok)throw new Error('reviews request failed');
-  const rows=await r.json();updateRatingSummary(rows);
-  const signature=JSON.stringify(rows);if(signature===reviewsSignature)return;reviewsSignature=signature;
-  box.innerHTML=rows.length?rows.map(x=>`<article class="review-card"><div class="review-head"><div><strong>${escapeHtml(x.name)}</strong><div class="review-stars" aria-label="${Number(x.rating)||0} من 5 نجوم">${renderStars(x.rating)}</div></div><span class="review-date">${x.created_at?new Date(x.created_at).toLocaleDateString('ar-EG'):''}</span></div><p>${escapeHtml(x.review)}</p><button class="review-report" type="button" data-report-id="${escapeHtml(x.id)}">⚑ الإبلاغ عن تعليق</button></article>`).join(''):'<div class="review-empty">لسه مفيش تقييمات منشورة. كن أول واحد يشارك تجربته ❤️</div>';
- }catch(e){if(showError)box.innerHTML='<div class="review-empty">تعذر تحميل الآراء حاليًا. حاول تحديث الصفحة.</div>';}
+  const box=document.getElementById('reviewsList');
+  if(!box) return;
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/${REVIEWS_TABLE}?select=id,name,review,rating,created_at&status=eq.approved&order=created_at.desc`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},cache:'no-store'});
+    if(!r.ok) throw new Error('reviews request failed');
+    const rows=await r.json();
+    const signature=JSON.stringify(rows);
+    if(signature===reviewsSignature) return;
+    reviewsSignature=signature;
+    box.innerHTML=rows.length ? rows.map(x=>`<article class="review-card"><div class="review-head"><strong>${escapeHtml(x.name)}</strong><span class="review-date">${new Date(x.created_at).toLocaleDateString('ar-EG')}</span></div><p>${escapeHtml(x.review)}</p></article>`).join('') : '<div class="review-empty">لسه مفيش آراء — كن أول واحد يكتب رأيه ❤️</div>';
+  }catch(e){
+    if(showError) box.innerHTML='<div class="review-empty">تعذر تحميل الآراء حاليًا. حاول تحديث الصفحة.</div>';
+  }
 }
-document.getElementById('reviewsList')?.addEventListener('click',e=>{const b=e.target.closest('[data-report-id]');if(b)reportReview(b.dataset.reportId);});
+
 async function publishReview(e){
- e.preventDefault();const form=e.currentTarget,status=document.getElementById('reviewStatus');
- const name=document.getElementById('reviewName').value.trim();const review=document.getElementById('reviewText').value.trim();
- if(!name||name.length>80||review.length<3||review.length>1000){status.textContent='اكتب اسمك وتعليقًا من 3 إلى 1000 حرف.';return;}
- if(hasAbusiveLanguage(name+' '+review)){status.textContent='التعليق يحتوي على ألفاظ غير مسموح بها. من فضلك اكتب رأيك باحترام.';return;}
- status.textContent='جاري إرسال التقييم للمراجعة...';
- try{
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/${REVIEWS_TABLE}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({name,review,rating:selectedRating})});
-  if(!r.ok)throw new Error(await r.text()||'submit failed');
-  form.reset();setSelectedRating(5);status.textContent='وصل تقييمك! هيظهر بعد مراجعته والموافقة عليه ❤️';
- }catch(err){status.textContent='ما قدرناش نستقبل التقييم. تأكد من تطبيق إعدادات قاعدة البيانات ثم جرّب تاني.';}
+  e.preventDefault();
+  const form=e.currentTarget;
+  const status=document.getElementById('reviewStatus');
+  const name=document.getElementById('reviewName').value.trim();
+  const review=document.getElementById('reviewText').value.trim();
+  if(!name || name.length>80 || review.length<3 || review.length>1000){status.textContent='اكتب اسمك ورأي لا يقل عن 3 حروف.';return;}
+  status.textContent='جاري النشر...';
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/${REVIEWS_TABLE}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({name,review,rating:document.querySelector('input[name="reviewRating"]:checked') ? Number(document.querySelector('input[name="reviewRating"]:checked').value) : 5,status:'pending'})});
+    if(r.status===409){status.textContent='الاسم ده مستخدم قبل كده — مسموح بتعليق واحد لكل اسم ❤️';return;}
+    if(!r.ok) throw new Error(await r.text() || 'publish failed');
+    form.reset();
+    status.innerHTML='<strong>❤️ شكرًا ليك على تعليقك!</strong><span>تم استلام تعليقك بنجاح، وهو الآن <b>قيد المراجعة</b>، وسيتم نشره بعد الموافقة عليه.</span><span class="review-warning">⚠️ يُرجى تجنّب الكلمات المسيئة أو الألفاظ غير اللائقة، حفاظًا على احترام جميع الزوار وسمعة الموقع.</span><span>💛 شكرًا لمساهمتك في تطوير الموقع!</span>';
+    // Do not show the new review immediately; it appears publicly only after owner approval.
+    reviewsSignature='';
+    await loadReviews(false);
+  }catch(err){status.textContent='حصل خطأ أثناء النشر، حاول تاني.';}
 }
-const reviewForm=document.getElementById('reviewForm');if(reviewForm)reviewForm.addEventListener('submit',publishReview);
-loadReviews();clearInterval(reviewsTimer);reviewsTimer=setInterval(()=>loadReviews(false),10000);
-window.addEventListener('focus',()=>loadReviews(false));document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadReviews(false);});
+
+const reviewForm=document.getElementById('reviewForm');
+if(reviewForm) reviewForm.addEventListener('submit',publishReview);
+loadReviews();
+clearInterval(reviewsTimer);
+reviewsTimer=setInterval(()=>loadReviews(false),5000);
+window.addEventListener('focus',()=>loadReviews(false));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden) loadReviews(false);});
 </script>
+
+<style id="hesham-final-upgrade">
+/* Final simplified, scrolling layout and readable type */
+html{scroll-behavior:smooth!important;scroll-padding-top:20px}
+body,body.page-mode{padding:0!important;margin:0!important;overflow-x:hidden!important}
+#topNav,.side-panel,.nav{display:none!important}
+.page-section,.page-section.active-page{
+ display:flex!important;position:relative!important;visibility:visible!important;
+ width:100%!important;min-height:0!important;height:auto!important;
+ padding:100px 0!important;overflow:visible!important;scroll-margin-top:0!important;
+}
+#home.page-section{min-height:100svh!important;padding:70px 18px!important}
+#about{order:2} #work{order:3} #services{order:4} #reviews{order:5} #contact{order:6}
+#home{order:1}
+.page-section>.wrap{width:min(1120px,92%)!important;margin:0 auto!important}
+.page-section .wrap>h2,.section h2{font-size:clamp(30px,4vw,46px)!important;line-height:1.35!important}
+.page-section p,.about-copy>p,.work-intro,.services-intro,.contact>p{
+ font-size:clamp(16px,1.5vw,19px)!important;line-height:1.95!important;color:#d0d0d0!important
+}
+.page-section .kicker{font-size:13px!important;letter-spacing:1.5px!important}
+.work-card .work-meta h3,.service-item h3{font-size:clamp(19px,2vw,24px)!important;line-height:1.5!important}
+.work-card .live-description,.work-card .work-meta p,.service-item p{
+ font-size:16px!important;line-height:1.9!important;color:#e0e0e0!important
+}
+.work-card .view-work,.btn{font-size:16px!important;min-height:48px!important}
+.contact-card strong{font-size:18px!important}.contact-card small{font-size:15px!important;overflow-wrap:anywhere}
+.review-form input,.review-form textarea{font-size:17px!important;padding:16px!important}
+.review-form textarea{min-height:150px!important}
+.review-status{font-size:17px!important;line-height:1.9!important;min-height:0!important;color:#f5d76e!important}
+#reviewStatus strong,#reviewStatus span{display:block;margin:8px 0}
+#reviewStatus strong{font-size:21px!important;color:#f5d76e!important}
+#reviewStatus .review-warning{padding:12px 14px;border:1px solid #f5d76e55;border-radius:12px;background:#f5d76e0b;color:#fff!important}
+.review-card p{font-size:17px!important;line-height:1.95!important;color:#eee!important}
+.section-intro-box{
+ width:min(820px,100%);margin:0 auto 30px;padding:17px 20px;text-align:center;
+ color:#f7e4a1;font-size:clamp(16px,2vw,20px);line-height:1.8;
+ border:1px solid #f5d76e55;border-radius:16px;
+ background:linear-gradient(120deg,#f5d76e0d,#fff0 65%);
+ box-shadow:0 10px 35px #0005;opacity:0;transform:translateY(18px);
+ transition:opacity .55s ease,transform .55s ease
+}
+.section-intro-box.is-visible{opacity:1;transform:translateY(0)}
+#home .home-big-h{animation:hDraw 1.7s ease-out both,hFloat 5s 1.7s ease-in-out infinite!important;
+ clip-path:inset(0 100% 0 0);animation-name:hDraw,hFloat!important}
+@keyframes hDraw{to{clip-path:inset(0 0 0 0)}}
+.home-modern-name{font-size:clamp(30px,6vw,68px)!important;letter-spacing:clamp(1px,1vw,7px)!important}
+.home-modern-inner>p{font-size:clamp(17px,2vw,21px)!important;line-height:1.9!important;color:#e1e1e1!important}
+.portfolio-grid{gap:22px!important}
+.work-card{min-height:340px}
+#reviews .reviews-layout{align-items:start}
+#reviews .reviews-list{max-height:none!important;overflow:visible!important}
+footer{font-size:14px!important;padding:25px 5%!important}
+@media(max-width:700px){
+ .page-section,.page-section.active-page{padding:70px 0!important}
+ #home.page-section{min-height:92svh!important;padding:55px 14px!important}
+ .page-section>.wrap{width:90%!important}
+ .about-visual{width:100%!important}
+ .portfolio-grid,.services-list{grid-template-columns:1fr!important}
+ .work-card,.work-card.hero-work,.work-card.wide{min-height:300px!important}
+ .reviews-layout{grid-template-columns:1fr!important}
+ .contact-links{grid-template-columns:1fr!important}
+ .section-intro-box{padding:14px;font-size:16px;margin-bottom:24px}
+}
+@media(prefers-reduced-motion:reduce){.section-intro-box,#home .home-big-h{animation:none!important;transition:none!important;clip-path:none!important}}
+</style>
+<script id="hesham-final-scroll-layout">
+(function(){
+ const order=['home','about','work','services','reviews','contact'];
+ const messages={
+  about:'أهلًا بيك في قسم «من أنا» — دي حكايتي وبدايتي في عالم التصميم.',
+  work:'والآن، تعالَ نكتشف بعضًا من أعمالي ومشاريعي.',
+  services:'عندك فكرة؟ خلّيني أحوّلها لتصميم مميز!',
+  reviews:'رأيك يهمني ❤️ تقييمك وتعليقك بيساعدوني أتطور.',
+  contact:'عندك مشروع أو فكرة؟ يلا نبدأ مع بعض!'
+ };
+ const main=document.querySelector('body');
+ const footer=document.querySelector('footer');
+ const sections=order.map(id=>document.getElementById(id)).filter(Boolean);
+ sections.forEach((section,index)=>{
+   if(index>0 && messages[section.id] && !section.querySelector('.section-intro-box')){
+     const box=document.createElement('div');
+     box.className='section-intro-box';
+     box.textContent=messages[section.id];
+     const wrap=section.querySelector('.wrap');
+     if(wrap) wrap.insertBefore(box,wrap.firstChild);
+   }
+   if(footer) main.insertBefore(section,footer); else main.appendChild(section);
+ });
+ const nav=document.getElementById('topNav'); if(nav) nav.remove();
+ document.querySelectorAll('.page-section').forEach(s=>s.classList.add('active-page'));
+ if('IntersectionObserver' in window){
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting) entry.target.classList.add('is-visible');
+  }),{threshold:.15});
+  document.querySelectorAll('.section-intro-box').forEach(box=>observer.observe(box));
+ }else document.querySelectorAll('.section-intro-box').forEach(box=>box.classList.add('is-visible'));
+ // Make anchor buttons scroll to their section instead of switching single-page views.
+ document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+   const target=document.getElementById(a.getAttribute('href').slice(1));
+   if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+ });
+})();
+</script>
+
 </body></html>
