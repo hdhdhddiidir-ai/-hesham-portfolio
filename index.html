@@ -489,7 +489,7 @@ body:has(#home.active-page) .floating-wa{display:none}
 <style>
 /* ---------- First-visit interactive welcome tour + subtle gold click sparkle ---------- */
 .tour-overlay{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px;background:rgba(3,3,3,.82);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
-.tour-overlay.is-open{opacity:1;visibility:visible}
+.tour-overlay.is-open{opacity:1;visibility:visible}.tour-overlay.is-guiding{background:transparent;backdrop-filter:none;place-items:start center;padding:calc(var(--nav-height,76px) + 14px) 12px 12px;pointer-events:none}.tour-overlay.is-guiding .tour-card{pointer-events:auto;width:min(480px,calc(100% - 12px));padding:18px 20px 16px;border-radius:18px;background:rgba(8,8,8,.94);box-shadow:0 12px 40px #0009,0 0 22px #f5d76e20}
 .tour-card{width:min(520px,100%);position:relative;overflow:hidden;text-align:center;padding:30px 24px 22px;border:1px solid rgba(245,215,110,.42);border-radius:24px;background:radial-gradient(ellipse at top,rgba(245,215,110,.11),transparent 55%),#0b0b0b;box-shadow:0 0 45px rgba(245,215,110,.12),0 22px 90px #000;transform:translateY(16px) scale(.98);transition:transform .35s}
 .tour-overlay.is-open .tour-card{transform:translateY(0) scale(1)}
 .tour-emblem{width:62px;height:62px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid rgba(245,215,110,.7);border-radius:19px;color:#f5d76e;font-size:35px;font-weight:800;text-shadow:0 0 18px #d6a93b;box-shadow:inset 0 0 18px rgba(245,215,110,.08),0 0 22px rgba(245,215,110,.12)}
@@ -504,12 +504,12 @@ body:has(#home.active-page) .floating-wa{display:none}
 <style id="services-contact-life">
 /* Decorative life ONLY in Services and Contact. Effects never intercept clicks. */
 #services,#contact{position:relative;isolation:isolate;overflow:hidden}
-#services>.wrap,#contact>.wrap{position:relative;z-index:2}
-.section-life-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden}
-.life-h-mark{position:absolute;left:50%;top:26%;transform:translate(-50%,-50%) skew(-10deg) scale(.55);font:900 clamp(72px,13vw,150px)/1 Montserrat,sans-serif;color:#f5d76e;opacity:0;pointer-events:none;z-index:1;text-shadow:0 0 8px #fff8,0 0 24px #f5d76e,0 0 65px #f5d76e88;animation:lifeHReveal 4.8s ease-in-out infinite}
+#services>.wrap,#contact>.wrap{position:relative;z-index:4}
+.section-life-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:hidden}
+.life-h-mark{position:absolute;left:50%;top:26%;transform:translate(-50%,-50%) skew(-10deg) scale(.55);font:900 clamp(72px,13vw,150px)/1 Montserrat,sans-serif;color:#f5d76e;opacity:0;pointer-events:none;z-index:3;text-shadow:0 0 8px #fff8,0 0 24px #f5d76e,0 0 65px #f5d76e88;animation:lifeHReveal 4.8s ease-in-out infinite}
 @keyframes lifeHReveal{0%,100%{opacity:0;transform:translate(-50%,-50%) skew(-10deg) scale(.55);filter:blur(7px)}12%{opacity:.95;transform:translate(-50%,-50%) skew(-10deg) scale(1);filter:blur(0)}25%{opacity:.72;transform:translate(-50%,-50%) skew(-10deg) scale(1.04);filter:blur(0)}42%{opacity:0;transform:translate(-50%,-50%) skew(-10deg) scale(1.22);filter:blur(5px)}}
-.life-butterfly{position:absolute;z-index:1;pointer-events:none;font-size:17px;opacity:0;filter:drop-shadow(0 0 7px #f5d76e99);animation:lifeButterfly var(--dur,9s) ease-in-out var(--delay,0s) infinite}
-@keyframes lifeButterfly{0%{opacity:0;transform:translate3d(0,18px,0) rotate(-15deg) scale(.65)}12%{opacity:.75}50%{opacity:.8;transform:translate3d(var(--drift,32px),-42px,0) rotate(12deg) scale(1)}88%{opacity:.6}100%{opacity:0;transform:translate3d(calc(var(--drift,32px)*1.5),-90px,0) rotate(-12deg) scale(.72)}}
+.life-butterfly{position:absolute;z-index:3;pointer-events:none;width:16px;height:14px;opacity:0;filter:drop-shadow(0 0 5px #f5d76e);animation:lifeButterfly var(--dur,9s) ease-in-out var(--delay,0s) infinite}.life-butterfly:before,.life-butterfly:after{content:"";position:absolute;top:1px;width:7px;height:9px;background:linear-gradient(135deg,#fff2b0,#d5a82f 70%);border:1px solid #f9e7a0;box-shadow:0 0 5px #f5d76e88}.life-butterfly:before{left:0;border-radius:80% 25% 65% 35%;transform:rotate(22deg)}.life-butterfly:after{right:0;border-radius:25% 80% 35% 65%;transform:rotate(-22deg)}.life-butterfly{background:linear-gradient(#fff4bd,#b98a1d);background-size:2px 9px;background-repeat:no-repeat;background-position:center 3px}
+@keyframes lifeButterfly{0%{opacity:0;transform:translate3d(0,18px,0) rotate(-15deg) scale(.65)}12%{opacity:.95}50%{opacity:.9;transform:translate3d(var(--drift,32px),-42px,0) rotate(12deg) scale(1)}88%{opacity:.65}100%{opacity:0;transform:translate3d(calc(var(--drift,32px)*1.5),-90px,0) rotate(-12deg) scale(.72)}}
 @media(prefers-reduced-motion:reduce){.life-h-mark,.life-butterfly{animation:none!important;display:none!important}}
 </style>
 
@@ -1062,24 +1062,49 @@ w.addEventListener('animationend',function(){h.classList.add('hx-done')},{once:t
 (function(){
  'use strict';
  const overlay=document.getElementById('welcomeTour'); if(!overlay)return;
- const title=document.getElementById('tourTitle'), textEl=document.getElementById('tourText'), kicker=document.getElementById('tourKicker'), next=document.getElementById('tourNext'), prev=document.getElementById('tourPrev'), skip=document.getElementById('tourSkip'), progress=document.getElementById('tourProgress');
+ const title=document.getElementById('tourTitle'), textEl=document.getElementById('tourText'), kicker=document.getElementById('tourKicker'), next=document.getElementById('tourNext'), prev=document.getElementById('tourPrev'), skip=document.getElementById('tourSkip');
  const steps=[
-  {title:'أزيك يا فنان! 👋',text:'Hesham Hane بيرحّب بيك ✨ خلّينا نعمل جولة سريعة تتعرّف بيها على الموقع، كأنك داخل تجربة تفاعلية.',target:null,next:'يلا نبدأ الجولة ←'},
-  {title:'دي الرئيسية 🖤✨',text:'هنا هتتعرف على Hesham Hane من أول لحظة، وتشوف الهوية الذهبية، وتقدر تبدأ مشاهدة الأعمال أو تتواصل مباشرة.',target:'#topNav a[href="#home"]',next:'القسم اللي بعده ←'},
-  {title:'قسم «من أنا» 👨‍🎨',text:'هنا هتعرف مين المصمم، حكايته وطموحه، وإزاي بيطوّر نفسه في مجال التصميم.',target:'#topNav a[href="#about"]',next:'ورّيني أعماله ←'},
-  {title:'قسم «أعمالي» 🎨',text:'ده معرض التصميمات! افتح أي عمل عشان تشوف تفاصيله وصورته، وتتعرف على نوع التصميم ووصفه.',target:'#topNav a[href="#work"]',next:'كمّل الجولة ←'},
-  {title:'قسم «خدماتي» ✍️',text:'هنا هتلاقي أنواع التصميم اللي ممكن تطلبها، زي الشعارات والإعلانات وتصميمات السوشيال ميديا والمطبوعات.',target:'#topNav a[href="#services"]',next:'والتقييمات؟ ←'},
-  {title:'قسم «التقييمات» ⭐',text:'تقدر تقرأ آراء العملاء وتقييماتهم بالنجوم. ولو كتبت تقييم، ممكن يظهر بعد المراجعة حفاظًا على جودة الموقع.',target:'#topNav a[href="#reviews"]',next:'آخر محطة ←'},
-  {title:'قسم «تواصل معي» 💬',text:'وصلت لآخر الجولة! هنا تقدر تتواصل مع Hesham Hane من خلال وسائل التواصل المتاحة وتطلب تصميمك.',target:'#topNav a[href="#contact"]',next:'تمام، ادخل الموقع ✨'}
+  {title:'أزيك يا فنان! 👋',text:'Hesham Hane بيرحّب بيك ✨ جاهز أعرّفك على الموقع خطوة بخطوة، زي شرح أزرار لعبة؟ اضغط «يلا نبدأ» وهنمشي قسم قسم.',target:null,section:null,next:'يلا نبدأ تعريفك على الموقع ←'},
+  {title:'زر الرئيسية 🖤',text:'ده زر الرئيسية. لما تضغط عليه بترجع لأول الموقع، وهنا هتشوف هوية Hesham Hane وزر الواتساب.',target:'#topNav a[href="#home"]',section:'home',next:'فهمت، اللي بعده ←'},
+  {title:'زر من أنا 👨‍🎨',text:'من هنا تعرف نبذة عن المصمم وطموحه. كل زر بينقلك لصفحة مستقلة، مش كل الأقسام تحت بعض.',target:'#topNav a[href="#about"]',section:'about',next:'ورّيني أعماله ←'},
+  {title:'زر أعمالي 🎨',text:'هنا معرض التصميمات. اضغط على أي عمل عشان تشوف صورته وتفاصيله.',target:'#topNav a[href="#work"]',section:'work',next:'كمّل ←'},
+  {title:'زر خدماتي ✍️',text:'هنا الخدمات اللي تقدر تطلبها، زي الشعارات والإعلانات وتصميمات السوشيال ميديا والمطبوعات.',target:'#topNav a[href="#services"]',section:'services',next:'والتقييمات؟ ←'},
+  {title:'زر التقييمات ⭐',text:'هنا تشوف تقييمات العملاء بالنجوم وآراءهم. التعليقات الجديدة بتدخل المراجعة قبل النشر.',target:'#topNav a[href="#reviews"]',section:'reviews',next:'آخر زر ←'},
+  {title:'زر تواصل معي 💬',text:'من هنا تقدر تتواصل مع Hesham Hane من خلال وسائل التواصل الموجودة وتطلب تصميمك.',target:'#topNav a[href="#contact"]',section:'contact',next:'تمام، ابدأ التصفح ✨'}
  ];
- let idx=0, oldTarget=null;
+ let idx=0, oldTarget=null, guiding=false;
  function clearTarget(){if(oldTarget){oldTarget.classList.remove('tour-target');oldTarget=null}}
- function render(){clearTarget();const s=steps[idx];title.textContent=s.title;textEl.textContent=s.text;kicker.textContent='HESHAM HANE · '+String(idx+1).padStart(2,'0')+' / '+steps.length;next.textContent=s.next;prev.style.visibility=idx===0?'hidden':'visible';progress.replaceChildren();steps.forEach((_,i)=>{const dot=document.createElement('i');if(i===idx)dot.className='on';progress.appendChild(dot)});if(s.target){const target=document.querySelector(s.target);if(target){oldTarget=target;target.classList.add('tour-target')}}}
- function close(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');clearTarget();try{localStorage.setItem('heshamHaneTourSeen','1')}catch(e){}}
- function open(){overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');render();next.focus({preventScroll:true})}
- next.addEventListener('click',()=>{if(idx<steps.length-1){idx++;render()}else close()});prev.addEventListener('click',()=>{if(idx>0){idx--;render()}});skip.addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(!overlay.classList.contains('is-open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft'||e.key==='ArrowRight'){if(idx<steps.length-1){idx++;render()}else close()}});
- let seen=false;try{seen=localStorage.getItem('heshamHaneTourSeen')==='1'}catch(e){} if(!seen){setTimeout(open,700)}
- // A small, restrained gold glint on taps/clicks; no sound and no effect on navigation.
+ function goToSection(id){
+   if(!id)return;
+   const link=document.querySelector('#topNav a[href="#'+id+'"]');
+   if(link)link.click();
+   else {location.hash=id;}
+ }
+ function render(){
+   clearTarget();
+   const st=steps[idx];
+   title.textContent=st.title;textEl.textContent=st.text;
+   kicker.textContent=idx===0?'HESHAM HANE · WELCOME':'HESHAM HANE · '+String(idx).padStart(2,'0')+' / '+(steps.length-1);
+   next.textContent=st.next;
+   prev.style.visibility=idx<=1?'hidden':'visible';
+   document.getElementById('tourProgress').replaceChildren();
+   steps.slice(1).forEach((_,i)=>{const dot=document.createElement('i');if(i===idx-1)dot.className='on';document.getElementById('tourProgress').appendChild(dot)});
+   if(st.section)goToSection(st.section);
+   if(st.target){const target=document.querySelector(st.target);if(target){oldTarget=target;target.classList.add('tour-target')}}
+ }
+ function close(){overlay.classList.remove('is-open','is-guiding');overlay.setAttribute('aria-hidden','true');clearTarget();try{localStorage.setItem('heshamHaneTourSeen','1')}catch(e){}}
+ function open(){idx=0;guiding=false;overlay.classList.remove('is-guiding');overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');render();next.focus({preventScroll:true})}
+ next.addEventListener('click',()=>{
+   if(idx===0){guiding=true;overlay.classList.add('is-guiding');idx=1;render();return}
+   if(idx<steps.length-1){idx++;render()}else close()
+ });
+ prev.addEventListener('click',()=>{if(idx>1){idx--;render()}});
+ skip.addEventListener('click',close);
+ overlay.addEventListener('click',e=>{if(!guiding&&e.target===overlay)close()});
+ document.addEventListener('keydown',e=>{if(!overlay.classList.contains('is-open'))return;if(e.key==='Escape')close()});
+ let seen=false;try{seen=localStorage.getItem('heshamHaneTourSeen')==='1'}catch(e){}
+ if(!seen)setTimeout(open,700);
+ // Small gold glint on taps/clicks.
  let last=0;document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&Date.now()-last<100)return;last=Date.now();const g=document.createElement('i');g.className='click-glint';g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';document.body.appendChild(g);setTimeout(()=>g.remove(),600)},{passive:true});
 })();
 </script>
@@ -1100,7 +1125,7 @@ w.addEventListener('animationend',function(){h.classList.add('hx-done')},{once:t
    const mark=document.createElement('div');mark.className='life-h-mark';mark.textContent='H';mark.setAttribute('aria-hidden','true');host.appendChild(mark);
    const butterflies=[];
    for(let i=0;i<5;i++){
-     const b=document.createElement('span');b.className='life-butterfly';b.textContent='🦋';b.setAttribute('aria-hidden','true');
+     const b=document.createElement('span');b.className='life-butterfly';b.textContent='';b.setAttribute('aria-hidden','true');
      b.style.left=(8+i*19)+'%';b.style.top=(58+(i%3)*11)+'%';b.style.setProperty('--dur',(8+i%3*1.8)+'s');b.style.setProperty('--delay',(-i*1.4)+'s');b.style.setProperty('--drift',((i%2?1:-1)*(18+i*5))+'px');
      host.appendChild(b);butterflies.push(b);
    }
