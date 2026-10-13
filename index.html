@@ -486,6 +486,20 @@ body:has(#home.active-page) .floating-wa{display:none}
 }
 </style>
 
+<style>
+/* ---------- First-visit interactive welcome tour + subtle gold click sparkle ---------- */
+.tour-overlay{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px;background:rgba(3,3,3,.82);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.tour-overlay.is-open{opacity:1;visibility:visible}
+.tour-card{width:min(520px,100%);position:relative;overflow:hidden;text-align:center;padding:30px 24px 22px;border:1px solid rgba(245,215,110,.42);border-radius:24px;background:radial-gradient(ellipse at top,rgba(245,215,110,.11),transparent 55%),#0b0b0b;box-shadow:0 0 45px rgba(245,215,110,.12),0 22px 90px #000;transform:translateY(16px) scale(.98);transition:transform .35s}
+.tour-overlay.is-open .tour-card{transform:translateY(0) scale(1)}
+.tour-emblem{width:62px;height:62px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid rgba(245,215,110,.7);border-radius:19px;color:#f5d76e;font-size:35px;font-weight:800;text-shadow:0 0 18px #d6a93b;box-shadow:inset 0 0 18px rgba(245,215,110,.08),0 0 22px rgba(245,215,110,.12)}
+.tour-kicker{color:#d8b957;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}.tour-card h2{font-size:clamp(22px,5vw,30px);line-height:1.4;margin:0 0 10px;color:#fff}.tour-card p{color:#c9c5b8;line-height:1.9;font-size:15px;margin:0 auto 20px;max-width:410px}.tour-progress{display:flex;justify-content:center;gap:7px;margin:0 0 20px}.tour-progress i{width:6px;height:6px;border-radius:50%;background:#48412d;transition:all .25s}.tour-progress i.on{width:22px;border-radius:8px;background:#f5d76e;box-shadow:0 0 10px rgba(245,215,110,.45)}.tour-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.tour-actions button{font:inherit;font-weight:700;cursor:pointer;border-radius:12px;padding:11px 19px;border:1px solid rgba(245,215,110,.5);color:#f5d76e;background:rgba(245,215,110,.06);transition:background .2s,box-shadow .2s,transform .2s}.tour-actions button:hover{background:rgba(245,215,110,.14);box-shadow:0 0 16px rgba(245,215,110,.13)}.tour-actions .tour-next{background:linear-gradient(120deg,#f7e7a0,#d5a82f);color:#161105;border-color:transparent}.tour-actions button:active{transform:scale(.97)}.tour-skip{position:absolute;top:12px;inset-inline-end:13px;border:0!important;background:transparent!important;color:#8d8777!important;padding:6px 9px!important;font-size:12px}.tour-target{position:relative!important;z-index:10051!important;outline:1px solid rgba(245,215,110,.85)!important;outline-offset:5px;border-radius:8px;filter:drop-shadow(0 0 8px rgba(245,215,110,.28))}
+.click-glint{position:fixed;z-index:10060;pointer-events:none;width:18px;height:18px;transform:translate(-50%,-50%) scale(.3);opacity:0;border-radius:50%;background:radial-gradient(circle,#fff9d4 0 8%,#f5d76e 15%,rgba(245,215,110,.32) 38%,transparent 72%);animation:clickGlint .52s ease-out forwards}
+.click-glint:before,.click-glint:after{content:"";position:absolute;left:50%;top:50%;width:2px;height:20px;border-radius:3px;background:linear-gradient(transparent,#fff1a8,transparent);transform:translate(-50%,-50%)}.click-glint:after{transform:translate(-50%,-50%) rotate(90deg)}
+@keyframes clickGlint{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}25%{opacity:.85;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.65)}}
+@media(max-width:480px){.tour-card{padding:28px 18px 20px;border-radius:20px}.tour-card p{font-size:14px}.tour-actions button{padding:10px 15px}}
+@media(prefers-reduced-motion:reduce){.tour-overlay,.tour-card{transition:none}.click-glint{animation-duration:.2s}}
+</style>
 </head>
 <body>
 <header class="top-nav" id="topNav">
@@ -620,6 +634,17 @@ body:has(#home.active-page) .floating-wa{display:none}
     </div>
   </div>
 </div>
+
+<div class="tour-overlay" id="welcomeTour" aria-hidden="true">
+ <section class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourText" dir="rtl">
+  <button class="tour-skip" id="tourSkip" type="button">تخطي التعريف ✕</button>
+  <div class="tour-emblem" aria-hidden="true">H</div><div class="tour-kicker" id="tourKicker">HESHAM HANE · WELCOME</div>
+  <h2 id="tourTitle">أزيك يا فنان! 👋</h2><p id="tourText">Hesham Hane بيرحّب بيك ✨ خلّينا نعمل جولة سريعة تتعرّف بيها على الموقع، كأنك داخل تجربة تفاعلية.</p>
+  <div class="tour-progress" id="tourProgress" aria-hidden="true"></div>
+  <div class="tour-actions"><button id="tourPrev" type="button">السابق</button><button class="tour-next" id="tourNext" type="button">يلا نبدأ الجولة ←</button></div>
+ </section>
+</div>
+
 <script>
 (function () {
 'use strict';
@@ -1019,5 +1044,32 @@ syncStars();
 (function(){var h=document.getElementById('home'),w=h&&h.querySelector('.hx-wa');if(!h||!w)return;
 w.addEventListener('animationend',function(){h.classList.add('hx-done')},{once:true});})();
 </script>
+
+<script>
+(function(){
+ 'use strict';
+ const overlay=document.getElementById('welcomeTour'); if(!overlay)return;
+ const title=document.getElementById('tourTitle'), textEl=document.getElementById('tourText'), kicker=document.getElementById('tourKicker'), next=document.getElementById('tourNext'), prev=document.getElementById('tourPrev'), skip=document.getElementById('tourSkip'), progress=document.getElementById('tourProgress');
+ const steps=[
+  {title:'أزيك يا فنان! 👋',text:'Hesham Hane بيرحّب بيك ✨ خلّينا نعمل جولة سريعة تتعرّف بيها على الموقع، كأنك داخل تجربة تفاعلية.',target:null,next:'يلا نبدأ الجولة ←'},
+  {title:'دي الرئيسية 🖤✨',text:'هنا هتتعرف على Hesham Hane من أول لحظة، وتشوف الهوية الذهبية، وتقدر تبدأ مشاهدة الأعمال أو تتواصل مباشرة.',target:'#home',next:'القسم اللي بعده ←'},
+  {title:'قسم «من أنا» 👨‍🎨',text:'هنا هتعرف مين المصمم، حكايته وطموحه، وإزاي بيطوّر نفسه في مجال التصميم.',target:'a[href="#about"]',next:'ورّيني أعماله ←'},
+  {title:'قسم «أعمالي» 🎨',text:'ده معرض التصميمات! افتح أي عمل عشان تشوف تفاصيله وصورته، وتتعرف على نوع التصميم ووصفه.',target:'a[href="#work"]',next:'كمّل الجولة ←'},
+  {title:'قسم «خدماتي» ✍️',text:'هنا هتلاقي أنواع التصميم اللي ممكن تطلبها، زي الشعارات والإعلانات وتصميمات السوشيال ميديا والمطبوعات.',target:'a[href="#services"]',next:'والتقييمات؟ ←'},
+  {title:'قسم «التقييمات» ⭐',text:'تقدر تقرأ آراء العملاء وتقييماتهم بالنجوم. ولو كتبت تقييم، ممكن يظهر بعد المراجعة حفاظًا على جودة الموقع.',target:'a[href="#reviews"]',next:'آخر محطة ←'},
+  {title:'قسم «تواصل معي» 💬',text:'وصلت لآخر الجولة! هنا تقدر تتواصل مع Hesham Hane من خلال وسائل التواصل المتاحة وتطلب تصميمك.',target:'a[href="#contact"]',next:'تمام، ادخل الموقع ✨'}
+ ];
+ let idx=0, oldTarget=null;
+ function clearTarget(){if(oldTarget){oldTarget.classList.remove('tour-target');oldTarget=null}}
+ function render(){clearTarget();const s=steps[idx];title.textContent=s.title;textEl.textContent=s.text;kicker.textContent='HESHAM HANE · '+String(idx+1).padStart(2,'0')+' / '+steps.length;next.textContent=s.next;prev.style.visibility=idx===0?'hidden':'visible';progress.replaceChildren();steps.forEach((_,i)=>{const dot=document.createElement('i');if(i===idx)dot.className='on';progress.appendChild(dot)});if(s.target){const target=document.querySelector(s.target);if(target){oldTarget=target;target.classList.add('tour-target')}}}
+ function close(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');clearTarget();try{localStorage.setItem('heshamHaneTourSeen','1')}catch(e){}}
+ function open(){overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');render();next.focus({preventScroll:true})}
+ next.addEventListener('click',()=>{if(idx<steps.length-1){idx++;render()}else close()});prev.addEventListener('click',()=>{if(idx>0){idx--;render()}});skip.addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(!overlay.classList.contains('is-open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft'||e.key==='ArrowRight'){if(idx<steps.length-1){idx++;render()}else close()}});
+ let seen=false;try{seen=localStorage.getItem('heshamHaneTourSeen')==='1'}catch(e){} if(!seen){setTimeout(open,700)}
+ // A small, restrained gold glint on taps/clicks; no sound and no effect on navigation.
+ let last=0;document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&Date.now()-last<100)return;last=Date.now();const g=document.createElement('i');g.className='click-glint';g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';document.body.appendChild(g);setTimeout(()=>g.remove(),600)},{passive:true});
+})();
+</script>
+
 </body>
 </html>
