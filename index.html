@@ -425,6 +425,67 @@ body:has(#home.active-page) .floating-wa{display:none}
   #home .hx-sp,#home .hx-pen,#home .hx-burn,#home .hx-tw{display:none}
 }
 </style>
+
+<style id="about-mobile-visibility-fix">
+/* Targeted fix: keep the About section visible and readable on phones.
+   All existing page content, styles, animations and integrations remain unchanged. */
+@media (max-width: 900px) {
+  #about.page-section.active-page {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+  }
+  #about .wrap.about.about-deep {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: min(92%, 760px) !important;
+    max-width: 760px !important;
+    min-width: 0 !important;
+    margin-inline: auto !important;
+    gap: 28px !important;
+    padding: 88px 0 45px !important;
+  }
+  #about .about-visual {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+  #about .about-visual .hbox {
+    width: min(270px, 78vw) !important;
+    height: 310px !important;
+  }
+  #about .about-visual .bigH {
+    font-size: clamp(150px, 45vw, 205px) !important;
+  }
+  #about .about-copy {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  #about .about-title,
+  #about .about-copy > p {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 600px) {
+  #about .wrap.about.about-deep {
+    width: 90% !important;
+    padding-top: 82px !important;
+    padding-bottom: 36px !important;
+    gap: 24px !important;
+  }
+  #about .about-stats {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  #about .about-quote {
+    padding: 13px 14px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header class="top-nav" id="topNav">
