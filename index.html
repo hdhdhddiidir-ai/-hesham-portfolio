@@ -2,6 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
 <title>هشام هاني — مصمم جرافيك</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@600;700;800&display=swap');
@@ -300,9 +302,9 @@ body{overflow-x:hidden}
 #home.page-section.active-page{display:flex!important;min-height:calc(100vh - 76px)!important;padding:35px 18px!important}
 #about.page-section.active-page,#work.page-section.active-page,#services.page-section.active-page,#contact.page-section.active-page,#reviews.page-section.active-page{display:block!important}
 #topNav,.top-nav{visibility:visible!important}
-.language-toggle{flex:0 0 auto;border:1px solid #f5d76e66;background:#f5d76e10;color:#f5d76e;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer}
+
 .review-stars{color:#f5d76e;letter-spacing:3px;font-size:20px;margin-top:12px}.review-stars span{color:#514726}
-@media(max-width:900px){.top-nav{height:auto!important}.top-nav-inner{min-height:66px!important;flex-wrap:wrap;padding:8px 10px!important}.top-links{order:3;flex-basis:100%;width:100%;overflow-x:auto}.top-links a{padding:8px 10px!important}.language-toggle{margin-inline-start:auto}.page-section,.page-section.active-page{padding:85px 0!important}#home.page-section.active-page{padding:25px 12px!important}}
+@media(max-width:900px){.top-nav{height:auto!important}.top-nav-inner{min-height:66px!important;flex-wrap:wrap;padding:8px 10px!important}.top-links{order:3;flex-basis:100%;width:100%;overflow-x:auto}.top-links a{padding:8px 10px!important}.page-section,.page-section.active-page{padding:85px 0!important}#home.page-section.active-page{padding:25px 12px!important}}
 </style>
 
 <style id="v2-fixes">
@@ -320,8 +322,7 @@ html[dir=rtl] .star-picker{justify-content:flex-end}
 .work-card{cursor:pointer}
 .work-card:focus-visible{outline:2px solid #f5d76e;outline-offset:3px}
 .work-visual span{display:grid;place-items:center;width:100%;height:100%;font:800 90px Montserrat;color:#f5d76e55}
-.top-links a:focus-visible,.language-toggle:focus-visible,.btn:focus-visible,.view-work:focus-visible{outline:2px solid #f5d76e;outline-offset:2px}
-.language-toggle{min-width:52px;font-family:inherit}
+.top-links a:focus-visible,.btn:focus-visible,.view-work:focus-visible{outline:2px solid #f5d76e;outline-offset:2px}
 /* ---- LTR (English) corrections for rules that were hard-coded for RTL ---- */
 #lightboxInfo{text-align:start!important;direction:inherit!important}
 html[dir=ltr] .about-quote{border-right:0!important;border-left:3px solid #f5d76e!important}
@@ -384,6 +385,11 @@ body:has(#home.active-page) .floating-wa{display:none}
   border:1px solid #f5d76e14;border-top-color:#f5d76e70;transform:translate(-50%,-56%);
   animation:hxRingIn 1.2s ease-out .2s backwards,hxRingSpin 16s linear 1.4s infinite}
 
+
+/* fonts + nav balance (language switch removed) */
+#home .hx-name,#home .hx-shine,#home .home-modern-sub,.top-logo,.top-logo span{font-family:Montserrat,"Segoe UI",Arial,sans-serif}
+@media(min-width:901px){#topNav .top-nav-inner{display:grid;grid-template-columns:1fr auto 1fr;gap:20px}#topNav .top-nav-inner::after{content:""}#topNav .top-links{flex:none}}
+@media(max-width:900px){#topNav .top-logo{min-width:0!important}#topNav .top-logo span{display:inline!important;font-size:10px;letter-spacing:2.5px}}
 @keyframes hxDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes hxPenA{from{transform:translate(48px,26px)}to{transform:translate(48px,214px)}}
 @keyframes hxPenB{from{transform:translate(152px,26px)}to{transform:translate(152px,214px)}}
@@ -419,12 +425,11 @@ body:has(#home.active-page) .floating-wa{display:none}
   #home .hx-sp,#home .hx-pen,#home .hx-burn,#home .hx-tw{display:none}
 }
 </style>
-<script>try{if(localStorage.getItem('heshamLanguage')==='en'){document.documentElement.lang='en';document.documentElement.dir='ltr'}}catch(e){}</script>
 </head>
 <body>
 <header class="top-nav" id="topNav">
 <div class="top-nav-inner">
-<a href="#home" class="top-logo" data-i18n-aria="logoAria" aria-label="Hesham Hany - الرئيسية">H<span>HESHAM HANY</span></a>
+<a href="#home" class="top-logo" data-i18n-aria="logoAria" aria-label="Hesham Hane - الرئيسية">H<span>HESHAM HANE DESIGNER</span></a>
 <nav class="top-links" data-i18n-aria="navAria" aria-label="التنقل الرئيسي">
 <a href="#home" data-i18n="navHome">الرئيسية</a>
 <a href="#about" data-i18n="navAbout">من أنا</a>
@@ -433,7 +438,6 @@ body:has(#home.active-page) .floating-wa{display:none}
 <a href="#reviews" data-i18n="navReviews">التقييمات</a>
 <a href="#contact" data-i18n="navContact">تواصل معي</a>
 </nav>
-<button id="languageToggle" class="language-toggle" type="button" aria-label="Switch language">EN</button>
 </div>
 </header>
 
@@ -471,25 +475,25 @@ body:has(#home.active-page) .floating-wa{display:none}
 <i class="hx-tw" style="left:12%;top:88%;--dl:3.3s"></i>
 <i class="hx-tw" style="left:86%;top:84%;--dl:2.2s"></i>
 </div>
-<div class="hx-nameWrap"><div class="home-modern-name hx-name">HESHAM HANY<span class="hx-shine" aria-hidden="true">HESHAM HANY</span></div><i class="hx-burn" aria-hidden="true"></i></div>
-<div class="home-modern-sub hx-in">GRAPHIC DESIGNER</div>
+<div class="hx-nameWrap"><div class="home-modern-name hx-name">HESHAM HANE<span class="hx-shine" aria-hidden="true">HESHAM HANE</span></div><i class="hx-burn" aria-hidden="true"></i></div>
+<div class="home-modern-sub hx-in">DESIGNER</div>
 <p class="hx-in" data-i18n="homeTag">أحوّل الأفكار إلى تصاميم بصرية مؤثرة.</p>
 <div class="buttons hx-in"><a class="btn primary" href="#work" data-i18n="homeBtnWork">مشاهدة أعمالي →</a><a class="btn" href="#contact" data-i18n="homeBtnContact">تواصل معي ✉</a></div>
 <a class="hx-wa hx-in" href="https://wa.me/201118313357" target="_blank" rel="noopener" data-i18n-aria="waAria" aria-label="تواصل معي على واتساب"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span data-i18n="waBtn">تواصل معي</span></a>
 </div></main>
 
 <section id="about" class="section page-section"><div class="wrap about about-deep">
-<div class="about-visual"><div class="hbox" role="img" aria-label="Hesham Hany monogram"><div class="bigH">H</div><i class="gold-dot"></i><i class="gold-line"></i></div><div class="about-orbit"><span>CREATIVE</span><span>VISION</span><span>DESIGN</span></div></div>
-<div class="about-copy"><div class="kicker">01 / ABOUT ME</div><div class="about-eyebrow">HESHAM HANY · GRAPHIC DESIGNER</div>
+<div class="about-visual"><div class="hbox" role="img" aria-label="Hesham Hane monogram"><div class="bigH">H</div><i class="gold-dot"></i><i class="gold-line"></i></div><div class="about-orbit"><span>CREATIVE</span><span>VISION</span><span>DESIGN</span></div></div>
+<div class="about-copy"><div class="kicker">01 / ABOUT ME</div><div class="about-eyebrow">HESHAM HANE · DESIGNER</div>
 <h2 class="about-title" data-i18n-html="aboutTitle">أنا مش بس بعمل تصميم…<br><em>أنا ببني نفسي مع كل تصميم.</em></h2>
-<p class="about-lead" data-i18n-html="aboutP1">أنا <strong>Hesham Hany</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.</p>
+<p class="about-lead" data-i18n-html="aboutP1">أنا <strong>Hesham Hane</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.</p>
 <p data-i18n-html="aboutP2">بالنسبة لي، التصميم مش مجرد ألوان وصور؛ هو طريقة لتحويل فكرة بسيطة إلى شكل يخلي الناس <strong>تشوف، تفهم، وتحس</strong>. عشان كده بحاول في كل شغل أوازن بين الشكل القوي والفكرة الواضحة، وأتعلم من كل تجربة بدل ما أكرر نفس الخطوة.</p>
 <p data-i18n-html="aboutP3">بشتغل على <strong>اللوجوهات والهوية البصرية والإعلانات والسوشيال ميديا والـBusiness Cards والمنيوهات والمطبوعات</strong> وغيرها من التصميمات الرقمية والمطبوعة. هدفي إني أطور مستوايا باستمرار وأوصل لشغل أقدر أكون فخور بيه.</p>
 <div class="about-stats"><div><b>01</b><span data-i18n="st1">أتعلّم باستمرار</span><small data-i18n="st1s">كل مشروع فرصة جديدة</small></div><div><b>02</b><span data-i18n="st2">أهتم بالتفاصيل</span><small data-i18n="st2s">الفكرة قبل الزحمة</small></div><div><b>03</b><span data-i18n="st3">أبني مستقبلي</span><small data-i18n="st3s">خطوة وراء خطوة</small></div></div>
 <div class="about-quote" data-i18n="aboutQuote">“البداية الصغيرة مش معناها إن الحلم صغير… المهم إنك تفضل ماشي.”</div>
 <div class="about-tags"><span class="about-tag">Branding</span><span class="about-tag">Advertising</span><span class="about-tag">Social Media</span><span class="about-tag">Visual Design</span></div>
 <div class="buttons"><a class="btn primary" href="#work" data-i18n="aboutBtnWork">اكتشف أعمالي →</a><a class="btn" href="#contact" data-i18n="aboutBtnTalk">خلينا نتكلم ✉</a></div>
-<div class="about-signature"><span class="signature-dot" aria-hidden="true"></span><span class="signature-name">Hesham Hany</span></div></div></div></section>
+<div class="about-signature"><span class="signature-dot" aria-hidden="true"></span><span class="signature-name">Hesham Hane</span></div></div></div></section>
 
 <section id="work" class="section page-section"><div class="wrap"><div class="kicker">02 / PORTFOLIO</div><h2 data-i18n="workTitle">شوية من شغلي.</h2><p class="work-intro" data-i18n="workIntro">تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.</p><div class="portfolio-grid" id="portfolioGrid"><div class="review-empty grid-state" style="grid-column:1/-1" data-i18n="worksLoading">جاري تحميل أعمالي...</div></div></div></section>
 
@@ -510,7 +514,7 @@ body:has(#home.active-page) .floating-wa{display:none}
 <div class="service-item"><span class="service-icon">⌂</span><div><b>14</b><h3 data-i18n="s14t">تصميمات للمحلات والشركات</h3><p data-i18n="s14d">تصاميم تساعد نشاطك يظهر بشكل احترافي ومميز.</p></div></div>
 <div class="service-item"><span class="service-icon">◉</span><div><b>15</b><h3 data-i18n="s15t">تصميم بوستات وستوري</h3><p data-i18n="s15d">محتوى بصري للسوشيال ميديا جاهز للنشر.</p></div></div>
 <div class="service-item"><span class="service-icon">✦</span><div><b>16</b><h3 data-i18n="s16t">تصميمات رقمية متنوعة</h3><p data-i18n="s16d">أي تصميم رقمي تحتاجه حسب فكرتك وهدفك.</p></div></div>
-<div class="service-signature"><span class="signature-dot" aria-hidden="true"></span><span>Hesham Hany</span></div>
+<div class="service-signature"><span class="signature-dot" aria-hidden="true"></span><span>Hesham Hane</span></div>
 </div></div></section>
 
 <section id="reviews" class="section page-section"><div class="wrap"><div class="kicker">04 / REVIEWS</div><h2 data-i18n="reviewsTitle">آراء العملاء</h2><p class="services-intro" data-i18n="reviewsIntro">رأيك يهمني ❤️ اكتب تعليقك، وبعد المراجعة والموافقة هيظهر للناس كلها.</p>
@@ -534,7 +538,7 @@ body:has(#home.active-page) .floating-wa{display:none}
 
 <section id="contact" class="section page-section"><div class="wrap"><div class="contact"><div class="kicker">05 / CONTACT</div><h2 data-i18n="contactTitle">عندك فكرة؟ خلينا نعملها مميزة.</h2><p data-i18n="contactIntro">اختار الطريقة اللي تريحك وتواصل معايا مباشرة.</p><div class="contact-links"><a class="contact-card" href="mailto:heshamhane65@gmail.com"><span class="contact-icon">✉</span><strong data-i18n="cEmail">البريد الإلكتروني</strong><small>heshamhane65@gmail.com</small></a><a class="contact-card" href="https://wa.me/201118313357" target="_blank" rel="noopener"><span class="contact-icon">◉</span><strong>WhatsApp</strong><small>01118313357</small></a><a class="contact-card" href="https://www.facebook.com/share/1CDjmVhnjf/" target="_blank" rel="noopener"><span class="contact-icon">f</span><strong>Facebook</strong><small data-i18n="cFb">صفحتي على فيسبوك</small></a></div></div></div></section>
 
-<footer><span>© 2026 Hesham Hany</span><span>Facebook · WhatsApp · Email</span></footer>
+<footer><span>© 2026 Hesham Hane</span><span>Facebook · WhatsApp · Email</span></footer>
 
 <a class="floating-wa" href="https://wa.me/201118313357" target="_blank" rel="noopener" data-i18n-aria="waAria" aria-label="تواصل معي على واتساب"><span class="wa-icon">◉</span><span data-i18n="waBtn">تواصل معي</span></a>
 
@@ -567,9 +571,8 @@ const WA = 'https://wa.me/201118313357';
 const PAGES = ['home', 'about', 'work', 'services', 'reviews', 'contact'];
 
 /* ---------- i18n ---------- */
-const I18N = { ar: {"navHome": "الرئيسية", "navAbout": "من أنا", "navWork": "أعمالي", "navServices": "خدماتي", "navReviews": "التقييمات", "navContact": "تواصل معي", "homeTag": "أحوّل الأفكار إلى تصاميم بصرية مؤثرة.", "homeBtnWork": "مشاهدة أعمالي →", "homeBtnContact": "تواصل معي ✉", "aboutTitle": "أنا مش بس بعمل تصميم…<br><em>أنا ببني نفسي مع كل تصميم.</em>", "aboutP1": "أنا <strong>Hesham Hany</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.", "aboutP2": "بالنسبة لي، التصميم مش مجرد ألوان وصور؛ هو طريقة لتحويل فكرة بسيطة إلى شكل يخلي الناس <strong>تشوف، تفهم، وتحس</strong>. عشان كده بحاول في كل شغل أوازن بين الشكل القوي والفكرة الواضحة، وأتعلم من كل تجربة بدل ما أكرر نفس الخطوة.", "aboutP3": "بشتغل على <strong>اللوجوهات والهوية البصرية والإعلانات والسوشيال ميديا والـBusiness Cards والمنيوهات والمطبوعات</strong> وغيرها من التصميمات الرقمية والمطبوعة. هدفي إني أطور مستوايا باستمرار وأوصل لشغل أقدر أكون فخور بيه.", "st1": "أتعلّم باستمرار", "st1s": "كل مشروع فرصة جديدة", "st2": "أهتم بالتفاصيل", "st2s": "الفكرة قبل الزحمة", "st3": "أبني مستقبلي", "st3s": "خطوة وراء خطوة", "aboutQuote": "“البداية الصغيرة مش معناها إن الحلم صغير… المهم إنك تفضل ماشي.”", "aboutBtnWork": "اكتشف أعمالي →", "aboutBtnTalk": "خلينا نتكلم ✉", "workTitle": "شوية من شغلي.", "workIntro": "تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.", "worksLoading": "جاري تحميل أعمالي...", "servicesTitle": "خدماتي", "servicesIntro": "كل فكرة ليها شكلها الصح — وأنا أحولها لتصميم يليق بيها.", "s01t": "تصميم جرافيك", "s01d": "تصميمات جرافيكية متنوعة حسب احتياجك وفكرتك.", "s02t": "لوجو وهوية بصرية", "s02d": "شعار وهوية متكاملة تعبر عن البراند باحتراف.", "s03t": "كروت شخصية", "s03d": "كروت شخصية وبيزنس كارد بشكل أنيق وواضح.", "s04t": "إعلانات", "s04d": "تصميم إعلاني جذاب للحملات والعروض والمنتجات.", "s05t": "إعلانات سوشيال ميديا", "s05d": "بوستات وستوري وحملات متناسقة للسوشيال.", "s06t": "مطبوعات", "s06d": "تصميمات جاهزة للطباعة بجودة وتنظيم احترافي.", "s07t": "فلاير", "s07d": "فلايرات إعلانية وعروض بشكل جذاب وواضح.", "s08t": "بروشور", "s08d": "بروشورات تعريفية وتسويقية مرتبة واحترافية.", "s09t": "منيو مطاعم", "s09d": "منيوهات مرتبة وشهية بصريًا للمطاعم والكافيهات.", "s10t": "دعوات وأفراح ومناسبات", "s10d": "دعوات أنيقة للأفراح والمناسبات والفعاليات.", "s11t": "استيكرات وليبلات", "s11d": "تصميم استيكرات وليبلات للمنتجات والمشروعات.", "s12t": "بوسترات وبانرات", "s12d": "تصميمات كبيرة وواضحة للإعلانات والطباعة.", "s13t": "تصميمات تغليف وعبوات", "s13d": "تغليف وعبوات تبرز المنتج بشكل مميز واحترافي.", "s14t": "تصميمات للمحلات والشركات", "s14d": "تصاميم تساعد نشاطك يظهر بشكل احترافي ومميز.", "s15t": "تصميم بوستات وستوري", "s15d": "محتوى بصري للسوشيال ميديا جاهز للنشر.", "s16t": "تصميمات رقمية متنوعة", "s16d": "أي تصميم رقمي تحتاجه حسب فكرتك وهدفك.", "reviewsTitle": "آراء العملاء", "reviewsIntro": "رأيك يهمني ❤️ اكتب تعليقك، وبعد المراجعة والموافقة هيظهر للناس كلها.", "ratingLegend": "تقييمك من 1 إلى 5 نجوم", "star1": "نجمة واحدة", "star2": "نجمتان", "star3": "3 نجوم", "star4": "4 نجوم", "star5": "5 نجوم", "reviewSubmit": "نشر رأيي", "revLoading": "جاري تحميل الآراء...", "contactTitle": "عندك فكرة؟ خلينا نعملها مميزة.", "contactIntro": "اختار الطريقة اللي تريحك وتواصل معايا مباشرة.", "cEmail": "البريد الإلكتروني", "cFb": "صفحتي على فيسبوك", "waBtn": "تواصل معي", "lbCta": "💬 اطلب تصميمك الآن", "logoAria": "Hesham Hany - الرئيسية", "navAria": "التنقل الرئيسي", "phName": "اسمك", "phReview": "اكتب رأيك في الشغل أو تجربتك...", "starsAria": "تقييم النجوم", "waAria": "تواصل معي على واتساب", "lbAria": "عرض المشروع", "lbClose": "إغلاق", "lbTools": "أدوات الصورة", "lbZoomOut": "تصغير", "lbZoomReset": "الحجم الطبيعي", "lbZoomIn": "تكبير", "docTitle": "هشام هاني — مصمم جرافيك", "viewWork": "شوف المشروع ↗", "worksEmpty": "لسه مفيش أعمال منشورة.", "worksErr": "تعذر تحميل الأعمال حاليًا. هنعيد المحاولة تلقائيًا.", "revEmpty": "لسه مفيش آراء — كن أول واحد يكتب رأيه ❤️", "revErr": "تعذر تحميل الآراء حاليًا. هنعيد المحاولة تلقائيًا.", "revInvalid": "اكتب اسمك ورأي لا يقل عن 3 حروف.", "revSending": "جاري الإرسال...", "revDup": "الاسم ده مستخدم قبل كده — مسموح بتعليق واحد لكل اسم ❤️", "revError": "حصل خطأ أثناء النشر، حاول تاني.", "revOk": "<strong>❤️ شكرًا ليك على تعليقك!</strong><span>تم استلام تعليقك بنجاح، وهو الآن <b>قيد المراجعة</b>، وسيتم نشره بعد الموافقة عليه.</span><span class=\"review-warning\">⚠️ يُرجى تجنّب الكلمات المسيئة أو الألفاظ غير اللائقة، حفاظًا على احترام جميع الزوار وسمعة الموقع.</span><span>💛 شكرًا لمساهمتك في تطوير الموقع!</span>", "starsOf5": "{n} من 5 نجوم", "lbDefaultDesc": "تصميم إبداعي من أعمال Hesham Hany.", "lbDefaultTitle": "مشروع", "lbDefaultCat": "تصميم", "lbWaMsg": "السلام عليكم، أنا مهتم بتصميم مشابه لمشروع: ", "switchLabel": "EN", "catSocial": "سوشيال ميديا", "catAdvertising": "إعلانات", "catPrint": "مطبوعات", "catBranding": "هوية بصرية"}, en: {"docTitle": "Hesham Hany — Graphic Designer", "logoAria": "Hesham Hany – Home", "navAria": "Main navigation", "navHome": "Home", "navAbout": "About", "navWork": "Work", "navServices": "Services", "navReviews": "Reviews", "navContact": "Contact", "homeTag": "I turn ideas into impactful visual designs.", "homeBtnWork": "View my work →", "homeBtnContact": "Contact me ✉", "aboutTitle": "I don’t just make designs…<br><em>I build myself with every design.</em>", "aboutP1": "I’m <strong>Hesham Hany</strong>, a <strong>high-school senior</strong> building my path in design and freelancing at the same time. I started out of curiosity about graphics; over time that curiosity became passion, and the passion became a real journey that grows every day.", "aboutP2": "For me, design isn’t just colors and images; it’s a way of turning a simple idea into a form that makes people <strong>see, understand, and feel</strong>. That’s why in every project I try to balance strong visuals with a clear idea, and learn from each experience instead of repeating the same step.", "aboutP3": "I work on <strong>logos, visual identity, ads, social media, business cards, menus, and print</strong> as well as other digital and printed designs. My goal is to keep improving my level and reach work I can be proud of.", "st1": "I keep learning", "st1s": "Every project is a new opportunity", "st2": "I care about details", "st2s": "Clarity over clutter", "st3": "I’m building my future", "st3s": "Step by step", "aboutQuote": "“A small beginning doesn’t mean a small dream… what matters is that you keep going.”", "aboutBtnWork": "Explore my work →", "aboutBtnTalk": "Let’s talk ✉", "workTitle": "A glimpse of my work.", "workIntro": "Designs made to stand out, not just fill space.", "worksLoading": "Loading portfolio…", "viewWork": "View project ↗", "worksEmpty": "No portfolio items published yet.", "worksErr": "Couldn’t load the portfolio right now. Retrying automatically.", "servicesTitle": "Services", "servicesIntro": "Every idea deserves the right look — I turn it into a fitting design.", "s01t": "Graphic design", "s01d": "Varied graphic designs tailored to your needs and idea.", "s02t": "Logo & visual identity", "s02d": "A logo and a complete identity that expresses your brand professionally.", "s03t": "Business cards", "s03d": "Elegant, clear business cards.", "s04t": "Advertising", "s04d": "Eye-catching ad designs for campaigns, offers, and products.", "s05t": "Social media ads", "s05d": "Consistent posts, stories, and campaigns for social media.", "s06t": "Print design", "s06d": "Print-ready designs with professional quality and organization.", "s07t": "Flyers", "s07d": "Attractive, clear promotional flyers and offers.", "s08t": "Brochures", "s08d": "Organized, professional informational and marketing brochures.", "s09t": "Restaurant menus", "s09d": "Well-organized, appetizing menus for restaurants and cafés.", "s10t": "Invitations & events", "s10d": "Elegant invitations for weddings, occasions, and events.", "s11t": "Stickers & labels", "s11d": "Sticker and label designs for products and projects.", "s12t": "Posters & banners", "s12d": "Large, clear designs for ads and print.", "s13t": "Packaging design", "s13d": "Packaging that makes your product stand out professionally.", "s14t": "Design for shops & companies", "s14d": "Designs that help your business look professional and distinctive.", "s15t": "Posts & stories", "s15d": "Ready-to-publish visual content for social media.", "s16t": "Various digital designs", "s16d": "Any digital design you need, based on your idea and goal.", "reviewsTitle": "Client reviews", "reviewsIntro": "Your opinion matters ❤️ Write your review; once it has been reviewed and approved, it will appear for everyone.", "phName": "Your name", "phReview": "Share your opinion about the work or your experience...", "ratingLegend": "Your rating, from 1 to 5 stars", "starsAria": "Star rating", "star1": "1 star", "star2": "2 stars", "star3": "3 stars", "star4": "4 stars", "star5": "5 stars", "reviewSubmit": "Submit my review", "revLoading": "Loading reviews…", "revEmpty": "No reviews yet — be the first to share your thoughts ❤️", "revErr": "Couldn’t load reviews right now. Retrying automatically.", "revInvalid": "Please enter your name and a review of at least 3 characters.", "revSending": "Sending…", "revDup": "This name has already been used — one review per name is allowed ❤️", "revError": "Something went wrong while sending. Please try again.", "revOk": "<strong>❤️ Thank you for your review!</strong><span>Your review was received and is now <b>under review</b>. It will be published once approved.</span><span class=\"review-warning\">⚠️ Please avoid offensive or inappropriate language, out of respect for all visitors and the reputation of the site.</span><span>💛 Thank you for helping improve the site!</span>", "starsOf5": "{n} out of 5 stars", "contactTitle": "Have an idea? Let’s make it stand out.", "contactIntro": "Choose the way you prefer and contact me directly.", "cEmail": "Email", "cFb": "My Facebook page", "waBtn": "Contact me", "waAria": "Contact me on WhatsApp", "lbAria": "Project viewer", "lbClose": "Close", "lbTools": "Image tools", "lbZoomOut": "Zoom out", "lbZoomReset": "Actual size", "lbZoomIn": "Zoom in", "lbCta": "💬 Order your design now", "lbDefaultDesc": "A creative design from Hesham Hany’s work.", "lbDefaultTitle": "Project", "lbDefaultCat": "Design", "lbWaMsg": "Hello, I’m interested in a design similar to the project: ", "switchLabel": "عربي", "catSocial": "Social media", "catAdvertising": "Advertising", "catPrint": "Print", "catBranding": "Branding"} };
-let lang = 'ar';
-try { if (localStorage.getItem('heshamLanguage') === 'en') lang = 'en'; } catch (e) {}
+const I18N = { ar: {"navHome": "الرئيسية", "navAbout": "من أنا", "navWork": "أعمالي", "navServices": "خدماتي", "navReviews": "التقييمات", "navContact": "تواصل معي", "homeTag": "أحوّل الأفكار إلى تصاميم بصرية مؤثرة.", "homeBtnWork": "مشاهدة أعمالي →", "homeBtnContact": "تواصل معي ✉", "aboutTitle": "أنا مش بس بعمل تصميم…<br><em>أنا ببني نفسي مع كل تصميم.</em>", "aboutP1": "أنا <strong>Hesham Hane</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.", "aboutP2": "بالنسبة لي، التصميم مش مجرد ألوان وصور؛ هو طريقة لتحويل فكرة بسيطة إلى شكل يخلي الناس <strong>تشوف، تفهم، وتحس</strong>. عشان كده بحاول في كل شغل أوازن بين الشكل القوي والفكرة الواضحة، وأتعلم من كل تجربة بدل ما أكرر نفس الخطوة.", "aboutP3": "بشتغل على <strong>اللوجوهات والهوية البصرية والإعلانات والسوشيال ميديا والـBusiness Cards والمنيوهات والمطبوعات</strong> وغيرها من التصميمات الرقمية والمطبوعة. هدفي إني أطور مستوايا باستمرار وأوصل لشغل أقدر أكون فخور بيه.", "st1": "أتعلّم باستمرار", "st1s": "كل مشروع فرصة جديدة", "st2": "أهتم بالتفاصيل", "st2s": "الفكرة قبل الزحمة", "st3": "أبني مستقبلي", "st3s": "خطوة وراء خطوة", "aboutQuote": "“البداية الصغيرة مش معناها إن الحلم صغير… المهم إنك تفضل ماشي.”", "aboutBtnWork": "اكتشف أعمالي →", "aboutBtnTalk": "خلينا نتكلم ✉", "workTitle": "شوية من شغلي.", "workIntro": "تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.", "worksLoading": "جاري تحميل أعمالي...", "servicesTitle": "خدماتي", "servicesIntro": "كل فكرة ليها شكلها الصح — وأنا أحولها لتصميم يليق بيها.", "s01t": "تصميم جرافيك", "s01d": "تصميمات جرافيكية متنوعة حسب احتياجك وفكرتك.", "s02t": "لوجو وهوية بصرية", "s02d": "شعار وهوية متكاملة تعبر عن البراند باحتراف.", "s03t": "كروت شخصية", "s03d": "كروت شخصية وبيزنس كارد بشكل أنيق وواضح.", "s04t": "إعلانات", "s04d": "تصميم إعلاني جذاب للحملات والعروض والمنتجات.", "s05t": "إعلانات سوشيال ميديا", "s05d": "بوستات وستوري وحملات متناسقة للسوشيال.", "s06t": "مطبوعات", "s06d": "تصميمات جاهزة للطباعة بجودة وتنظيم احترافي.", "s07t": "فلاير", "s07d": "فلايرات إعلانية وعروض بشكل جذاب وواضح.", "s08t": "بروشور", "s08d": "بروشورات تعريفية وتسويقية مرتبة واحترافية.", "s09t": "منيو مطاعم", "s09d": "منيوهات مرتبة وشهية بصريًا للمطاعم والكافيهات.", "s10t": "دعوات وأفراح ومناسبات", "s10d": "دعوات أنيقة للأفراح والمناسبات والفعاليات.", "s11t": "استيكرات وليبلات", "s11d": "تصميم استيكرات وليبلات للمنتجات والمشروعات.", "s12t": "بوسترات وبانرات", "s12d": "تصميمات كبيرة وواضحة للإعلانات والطباعة.", "s13t": "تصميمات تغليف وعبوات", "s13d": "تغليف وعبوات تبرز المنتج بشكل مميز واحترافي.", "s14t": "تصميمات للمحلات والشركات", "s14d": "تصاميم تساعد نشاطك يظهر بشكل احترافي ومميز.", "s15t": "تصميم بوستات وستوري", "s15d": "محتوى بصري للسوشيال ميديا جاهز للنشر.", "s16t": "تصميمات رقمية متنوعة", "s16d": "أي تصميم رقمي تحتاجه حسب فكرتك وهدفك.", "reviewsTitle": "آراء العملاء", "reviewsIntro": "رأيك يهمني ❤️ اكتب تعليقك، وبعد المراجعة والموافقة هيظهر للناس كلها.", "ratingLegend": "تقييمك من 1 إلى 5 نجوم", "star1": "نجمة واحدة", "star2": "نجمتان", "star3": "3 نجوم", "star4": "4 نجوم", "star5": "5 نجوم", "reviewSubmit": "نشر رأيي", "revLoading": "جاري تحميل الآراء...", "contactTitle": "عندك فكرة؟ خلينا نعملها مميزة.", "contactIntro": "اختار الطريقة اللي تريحك وتواصل معايا مباشرة.", "cEmail": "البريد الإلكتروني", "cFb": "صفحتي على فيسبوك", "waBtn": "تواصل معي", "lbCta": "💬 اطلب تصميمك الآن", "logoAria": "Hesham Hane - الرئيسية", "navAria": "التنقل الرئيسي", "phName": "اسمك", "phReview": "اكتب رأيك في الشغل أو تجربتك...", "starsAria": "تقييم النجوم", "waAria": "تواصل معي على واتساب", "lbAria": "عرض المشروع", "lbClose": "إغلاق", "lbTools": "أدوات الصورة", "lbZoomOut": "تصغير", "lbZoomReset": "الحجم الطبيعي", "lbZoomIn": "تكبير", "docTitle": "هشام هاني — مصمم جرافيك", "viewWork": "شوف المشروع ↗", "worksEmpty": "لسه مفيش أعمال منشورة.", "worksErr": "تعذر تحميل الأعمال حاليًا. هنعيد المحاولة تلقائيًا.", "revEmpty": "لسه مفيش آراء — كن أول واحد يكتب رأيه ❤️", "revErr": "تعذر تحميل الآراء حاليًا. هنعيد المحاولة تلقائيًا.", "revInvalid": "اكتب اسمك ورأي لا يقل عن 3 حروف.", "revSending": "جاري الإرسال...", "revDup": "الاسم ده مستخدم قبل كده — مسموح بتعليق واحد لكل اسم ❤️", "revError": "حصل خطأ أثناء النشر، حاول تاني.", "revOk": "<strong>❤️ شكرًا ليك على تعليقك!</strong><span>تم استلام تعليقك بنجاح، وهو الآن <b>قيد المراجعة</b>، وسيتم نشره بعد الموافقة عليه.</span><span class=\"review-warning\">⚠️ يُرجى تجنّب الكلمات المسيئة أو الألفاظ غير اللائقة، حفاظًا على احترام جميع الزوار وسمعة الموقع.</span><span>💛 شكرًا لمساهمتك في تطوير الموقع!</span>", "starsOf5": "{n} من 5 نجوم", "lbDefaultDesc": "تصميم إبداعي من أعمال Hesham Hane.", "lbDefaultTitle": "مشروع", "lbDefaultCat": "تصميم", "lbWaMsg": "السلام عليكم، أنا مهتم بتصميم مشابه لمشروع: ", "switchLabel": "EN", "catSocial": "سوشيال ميديا", "catAdvertising": "إعلانات", "catPrint": "مطبوعات", "catBranding": "هوية بصرية"} };
+const lang = 'ar';
 
 function t(key, vars) {
   let s = I18N[lang] && I18N[lang][key];
@@ -580,26 +583,15 @@ function t(key, vars) {
 }
 
 function applyLang() {
-  const en = lang === 'en';
-  document.documentElement.lang = lang;
-  document.documentElement.dir = en ? 'ltr' : 'rtl';
   document.title = t('docTitle');
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
-  const tg = document.getElementById('languageToggle');
-  tg.textContent = t('switchLabel');
-  try { localStorage.setItem('heshamLanguage', lang); } catch (e) {}
   renderStatus();
   renderWorks(true);
   renderReviews(true);
 }
-
-document.getElementById('languageToggle').addEventListener('click', () => {
-  lang = lang === 'en' ? 'ar' : 'en';
-  applyLang();
-});
 
 /* ---------- Page navigation (each section is its own page) ---------- */
 let currentPage = 'home';
@@ -694,7 +686,6 @@ function matchCat(raw) {
 }
 function categoryLabel(raw) {
   const k = matchCat(raw);
-  if (lang === 'en' && k) return t('cat' + k.charAt(0).toUpperCase() + k.slice(1));
   return raw || 'DESIGN';
 }
 function safeUrl(u) { return typeof u === 'string' && /^(https?:\/\/|data:image\/|\/|\.\/)/i.test(u.trim()) ? u.trim() : ''; }
@@ -717,7 +708,7 @@ function buildWorkCard(w, i) {
   const url = safeUrl(w.image_url);
   if (url) {
     const img = new Image();
-    img.alt = w.title || 'Hesham Hany';
+    img.alt = w.title || 'Hesham Hane';
     img.decoding = 'async';
     img.loading = i === 0 ? 'eager' : 'lazy';
     img.addEventListener('error', () => vis.replaceChildren(letterNode(w)));
@@ -801,7 +792,7 @@ function buildReviewCard(x) {
   const name = document.createElement('strong'); name.dir = 'auto'; name.textContent = x.name || '';
   const date = document.createElement('span'); date.className = 'review-date';
   const d = new Date(x.created_at);
-  date.textContent = isNaN(d) ? '' : d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'ar-EG');
+  date.textContent = isNaN(d) ? '' : d.toLocaleDateString('ar-EG');
   head.append(name, date);
   const stars = document.createElement('div'); stars.className = 'review-stars';
   stars.setAttribute('role', 'img'); stars.setAttribute('aria-label', t('starsOf5', { n }));
