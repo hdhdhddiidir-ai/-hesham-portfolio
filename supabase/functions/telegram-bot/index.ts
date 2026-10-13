@@ -24,7 +24,9 @@ const menu=(c:number,t="🎛️ لوحة تحكم Hesham Portfolio")=>
    keyboard:[
     [{text:"➕ إضافة عمل"},{text:"📋 عرض الأعمال"}],
     [{text:"✏️ تعديل عمل"},{text:"🗑️ حذف عمل"}],
-    [{text:"💬 عرض التعليقات"},{text:"📊 الإحصائيات"}]
+    [{text:"🕒 تعليقات قيد المراجعة"}],
+    [{text:"✅ تعليقات الموقع"}],
+    [{text:"📊 الإحصائيات"}]
    ],
    resize_keyboard:true
   }
@@ -214,7 +216,8 @@ Deno.serve(async(req)=>{
 
    if(d.startsWith("del:")){
     const id=Number(d.slice(4));
-    await db("works?id=eq."+id,{method:"DELETE"});
+    const r=await db("works?id=eq."+id,{method:"DELETE"});
+    if(!r.ok)throw Error(await r.text());
     await menu(c,"🗑️ تم حذف العمل #"+id+" بنجاح.")
    }
    else if(d.startsWith("reviewapprove:")){
@@ -236,6 +239,16 @@ Deno.serve(async(req)=>{
     });
     if(!r.ok)throw Error(await r.text());
     await menu(c,"🚫 تم رفض التعليق #"+id+".")
+   }
+   else if(d.startsWith("reviewpending:")){
+    const id=Number(d.slice(14));
+    const r=await db("customer_reviews?id=eq."+id,{
+     method:"PATCH",
+     headers:{...H,Prefer:"return=minimal"},
+     body:JSON.stringify({status:"pending"})
+    });
+    if(!r.ok)throw Error(await r.text());
+    await menu(c,"🔄 تم إرجاع التعليق #"+id+" إلى قائمة المراجعة، وأصبح غير معتمد.")
    }
    else if(d.startsWith("reviewdel:")){
     const id=Number(d.slice(10));
@@ -375,11 +388,12 @@ Deno.serve(async(req)=>{
    return new Response("OK")
   }
 
-  if(t==="💬 عرض التعليقات"){
+  // 🕒 عرض التعليقات قيد المراجعة فقط
+  if(t==="🕒 تعليقات قيد المراجعة"){
    const r=await db("customer_reviews?select=id,name,review,rating,status,created_at&status=eq.pending&order=created_at.asc");
    const a=await r.json();
 
-   if(!Array.isArray(a)){
+   if(!r.ok||!Array.isArray(a)){
     await menu(c,"⚠️ مقدرتش أجيب التعليقات. راجع إعدادات قاعدة البيانات.");
     return new Response("OK")
    }
@@ -391,7 +405,7 @@ Deno.serve(async(req)=>{
 
    await tg("sendMessage",{
     chat_id:c,
-    text:"💬 التعليقات قيد المراجعة ("+a.length+")"
+    text:"🕒 التعليقات قيد المراجعة ("+a.length+")"
    });
 
    for(const x of a){
@@ -410,6 +424,53 @@ Deno.serve(async(req)=>{
         {text:"🚫 رفض",callback_data:"reviewreject:"+x.id}
        ],
        [{text:"🗑️ حذف نهائي",callback_data:"reviewdel:"+x.id}]
+      ]
+     }
+    })
+   }
+
+   return new Response("OK")
+  }
+
+  // ✅ عرض التعليقات المنشورة على الموقع فقط
+  if(t==="✅ تعليقات الموقع"){
+   const r=await db("customer_reviews?select=id,name,review,rating,status,created_at&status=eq.approved&order=created_at.desc");
+   const a=await r.json();
+
+   if(!r.ok||!Array.isArray(a)){
+    await menu(c,"⚠️ مقدرتش أجيب التعليقات المنشورة. راجع إعدادات قاعدة البيانات.");
+    return new Response("OK")
+   }
+
+   if(!a.length){
+    await menu(c,"📭 مفيش تعليقات معتمدة على الموقع حاليًا.");
+    return new Response("OK")
+   }
+
+   await tg("sendMessage",{
+    chat_id:c,
+    text:"✅ التعليقات المنشورة على الموقع ("+a.length+")"
+   });
+
+   for(const x of a){
+    await tg("sendMessage",{
+     chat_id:c,
+     text:
+      "✅ تعليق منشور #"+x.id+"\n\n"+
+      "👤 الاسم: "+String(x.name??"")+"\n"+
+      "⭐ التقييم: "+String(x.rating??5)+"/5\n\n"+
+      "📝 التعليق:\n"+String(x.review??"")+
+      "\n\n📢 الحالة: منشور على الموقع",
+     reply_markup:{
+      inline_keyboard:[
+       [{
+        text:"🔄 إرجاع للمراجعة وإخفاء",
+        callback_data:"reviewpending:"+x.id
+       }],
+       [{
+        text:"🗑️ حذف نهائي",
+        callback_data:"reviewdel:"+x.id
+       }]
       ]
      }
     })
