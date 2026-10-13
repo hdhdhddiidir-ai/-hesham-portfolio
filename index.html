@@ -328,6 +328,97 @@ html[dir=ltr] .about-quote{border-right:0!important;border-left:3px solid #f5d76
 html[dir=ltr] .review-card,html[dir=ltr] .review-item{text-align:left}
 .review-card strong,.review-card p,.work-meta h3,.work-meta .live-description{unicode-bidi:plaintext}
 </style>
+<style id="hero-intro">
+/* ===== Home intro: golden H written in light, then the name engraved in gold ===== */
+#home .hx-stage{position:relative;width:clamp(150px,min(26vw,30vh),250px);aspect-ratio:5/6;margin:0 auto;
+  filter:drop-shadow(0 0 22px #f5d76e66) drop-shadow(0 0 60px #f5d76e22);
+  animation:hxBloom 1.3s ease-out 1.45s backwards,hxBreath 4.4s ease-in-out 2.8s infinite,hxFloat 5.5s ease-in-out 2.8s infinite}
+#home .hx-svg{display:block;width:100%;height:100%;overflow:visible;transform:skewX(-9deg)}
+#home .hx-stroke{fill:none;stroke-dasharray:1;stroke-dashoffset:0;animation:hxDraw var(--d) cubic-bezier(.5,.1,.25,1) var(--t) backwards}
+#home .hx-fat{stroke:url(#hxGold);stroke-width:30}
+#home .hx-core{stroke:#fffbe6;stroke-width:5;opacity:.6}
+#home .hx-a{--t:.15s;--d:.55s}#home .hx-b{--t:.65s;--d:.55s}#home .hx-c{--t:1.15s;--d:.4s}
+#home .hx-pen{opacity:0}
+#home .hx-pen-a{animation:hxPenA .55s cubic-bezier(.5,.1,.25,1) .15s backwards,hxPenFade .55s linear .15s backwards}
+#home .hx-pen-b{animation:hxPenB .55s cubic-bezier(.5,.1,.25,1) .65s backwards,hxPenFade .55s linear .65s backwards}
+#home .hx-pen-c{animation:hxPenC .4s cubic-bezier(.5,.1,.25,1) 1.15s backwards,hxPenFade .4s linear 1.15s backwards}
+#home .hx-sp{position:absolute;left:50%;top:50%;width:var(--w);height:var(--w);margin:calc(var(--w) / -2) 0 0 calc(var(--w) / -2);border-radius:50%;
+  background:#fff6c8;box-shadow:0 0 8px 2px #f5d76e,0 0 18px 4px #f5d76e66;opacity:0;pointer-events:none;--k:1;
+  animation:hxSpark var(--du) cubic-bezier(.15,.7,.3,1) calc(1.55s + var(--dl)) backwards}
+#home .hx-tw{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;opacity:0;pointer-events:none;
+  background:linear-gradient(#0000 44%,#fff6c8 50%,#0000 56%),linear-gradient(90deg,#0000 44%,#fff6c8 50%,#0000 56%);
+  filter:drop-shadow(0 0 5px #f5d76e);animation:hxTwinkle 3.2s ease-in-out var(--dl) infinite}
+
+#home .hx-nameWrap{position:relative;display:inline-block;margin-top:24px;direction:ltr;text-align:center}
+#home .hx-name{position:relative;margin:0;color:transparent;text-shadow:none;
+  background:linear-gradient(180deg,#fff4b8 0%,#f5d76e 26%,#d6a52a 52%,#8c6410 76%,#e8c24c 100%);
+  -webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 -1px 0 #000a) drop-shadow(0 1px 0 #fff0b04d) drop-shadow(0 8px 10px #000c) drop-shadow(0 0 24px #f5d76e30);
+  clip-path:inset(-60px -60px -60px -60px);
+  animation:hxEngrave .9s cubic-bezier(.4,0,.2,1) 1.75s backwards}
+#home .hx-shine{position:absolute;left:0;top:0;width:100%;height:100%;white-space:nowrap;color:transparent;pointer-events:none;
+  background:linear-gradient(105deg,#fff0 42%,#fffbe8 50%,#fff0 58%) no-repeat 0% 0/260% 100%;
+  -webkit-background-clip:text;background-clip:text;animation:hxShine 7s ease-in-out 2.8s infinite}
+#home .hx-burn{position:absolute;top:-6px;bottom:-6px;left:0;width:2px;border-radius:2px;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,#fff0,#fffbe6 20%,#fffbe6 80%,#fff0);box-shadow:0 0 10px 2px #f5d76e,0 0 30px 8px #f5d76e55;
+  animation:hxBurnMove .9s cubic-bezier(.4,0,.2,1) 1.75s backwards,hxBurnFade .9s linear 1.75s backwards}
+
+#home .home-modern-sub{animation:hxRise .7s ease-out 2.5s backwards}
+#home .home-modern-inner>p{animation:hxRise .7s ease-out 2.7s backwards}
+#home .buttons{animation:hxRise .7s ease-out 2.85s backwards}
+#home .hx-wa{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 22px;border-radius:999px;border:1px solid #f5d76e66;
+  background:#f5d76e0d;color:#fff;font-weight:800;font-size:14px;box-shadow:0 0 26px #f5d76e12;
+  transition:transform .25s,background .25s,color .25s,box-shadow .25s,border-color .25s;animation:hxRise .7s ease-out 3.1s backwards}
+#home .hx-wa svg{width:22px;height:22px;flex:none;fill:#25d366;transition:fill .25s}
+#home .hx-wa:hover{background:var(--gold);color:#111;border-color:var(--gold);box-shadow:0 10px 34px #f5d76e40;transform:translateY(-3px)}
+#home .hx-wa:hover svg{fill:#111}
+#home .hx-wa:focus-visible{outline:2px solid #f5d76e;outline-offset:3px}
+body:has(#home.active-page) .floating-wa{display:none}
+/* the rotating ring / burn line must never widen the page */
+#home.home-modern{overflow:hidden!important;overflow:clip!important}
+
+#home .home-modern-glow{position:absolute;left:50%;top:50%;width:clamp(300px,64vw,720px);aspect-ratio:1;border-radius:50%;pointer-events:none;z-index:1;
+  transform:translate(-50%,-56%);background:radial-gradient(circle,#f5d76e26 0,#f5d76e0e 38%,transparent 66%);
+  animation:hxGlowIn 1.6s ease-out backwards,hxGlowPulse 6s ease-in-out 1.6s infinite}
+#home .home-modern-ring{position:absolute;left:50%;top:50%;width:clamp(280px,50vw,560px);aspect-ratio:1;border-radius:50%;pointer-events:none;z-index:1;
+  border:1px solid #f5d76e14;border-top-color:#f5d76e70;transform:translate(-50%,-56%);
+  animation:hxRingIn 1.2s ease-out .2s backwards,hxRingSpin 16s linear 1.4s infinite}
+
+@keyframes hxDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes hxPenA{from{transform:translate(48px,26px)}to{transform:translate(48px,214px)}}
+@keyframes hxPenB{from{transform:translate(152px,26px)}to{transform:translate(152px,214px)}}
+@keyframes hxPenC{from{transform:translate(48px,124px)}to{transform:translate(152px,124px)}}
+@keyframes hxPenFade{0%{opacity:0}10%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes hxBloom{0%{filter:drop-shadow(0 0 22px #f5d76e66) drop-shadow(0 0 60px #f5d76e22)}
+  35%{filter:drop-shadow(0 0 30px #fff1a8e6) drop-shadow(0 0 80px #f5d76ecc)}
+  100%{filter:drop-shadow(0 0 22px #f5d76e66) drop-shadow(0 0 60px #f5d76e22)}}
+@keyframes hxBreath{0%,100%{filter:drop-shadow(0 0 22px #f5d76e66) drop-shadow(0 0 60px #f5d76e22)}50%{filter:drop-shadow(0 0 30px #f5d76e99) drop-shadow(0 0 80px #f5d76e33)}}
+@keyframes hxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes hxSpark{0%{opacity:0;transform:translate(0,0) scale(1)}8%{opacity:1}70%{opacity:1}
+  100%{opacity:0;transform:translate(calc(var(--x) * var(--k)),calc(var(--y) * var(--k))) scale(.3)}}
+@keyframes hxTwinkle{0%,60%,100%{opacity:0;transform:scale(.3) rotate(0)}30%{opacity:1;transform:scale(1) rotate(45deg)}}
+@keyframes hxEngrave{from{clip-path:inset(-60px 100% -60px -60px)}to{clip-path:inset(-60px -60px -60px -60px)}}
+@keyframes hxBurnMove{from{left:0}to{left:calc(100% + 60px)}}
+@keyframes hxBurnFade{0%{opacity:0}8%{opacity:1}88%{opacity:1}100%{opacity:0}}
+@keyframes hxShine{0%{background-position:100% 0}22%,100%{background-position:0% 0}}
+@keyframes hxRise{from{opacity:0;transform:translateY(14px)}}
+@keyframes hxGlowIn{from{opacity:0;transform:translate(-50%,-56%) scale(.6)}}
+@keyframes hxGlowPulse{0%,100%{opacity:.8;transform:translate(-50%,-56%) scale(1)}50%{opacity:1;transform:translate(-50%,-56%) scale(1.07)}}
+@keyframes hxRingIn{from{opacity:0}}
+@keyframes hxRingSpin{from{transform:translate(-50%,-56%) rotate(0)}to{transform:translate(-50%,-56%) rotate(360deg)}}
+
+/* After the intro has played once, coming back to Home shows the finished scene right away */
+#home.hx-done .hx-stroke,#home.hx-done .hx-pen,#home.hx-done .hx-sp,#home.hx-done .hx-name,#home.hx-done .hx-burn,#home.hx-done .hx-in,
+#home.hx-done .home-modern-sub,#home.hx-done .home-modern-inner>p,#home.hx-done .buttons,#home.hx-done .hx-wa{animation:none}
+#home.hx-done .hx-stage{animation:hxBreath 4.4s ease-in-out infinite,hxFloat 5.5s ease-in-out infinite}
+
+@media(max-width:600px){#home .hx-sp{--k:.6}#home .hx-wa{padding:11px 20px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){
+  #home .hx-stage,#home .hx-stroke,#home .hx-name,#home .hx-in,#home .home-modern-sub,#home .home-modern-inner>p,#home .buttons,#home .hx-wa,
+  #home .hx-shine,#home .home-modern-glow,#home .home-modern-ring{animation:none!important}
+  #home .hx-sp,#home .hx-pen,#home .hx-burn,#home .hx-tw{display:none}
+}
+</style>
 <script>try{if(localStorage.getItem('heshamLanguage')==='en'){document.documentElement.lang='en';document.documentElement.dir='ltr'}}catch(e){}</script>
 </head>
 <body>
@@ -347,10 +438,44 @@ html[dir=ltr] .review-card,html[dir=ltr] .review-item{text-align:left}
 </header>
 
 <main id="home" class="hero page-section home-modern"><div class="home-modern-glow"></div><div class="home-modern-ring"></div><div class="home-modern-inner">
-<div class="home-big-h" aria-hidden="true">H</div>
-<div class="home-modern-name">HESHAM HANY</div><div class="home-modern-sub">GRAPHIC DESIGNER</div>
-<p data-i18n="homeTag">أحوّل الأفكار إلى تصاميم بصرية مؤثرة.</p>
-<div class="buttons"><a class="btn primary" href="#work" data-i18n="homeBtnWork">مشاهدة أعمالي →</a><a class="btn" href="#contact" data-i18n="homeBtnContact">تواصل معي ✉</a></div>
+<div class="hx-stage" aria-hidden="true">
+<svg class="hx-svg" viewBox="0 0 200 240" focusable="false">
+<defs>
+<linearGradient id="hxGold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="240"><stop offset="0" stop-color="#fff1a8"/><stop offset=".35" stop-color="#f5d76e"/><stop offset=".7" stop-color="#d9a92f"/><stop offset="1" stop-color="#a87a1c"/></linearGradient>
+<radialGradient id="hxPenGlow"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#fff3b0"/><stop offset=".55" stop-color="#f5d76e" stop-opacity=".55"/><stop offset="1" stop-color="#f5d76e" stop-opacity="0"/></radialGradient>
+</defs>
+<path class="hx-stroke hx-fat hx-a" pathLength="1" d="M48 26V214"/>
+<path class="hx-stroke hx-fat hx-b" pathLength="1" d="M152 26V214"/>
+<path class="hx-stroke hx-fat hx-c" pathLength="1" d="M48 124H152"/>
+<path class="hx-stroke hx-core hx-a" pathLength="1" d="M48 26V214"/>
+<path class="hx-stroke hx-core hx-b" pathLength="1" d="M152 26V214"/>
+<path class="hx-stroke hx-core hx-c" pathLength="1" d="M48 124H152"/>
+<circle class="hx-pen hx-pen-a" r="20" fill="url(#hxPenGlow)"/>
+<circle class="hx-pen hx-pen-b" r="20" fill="url(#hxPenGlow)"/>
+<circle class="hx-pen hx-pen-c" r="20" fill="url(#hxPenGlow)"/>
+</svg>
+<i class="hx-sp" style="--x:-150px;--y:-95px;--w:4px;--dl:0s;--du:.9s"></i>
+<i class="hx-sp" style="--x:-95px;--y:-150px;--w:3px;--dl:.04s;--du:1s"></i>
+<i class="hx-sp" style="--x:-30px;--y:-175px;--w:5px;--dl:.02s;--du:.8s"></i>
+<i class="hx-sp" style="--x:45px;--y:-165px;--w:3px;--dl:.08s;--du:1s"></i>
+<i class="hx-sp" style="--x:115px;--y:-130px;--w:4px;--dl:.03s;--du:.9s"></i>
+<i class="hx-sp" style="--x:165px;--y:-60px;--w:3px;--dl:.1s;--du:.85s"></i>
+<i class="hx-sp" style="--x:170px;--y:30px;--w:5px;--dl:.05s;--du:1s"></i>
+<i class="hx-sp" style="--x:125px;--y:115px;--w:3px;--dl:.12s;--du:.9s"></i>
+<i class="hx-sp" style="--x:55px;--y:165px;--w:4px;--dl:.06s;--du:1.05s"></i>
+<i class="hx-sp" style="--x:-55px;--y:160px;--w:3px;--dl:.09s;--du:.9s"></i>
+<i class="hx-sp" style="--x:-130px;--y:105px;--w:5px;--dl:.01s;--du:1s"></i>
+<i class="hx-sp" style="--x:-175px;--y:15px;--w:3px;--dl:.07s;--du:.85s"></i>
+<i class="hx-tw" style="left:6%;top:6%;--dl:1.9s"></i>
+<i class="hx-tw" style="left:90%;top:22%;--dl:2.6s"></i>
+<i class="hx-tw" style="left:12%;top:88%;--dl:3.3s"></i>
+<i class="hx-tw" style="left:86%;top:84%;--dl:2.2s"></i>
+</div>
+<div class="hx-nameWrap"><div class="home-modern-name hx-name">HESHAM HANY<span class="hx-shine" aria-hidden="true">HESHAM HANY</span></div><i class="hx-burn" aria-hidden="true"></i></div>
+<div class="home-modern-sub hx-in">GRAPHIC DESIGNER</div>
+<p class="hx-in" data-i18n="homeTag">أحوّل الأفكار إلى تصاميم بصرية مؤثرة.</p>
+<div class="buttons hx-in"><a class="btn primary" href="#work" data-i18n="homeBtnWork">مشاهدة أعمالي →</a><a class="btn" href="#contact" data-i18n="homeBtnContact">تواصل معي ✉</a></div>
+<a class="hx-wa hx-in" href="https://wa.me/201118313357" target="_blank" rel="noopener" data-i18n-aria="waAria" aria-label="تواصل معي على واتساب"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span data-i18n="waBtn">تواصل معي</span></a>
 </div></main>
 
 <section id="about" class="section page-section"><div class="wrap about about-deep">
@@ -836,6 +961,11 @@ syncStars();
 
 })();
 
+</script>
+<script>
+/* Home intro: once the last element (WhatsApp button) finishes animating, later visits to Home skip the intro. */
+(function(){var h=document.getElementById('home'),w=h&&h.querySelector('.hx-wa');if(!h||!w)return;
+w.addEventListener('animationend',function(){h.classList.add('hx-done')},{once:true});})();
 </script>
 </body>
 </html>
