@@ -9,28 +9,34 @@ const K = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const H = {
   apikey: K,
   Authorization: "Bearer " + K,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-const tg = async (m: string, b: any) => {
-  const r = await fetch("https://api.telegram.org/bot" + T + "/" + m, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(b)
-  });
+const tg = async (method: string, body: any) => {
+  const r = await fetch(
+    "https://api.telegram.org/bot" + T + "/" + method,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    },
+  );
   return r.json();
 };
 
-const db = (p: string, o: any = {}) =>
-  fetch(U + "/rest/v1/" + p, {
-    ...o,
-    headers: { ...H, ...(o.headers || {}) }
+const db = (path: string, options: any = {}) =>
+  fetch(U + "/rest/v1/" + path, {
+    ...options,
+    headers: { ...H, ...(options.headers || {}) },
   });
 
-const menu = (c: number, t = "🎛️ لوحة تحكم Hesham Portfolio") =>
+const menu = (
+  chat: number,
+  message = "🎛️ لوحة تحكم Hesham Portfolio",
+) =>
   tg("sendMessage", {
-    chat_id: c,
-    text: t,
+    chat_id: chat,
+    text: message,
     reply_markup: {
       keyboard: [
         [{ text: "➕ إضافة عمل" }, { text: "📋 عرض الأعمال" }],
@@ -38,59 +44,76 @@ const menu = (c: number, t = "🎛️ لوحة تحكم Hesham Portfolio") =>
         [{ text: "🕒 تعليقات قيد المراجعة" }],
         [{ text: "✅ تعليقات الموقع" }],
         [{ text: "📊 الإحصائيات" }],
-        [{ text: "🛒 طلبات العملاء" }]
+        [{ text: "🛒 طلبات العملاء" }],
       ],
-      resize_keyboard: true
-    }
+      resize_keyboard: true,
+    },
   });
 
-async function sess(c: number) {
+async function sess(chat: number) {
   const r = await db(
-    "bot_sessions?chat_id=eq." + c + "&select=state,payload&limit=1"
+    "bot_sessions?chat_id=eq." + chat + "&select=state,payload&limit=1",
   );
   const a = await r.json();
   return a[0] ?? { state: "idle", payload: {} };
 }
 
-const set = async (c: number, s: string, p: any = {}) =>
+const set = async (chat: number, state: string, payload: any = {}) =>
   db("bot_sessions", {
     method: "POST",
     headers: {
       ...H,
-      Prefer: "resolution=merge-duplicates,return=minimal"
+      Prefer: "resolution=merge-duplicates,return=minimal",
     },
     body: JSON.stringify({
-      chat_id: c,
-      state: s,
-      payload: p,
-      updated_at: new Date().toISOString()
-    })
+      chat_id: chat,
+      state,
+      payload,
+      updated_at: new Date().toISOString(),
+    }),
   });
 
-const clear = (c: number) =>
-  db("bot_sessions?chat_id=eq." + c, { method: "DELETE" });
+const clear = (chat: number) =>
+  db("bot_sessions?chat_id=eq." + chat, { method: "DELETE" });
 
-async function upload(fid: string) {
-  const f = await tg("getFile", { file_id: fid });
-  const p = f.result.file_path;
-  const rr = await fetch("https://api.telegram.org/file/bot" + T + "/" + p);
-  const x = new Uint8Array(await rr.arrayBuffer());
-  const n =
-    crypto.randomUUID() + (p.endsWith(".png") ? ".png" : ".jpg");
+async function upload(fileId: string) {
+  const f = await tg("getFile", { file_id: fileId });
 
-  const q = await fetch(U + "/storage/v1/object/" + B + "/" + n, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + K,
-      apikey: K,
-      "Content-Type": p.endsWith(".png") ? "image/png" : "image/jpeg"
+  if (!f.ok || !f.result?.file_path) {
+    throw new Error("تعذر الحصول على الصورة من Telegram");
+  }
+
+  const path = f.result.file_path;
+  const response = await fetch(
+    "https://api.telegram.org/file/bot" + T + "/" + path,
+  );
+
+  if (!response.ok) {
+    throw new Error("تعذر تحميل الصورة");
+  }
+
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  const isPng = path.toLowerCase().endsWith(".png");
+  const filename = crypto.randomUUID() + (isPng ? ".png" : ".jpg");
+
+  const uploaded = await fetch(
+    U + "/storage/v1/object/" + B + "/" + filename,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + K,
+        apikey: K,
+        "Content-Type": isPng ? "image/png" : "image/jpeg",
+      },
+      body: bytes,
     },
-    body: x
-  });
+  );
 
-  if (!q.ok) throw Error(await q.text());
+  if (!uploaded.ok) {
+    throw new Error(await uploaded.text());
+  }
 
-  return U + "/storage/v1/object/public/" + B + "/" + n;
+  return U + "/storage/v1/object/public/" + B + "/" + filename;
 }
 
 const cats = [
@@ -109,7 +132,7 @@ const cats = [
   "📦 Packaging Design",
   "🏢 Business & Company Designs",
   "📱 Social Media Posts & Stories",
-  "✨ Digital Designs"
+  "✨ Digital Designs",
 ];
 
 const catKeyboard = {
@@ -121,21 +144,27 @@ const catKeyboard = {
     [cats[8], cats[9]],
     [cats[10], cats[11]],
     [cats[12], cats[13]],
-    [cats[14], cats[15]]
-  ].map(r => r.map(text => ({ text }))),
+    [cats[14], cats[15]],
+  ].map((row) => row.map((text) => ({ text }))),
   resize_keyboard: true,
-  one_time_keyboard: true
+  one_time_keyboard: true,
+};
+
+const orderStatuses: Record<string, string> = {
+  new: "🆕 جديد",
+  in_progress: "🛠️ قيد التنفيذ",
+  completed: "✅ مكتمل",
 };
 
 Deno.serve(async (req) => {
   if (req.method === "GET") {
-    const r = await tg("setWebhook", {
+    const result = await tg("setWebhook", {
       url: U + "/functions/v1/telegram-bot",
-      drop_pending_updates: false
+      drop_pending_updates: false,
     });
 
-    return new Response(JSON.stringify({ ok: true, webhook: r }), {
-      headers: { "Content-Type": "application/json" }
+    return new Response(JSON.stringify({ ok: true, webhook: result }), {
+      headers: { "Content-Type": "application/json" },
     });
   }
 
@@ -143,352 +172,371 @@ Deno.serve(async (req) => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  let u: any;
+  let update: any;
 
   try {
-    u = await req.json();
-  } catch (_) {
+    update = await req.json();
+  } catch {
     return new Response("OK");
   }
 
-  const m = u.message;
-  const cb = u.callback_query;
-  const c = Number(m?.chat?.id ?? cb?.message?.chat?.id ?? 0);
+  const message = update.message;
+  const callback = update.callback_query;
 
-  if (c !== A) return new Response("OK");
+  const chat = Number(
+    message?.chat?.id ?? callback?.message?.chat?.id ?? 0,
+  );
+
+  if (chat !== A) {
+    return new Response("OK");
+  }
 
   try {
     // =========================
-    // أزرار التفاعل
+    // التعامل مع أزرار التفاعل
     // =========================
-    if (cb) {
+
+    if (callback) {
       await tg("answerCallbackQuery", {
-        callback_query_id: cb.id
+        callback_query_id: callback.id,
       });
 
-      const d = String(cb.data || "");
+      const data = String(callback.data || "");
 
-      // اختيار عمل لتعديله
-      if (d.startsWith("edit:")) {
-        const id = Number(d.slice(5));
-        const r = await db(
-          "works?id=eq." + id + "&select=id,title,is_visible"
+      // فتح قائمة تعديل العمل
+      if (data.startsWith("edit:")) {
+        const id = Number(data.slice(5));
+
+        const response = await db(
+          "works?id=eq." + id + "&select=id,title,is_visible",
         );
-        const a = await r.json();
+        const rows = await response.json();
 
-        if (!a[0]) {
-          await menu(c, "❌ العمل غير موجود.");
+        if (!rows[0]) {
+          await menu(chat, "❌ العمل غير موجود.");
           return new Response("OK");
         }
 
+        const work = rows[0];
+
         await tg("sendMessage", {
-          chat_id: c,
-          text: "✏️ #" + id + " — " + a[0].title + "\n\nاختار التعديل:",
+          chat_id: chat,
+          text: "✏️ #" + id + " — " + work.title +
+            "\n\nاختار التعديل:",
           reply_markup: {
             inline_keyboard: [
               [{
                 text: "📝 تعديل الاسم",
-                callback_data: "ef:title:" + id
+                callback_data: "ef:title:" + id,
               }],
               [
                 {
                   text: "🖼️ تغيير الصورة",
-                  callback_data: "ef:image:" + id
+                  callback_data: "ef:image:" + id,
                 },
                 {
                   text: "🗑️ إزالة الصورة",
-                  callback_data: "ef:remove:" + id
-                }
+                  callback_data: "ef:remove:" + id,
+                },
               ],
               [{
                 text: "🏷️ تعديل التصنيف",
-                callback_data: "ef:category:" + id
+                callback_data: "ef:category:" + id,
               }],
               [{
                 text: "📄 تعديل الوصف",
-                callback_data: "ef:description:" + id
+                callback_data: "ef:description:" + id,
               }],
               [{
-                text: a[0].is_visible ? "🔴 إخفاء" : "🟢 إظهار",
-                callback_data: "ef:visibility:" + id
-              }]
-            ]
-          }
+                text: work.is_visible ? "🔴 إخفاء" : "🟢 إظهار",
+                callback_data: "ef:visibility:" + id,
+              }],
+            ],
+          },
         });
 
         return new Response("OK");
       }
 
-      // تنفيذ تعديل عمل
-      if (d.startsWith("ef:")) {
-        const z = d.split(":");
-        const f = z[1];
-        const id = Number(z[2]);
+      // تنفيذ تعديل العمل
+      if (data.startsWith("ef:")) {
+        const parts = data.split(":");
+        const field = parts[1];
+        const id = Number(parts[2]);
 
-        if (f === "remove" || f === "visibility") {
-          const r = await db(
-            "works?id=eq." + id + "&select=is_visible"
+        if (field === "remove" || field === "visibility") {
+          const response = await db(
+            "works?id=eq." + id + "&select=is_visible",
           );
-          const a = await r.json();
+          const rows = await response.json();
 
-          if (!a[0]) return new Response("OK");
+          if (!rows[0]) {
+            return new Response("OK");
+          }
 
-          const body =
-            f === "remove"
-              ? { image_url: "" }
-              : { is_visible: !a[0].is_visible };
+          const body = field === "remove"
+            ? { image_url: "" }
+            : { is_visible: !rows[0].is_visible };
 
-          const q = await db("works?id=eq." + id, {
+          const result = await db("works?id=eq." + id, {
             method: "PATCH",
             headers: { ...H, Prefer: "return=minimal" },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
           });
 
-          if (!q.ok) throw Error(await q.text());
+          if (!result.ok) {
+            throw new Error(await result.text());
+          }
 
-          await menu(c, "✅ تم تنفيذ التعديل على العمل #" + id + ".");
+          await menu(chat, "✅ تم تنفيذ التعديل على العمل #" + id);
           return new Response("OK");
         }
 
-        await set(c, "edit_" + f, { id });
+        await set(chat, "edit_" + field, { id });
+
+        const prompts: Record<string, string> = {
+          image: "📸 ابعت الصورة الجديدة.",
+          title: "📝 ابعت الاسم الجديد.",
+          category: "🏷️ اختار التصنيف الجديد.",
+          description: "📄 ابعت الوصف الجديد، أو اكتب لا لمسحه.",
+        };
 
         await tg("sendMessage", {
-          chat_id: c,
-          text:
-            f === "image"
-              ? "📸 ابعت الصورة الجديدة."
-              : f === "title"
-              ? "📝 ابعت الاسم الجديد."
-              : f === "category"
-              ? "🏷️ اختار التصنيف الجديد."
-              : "📄 ابعت الوصف الجديد، أو اكتب لا لمسحه.",
-          reply_markup: f === "category" ? catKeyboard : undefined
+          chat_id: chat,
+          text: prompts[field] || "ابعت التعديل الجديد.",
+          reply_markup: field === "category" ? catKeyboard : undefined,
         });
 
         return new Response("OK");
       }
 
       // حذف عمل
-      if (d.startsWith("del:")) {
-        const id = Number(d.slice(4));
-        const r = await db("works?id=eq." + id, {
-          method: "DELETE"
+      if (data.startsWith("del:")) {
+        const id = Number(data.slice(4));
+
+        const result = await db("works?id=eq." + id, {
+          method: "DELETE",
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await menu(c, "🗑️ تم حذف العمل #" + id + " بنجاح.");
+        await menu(chat, "🗑️ تم حذف العمل #" + id + " بنجاح.");
       }
 
-      // =========================
-      // إدارة طلبات العملاء
-      // =========================
+      // تحديث حالة طلب عميل
+      else if (data.startsWith("orderstatus:")) {
+        const parts = data.split(":");
+        const id = Number(parts[1]);
+        const status = parts[2];
 
-      // تغيير حالة طلب
-      else if (d.startsWith("orderstatus:")) {
-        const z = d.split(":");
-        const id = Number(z[1]);
-        const status = z[2];
-
-        const labels: any = {
-          new: "🆕 جديد",
-          in_progress: "🛠️ قيد التنفيذ",
-          completed: "✅ مكتمل"
-        };
-
-        if (!labels[status]) {
-          await tg("answerCallbackQuery", {
-            callback_query_id: cb.id,
-            text: "حالة غير صحيحة"
-          });
+        if (!orderStatuses[status]) {
           return new Response("OK");
         }
 
-        const r = await db("customer_orders?id=eq." + id, {
+        const result = await db("customer_orders?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
           body: JSON.stringify({
             status,
-            updated_at: new Date().toISOString()
-          })
+            updated_at: new Date().toISOString(),
+          }),
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
         await menu(
-          c,
-          "✅ تم تحديث حالة الطلب #" + id + " إلى " + labels[status]
+          chat,
+          "✅ تم تحديث حالة الطلب #" + id + " إلى " +
+            orderStatuses[status],
         );
       }
 
       // حذف طلب عميل
-      else if (d.startsWith("orderdel:")) {
-        const id = Number(d.slice(9));
+      else if (data.startsWith("orderdel:")) {
+        const id = Number(data.slice("orderdel:".length));
 
-        const r = await db("customer_orders?id=eq." + id, {
-          method: "DELETE"
+        const result = await db("customer_orders?id=eq." + id, {
+          method: "DELETE",
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await menu(c, "🗑️ تم حذف طلب العميل #" + id + ".");
+        await menu(chat, "🗑️ تم حذف طلب العميل #" + id + ".");
       }
 
-      // =========================
-      // إدارة التعليقات
-      // =========================
+      // الموافقة على تعليق
+      else if (data.startsWith("reviewapprove:")) {
+        const id = Number(data.slice("reviewapprove:".length));
 
-      else if (d.startsWith("reviewapprove:")) {
-        const id = Number(d.slice(14));
-
-        const r = await db("customer_reviews?id=eq." + id, {
+        const result = await db("customer_reviews?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
-          body: JSON.stringify({ status: "approved" })
+          body: JSON.stringify({ status: "approved" }),
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
         await menu(
-          c,
-          "✅ تمت الموافقة على التعليق #" + id + "، وسيظهر للزوار."
+          chat,
+          "✅ تمت الموافقة على التعليق #" + id + "، وسيظهر للزوار.",
         );
       }
 
-      else if (d.startsWith("reviewreject:")) {
-        const id = Number(d.slice(13));
+      // رفض تعليق
+      else if (data.startsWith("reviewreject:")) {
+        const id = Number(data.slice("reviewreject:".length));
 
-        const r = await db("customer_reviews?id=eq." + id, {
+        const result = await db("customer_reviews?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
-          body: JSON.stringify({ status: "rejected" })
+          body: JSON.stringify({ status: "rejected" }),
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await menu(c, "🚫 تم رفض التعليق #" + id + ".");
+        await menu(chat, "🚫 تم رفض التعليق #" + id + ".");
       }
 
-      else if (d.startsWith("reviewpending:")) {
-        const id = Number(d.slice(14));
+      // إرجاع تعليق للمراجعة
+      else if (data.startsWith("reviewpending:")) {
+        const id = Number(data.slice("reviewpending:".length));
 
-        const r = await db("customer_reviews?id=eq." + id, {
+        const result = await db("customer_reviews?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
-          body: JSON.stringify({ status: "pending" })
+          body: JSON.stringify({ status: "pending" }),
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
         await menu(
-          c,
-          "🔄 تم إرجاع التعليق #" + id + " إلى قائمة المراجعة."
+          chat,
+          "🔄 تم إرجاع التعليق #" + id + " إلى قائمة المراجعة.",
         );
       }
 
-      else if (d.startsWith("reviewdel:")) {
-        const id = Number(d.slice(10));
+      // حذف تعليق
+      else if (data.startsWith("reviewdel:")) {
+        const id = Number(data.slice("reviewdel:".length));
 
-        const r = await db("customer_reviews?id=eq." + id, {
-          method: "DELETE"
+        const result = await db("customer_reviews?id=eq." + id, {
+          method: "DELETE",
         });
 
-        if (!r.ok) throw Error(await r.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await menu(c, "🗑️ تم حذف التعليق #" + id + " بنجاح.");
+        await menu(chat, "🗑️ تم حذف التعليق #" + id + " بنجاح.");
       }
 
       return new Response("OK");
     }
 
-    const t = String(m?.text || "").trim();
+    const text = String(message?.text || "").trim();
 
+    // =========================
     // القائمة الرئيسية
-    if (t === "/start" || t === "/menu") {
-      await clear(c);
-      await menu(c);
+    // =========================
+
+    if (text === "/start" || text === "/menu") {
+      await clear(chat);
+      await menu(chat);
       return new Response("OK");
     }
 
     // =========================
-    // عرض طلبات العملاء
+    // طلبات العملاء
     // =========================
-    if (t === "🛒 طلبات العملاء") {
-      const r = await db(
-        "customer_orders?select=id,customer_name,service,details,whatsapp,status,created_at,attachments&order=created_at.desc&limit=30"
+
+    if (text === "🛒 طلبات العملاء") {
+      const response = await db(
+        "customer_orders?select=id,customer_name,service,details,whatsapp,status,created_at,attachments&order=created_at.desc&limit=30",
       );
 
-      const a = await r.json();
+      const rows = await response.json();
 
-      if (!r.ok || !Array.isArray(a)) {
+      if (!response.ok || !Array.isArray(rows)) {
+        console.error("Orders query failed:", rows);
         await menu(
-          c,
-          "⚠️ تعذر جلب الطلبات. تأكد من إعداد جدول customer_orders."
+          chat,
+          "⚠️ مش قادر أجيب الطلبات. راجع جدول customer_orders وصلاحيات قاعدة البيانات.",
         );
         return new Response("OK");
       }
 
-      if (a.length === 0) {
-        await menu(c, "🛒 لا توجد طلبات عملاء حتى الآن.");
+      if (rows.length === 0) {
+        await menu(chat, "🛒 مفيش طلبات عملاء لسه.");
         return new Response("OK");
       }
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "🛒 طلبات العملاء — آخر " + a.length + " طلب"
+        chat_id: chat,
+        text: "🛒 طلبات العملاء — آخر " + rows.length + " طلب",
       });
 
-      const labels: any = {
-        new: "🆕 جديد",
-        in_progress: "🛠️ قيد التنفيذ",
-        completed: "✅ مكتمل"
-      };
+      for (const order of rows) {
+        const attachments = Array.isArray(order.attachments) &&
+            order.attachments.length
+          ? order.attachments.map((item: any) =>
+            typeof item === "string" ? item : JSON.stringify(item)
+          ).join("\n")
+          : "لا يوجد";
 
-      for (const x of a) {
-        const attachments =
-          Array.isArray(x.attachments) && x.attachments.length
-            ? x.attachments.map((v: any) => String(v)).join("\n")
-            : "لا توجد مرفقات";
+        const createdAt = order.created_at
+          ? new Date(order.created_at).toLocaleString("ar-EG", {
+            timeZone: "Africa/Cairo",
+          })
+          : "غير متوفر";
 
-        const msg =
-          "🛒 طلب رقم #" + x.id + "\n\n" +
-          "👤 الاسم: " + String(x.customer_name || "—") + "\n" +
-          "🎨 الخدمة: " + String(x.service || "—") + "\n" +
-          "📱 واتساب: " + String(x.whatsapp || "—") + "\n" +
-          "📝 التفاصيل: " + String(x.details || "—") + "\n" +
-          "📎 المرفقات: " + attachments + "\n\n" +
-          "📌 الحالة: " + (labels[x.status] || x.status || "جديد") + "\n" +
-          "🕒 التاريخ: " + String(x.created_at || "—");
+        const details =
+          "🛒 طلب رقم #" + order.id +
+          "\n\n👤 الاسم: " + String(order.customer_name || "—") +
+          "\n🎨 الخدمة: " + String(order.service || "—") +
+          "\n📱 واتساب: " + String(order.whatsapp || "—") +
+          "\n📝 التفاصيل: " + String(order.details || "—") +
+          "\n📎 المرفقات: " + attachments +
+          "\n\n📌 الحالة: " +
+          (orderStatuses[order.status] || String(order.status || "جديد")) +
+          "\n🕒 التاريخ: " + createdAt;
 
         await tg("sendMessage", {
-          chat_id: c,
-          text: msg,
+          chat_id: chat,
+          text: details,
           reply_markup: {
             inline_keyboard: [
               [
                 {
                   text: "🆕 جديد",
-                  callback_data: "orderstatus:" + x.id + ":new"
+                  callback_data: "orderstatus:" + order.id + ":new",
                 },
                 {
                   text: "🛠️ قيد التنفيذ",
-                  callback_data: "orderstatus:" + x.id + ":in_progress"
-                }
-              ],
-              [
+                  callback_data: "orderstatus:" + order.id + ":in_progress",
+                },
                 {
                   text: "✅ مكتمل",
-                  callback_data: "orderstatus:" + x.id + ":completed"
-                }
+                  callback_data: "orderstatus:" + order.id + ":completed",
+                },
               ],
-              [
-                {
-                  text: "🗑️ حذف الطلب",
-                  callback_data: "orderdel:" + x.id
-                }
-              ]
-            ]
-          }
+              [{
+                text: "🗑️ حذف الطلب",
+                callback_data: "orderdel:" + order.id,
+              }],
+            ],
+          },
         });
       }
 
@@ -498,270 +546,289 @@ Deno.serve(async (req) => {
     // =========================
     // الإحصائيات
     // =========================
-    if (t === "📊 الإحصائيات") {
-      const wr = await db(
-        "works?select=id,title,category,is_visible,created_at&order=created_at.desc"
+
+    if (text === "📊 الإحصائيات") {
+      const worksResponse = await db(
+        "works?select=id,title,category,is_visible,created_at&order=created_at.desc",
       );
 
-      const rr = await db(
-        "customer_reviews?select=id,name,review,rating,status,created_at&order=created_at.desc"
+      const reviewsResponse = await db(
+        "customer_reviews?select=id,name,review,rating,status,created_at&order=created_at.desc",
       );
 
-      const wa = await wr.json();
-      const ra = await rr.json();
+      const worksData = await worksResponse.json();
+      const reviewsData = await reviewsResponse.json();
 
-      const works = Array.isArray(wa) ? wa : [];
-      const reviews = Array.isArray(ra) ? ra : [];
+      const works = Array.isArray(worksData) ? worksData : [];
+      const reviews = Array.isArray(reviewsData) ? reviewsData : [];
 
-      const visible = works.filter((x: any) => x.is_visible).length;
-      const counts: any = {};
+      const visible = works.filter((work: any) => work.is_visible).length;
+      const pending = reviews.filter(
+        (review: any) => review.status === "pending",
+      ).length;
+      const approved = reviews.filter(
+        (review: any) => review.status === "approved",
+      ).length;
 
-      for (const x of works) {
-        const k = x.category || "بدون تصنيف";
-        counts[k] = (counts[k] || 0) + 1;
+      const ratings = reviews.filter(
+        (review: any) =>
+          review.status === "approved" &&
+          Number(review.rating) >= 1 &&
+          Number(review.rating) <= 5,
+      );
+
+      const average = ratings.length
+        ? (
+          ratings.reduce(
+            (sum: number, review: any) => sum + Number(review.rating),
+            0,
+          ) / ratings.length
+        ).toFixed(1)
+        : "—";
+
+      const categories: Record<string, number> = {};
+
+      for (const work of works) {
+        const category = work.category || "بدون تصنيف";
+        categories[category] = (categories[category] || 0) + 1;
       }
 
-      const catsText =
-        Object.entries(counts)
-          .sort((a: any, b: any) => b[1] - a[1])
-          .map(([k, v]) => "• " + k + ": " + v)
-          .join("\n") || "• مفيش أعمال";
+      const categoryText = Object.entries(categories)
+        .sort((a, b) => b[1] - a[1])
+        .map(([category, count]) => "• " + category + ": " + count)
+        .join("\n") || "• مفيش أعمال";
 
       const latestWork = works[0];
       const latestReview = reviews[0];
 
-      const pending = reviews.filter(
-        (x: any) => x.status === "pending"
-      ).length;
-
-      const approved = reviews.filter(
-        (x: any) => x.status === "approved"
-      ).length;
-
-      const ratings = reviews.filter(
-        (x: any) =>
-          x.status === "approved" &&
-          Number(x.rating) >= 1 &&
-          Number(x.rating) <= 5
-      );
-
-      const avg = ratings.length
-        ? (
-            ratings.reduce(
-              (n: number, x: any) => n + Number(x.rating),
-              0
-            ) / ratings.length
-          ).toFixed(1)
-        : "—";
-
-      const text =
+      const report =
         "📊 إحصائيات Hesham Portfolio\n\n" +
-        "🎨 إجمالي الأعمال: " + works.length + "\n" +
-        "🟢 الأعمال الظاهرة: " + visible + "\n" +
-        "💬 إجمالي التعليقات: " + reviews.length + "\n" +
-        "🕒 قيد المراجعة: " + pending + "\n" +
-        "✅ تعليقات معتمدة: " + approved + "\n" +
-        "⭐ متوسط التقييم المعتمد: " + avg + "/5 (" +
-        ratings.length + " تقييم)\n\n" +
-        "🏷️ توزيع الأعمال حسب التصنيف:\n" + catsText + "\n\n" +
-        "🆕 آخر عمل: " +
-        (latestWork ? latestWork.title : "مفيش أعمال") + "\n" +
-        "💬 آخر تعليق: " +
+        "🎨 إجمالي الأعمال: " + works.length +
+        "\n🟢 الأعمال الظاهرة: " + visible +
+        "\n💬 إجمالي التعليقات: " + reviews.length +
+        "\n🕒 قيد المراجعة: " + pending +
+        "\n✅ تعليقات معتمدة: " + approved +
+        "\n⭐ متوسط التقييم المعتمد: " + average + "/5 (" +
+        ratings.length + " تقييم)" +
+        "\n\n🏷️ توزيع الأعمال حسب التصنيف:\n" + categoryText +
+        "\n\n🆕 آخر عمل: " +
+        (latestWork ? latestWork.title : "مفيش أعمال") +
+        "\n💬 آخر تعليق: " +
         (latestReview
           ? latestReview.name + " — " +
             String(latestReview.review || "").slice(0, 120)
           : "مفيش تعليقات");
 
-      await menu(c, text);
+      await menu(chat, report);
       return new Response("OK");
     }
 
+    // =========================
     // تعديل عمل
-    if (t === "✏️ تعديل عمل") {
-      const r = await db("works?select=id,title&order=id.desc");
-      const a = await r.json();
+    // =========================
 
-      if (!a.length) {
-        await menu(c, "✏️ مفيش أعمال لتعديلها.");
+    if (text === "✏️ تعديل عمل") {
+      const response = await db("works?select=id,title&order=id.desc");
+      const rows = await response.json();
+
+      if (!Array.isArray(rows) || rows.length === 0) {
+        await menu(chat, "✏️ مفيش أعمال لتعديلها.");
         return new Response("OK");
       }
 
       await tg("sendMessage", {
-        chat_id: c,
+        chat_id: chat,
         text: "✏️ اختار العمل اللي عايز تعدله:",
         reply_markup: {
-          inline_keyboard: a.map((w: any) => [{
-            text: "✏️ #" + w.id + " — " + w.title,
-            callback_data: "edit:" + w.id
-          }])
-        }
+          inline_keyboard: rows.map((work: any) => [{
+            text: "✏️ #" + work.id + " — " + work.title,
+            callback_data: "edit:" + work.id,
+          }]),
+        },
       });
 
       return new Response("OK");
     }
 
+    // =========================
     // إضافة عمل
-    if (t === "➕ إضافة عمل") {
-      await set(c, "image");
+    // =========================
+
+    if (text === "➕ إضافة عمل") {
+      await set(chat, "image");
       await tg("sendMessage", {
-        chat_id: c,
-        text: "📸 ابعت صورة العمل دلوقتي."
+        chat_id: chat,
+        text: "📸 ابعت صورة العمل دلوقتي.",
       });
       return new Response("OK");
     }
 
+    // =========================
     // عرض الأعمال
-    if (t === "📋 عرض الأعمال") {
-      const r = await db(
-        "works?select=id,title,category,is_visible&order=id.desc"
+    // =========================
+
+    if (text === "📋 عرض الأعمال") {
+      const response = await db(
+        "works?select=id,title,category,is_visible&order=id.desc",
       );
 
-      const a = await r.json();
+      const rows = await response.json();
 
-      await menu(
-        c,
-        a.length
-          ? "📋 أعمالك:\n\n" +
-            a.map((w: any) =>
-              "#" + w.id + " — " + w.title + "\n🏷️ " +
-              (w.category || "بدون تصنيف") + " | " +
-              (w.is_visible ? "🟢 ظاهر" : "🔴 مخفي")
-            ).join("\n\n")
-          : "📋 مفيش أعمال مضافة لسه."
-      );
+      if (!Array.isArray(rows)) {
+        await menu(chat, "⚠️ مقدرتش أجيب الأعمال من قاعدة البيانات.");
+        return new Response("OK");
+      }
 
+      const report = rows.length
+        ? "📋 أعمالك:\n\n" + rows.map((work: any) =>
+          "#" + work.id + " — " + work.title +
+          "\n🏷️ " + (work.category || "بدون تصنيف") +
+          " | " + (work.is_visible ? "🟢 ظاهر" : "🔴 مخفي")
+        ).join("\n\n")
+        : "📋 مفيش أعمال مضافة لسه.";
+
+      await menu(chat, report);
       return new Response("OK");
     }
 
+    // =========================
     // حذف عمل
-    if (t === "🗑️ حذف عمل") {
-      const r = await db("works?select=id,title&order=id.desc");
-      const a = await r.json();
+    // =========================
 
-      if (!a.length) {
-        await menu(c, "🗑️ مفيش أعمال لحذفها.");
+    if (text === "🗑️ حذف عمل") {
+      const response = await db("works?select=id,title&order=id.desc");
+      const rows = await response.json();
+
+      if (!Array.isArray(rows) || rows.length === 0) {
+        await menu(chat, "🗑️ مفيش أعمال لحذفها.");
       } else {
         await tg("sendMessage", {
-          chat_id: c,
-          text: "🗑️ اختار العمل:",
+          chat_id: chat,
+          text: "🗑️ اختار العمل اللي عايز تحذفه:",
           reply_markup: {
-            inline_keyboard: a.map((w: any) => [{
-              text: "🗑️ #" + w.id + " — " + w.title,
-              callback_data: "del:" + w.id
-            }])
-          }
+            inline_keyboard: rows.map((work: any) => [{
+              text: "🗑️ #" + work.id + " — " + work.title,
+              callback_data: "del:" + work.id,
+            }]),
+          },
         });
       }
 
       return new Response("OK");
     }
 
+    // =========================
     // التعليقات قيد المراجعة
-    if (t === "🕒 تعليقات قيد المراجعة") {
-      const r = await db(
-        "customer_reviews?select=id,name,review,rating,status,created_at&status=eq.pending&order=created_at.asc"
+    // =========================
+
+    if (text === "🕒 تعليقات قيد المراجعة") {
+      const response = await db(
+        "customer_reviews?select=id,name,review,rating,status,created_at&status=eq.pending&order=created_at.asc",
       );
 
-      const a = await r.json();
+      const rows = await response.json();
 
-      if (!r.ok || !Array.isArray(a)) {
+      if (!response.ok || !Array.isArray(rows)) {
         await menu(
-          c,
-          "⚠️ مقدرتش أجيب التعليقات. راجع إعدادات قاعدة البيانات."
+          chat,
+          "⚠️ مقدرتش أجيب التعليقات. راجع إعدادات قاعدة البيانات.",
         );
         return new Response("OK");
       }
 
-      if (!a.length) {
-        await menu(c, "✅ مفيش تعليقات قيد المراجعة حاليًا.");
+      if (rows.length === 0) {
+        await menu(chat, "✅ مفيش تعليقات قيد المراجعة حاليًا.");
         return new Response("OK");
       }
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "🕒 التعليقات قيد المراجعة (" + a.length + ")"
+        chat_id: chat,
+        text: "💬 التعليقات قيد المراجعة (" + rows.length + ")",
       });
 
-      for (const x of a) {
+      for (const review of rows) {
         await tg("sendMessage", {
-          chat_id: c,
+          chat_id: chat,
           text:
-            "💬 تعليق #" + x.id + "\n\n" +
-            "👤 الاسم: " + String(x.name ?? "") + "\n" +
-            "⭐ التقييم: " + String(x.rating ?? 5) + "/5\n\n" +
-            "📝 التعليق:\n" + String(x.review ?? "") +
+            "💬 تعليق #" + review.id +
+            "\n\n👤 الاسم: " + String(review.name ?? "") +
+            "\n⭐ التقييم: " + String(review.rating ?? 5) + "/5" +
+            "\n\n📝 التعليق:\n" + String(review.review ?? "") +
             "\n\n🕒 الحالة: قيد المراجعة",
           reply_markup: {
             inline_keyboard: [
               [
                 {
                   text: "✅ موافقة ونشر",
-                  callback_data: "reviewapprove:" + x.id
+                  callback_data: "reviewapprove:" + review.id,
                 },
                 {
                   text: "🚫 رفض",
-                  callback_data: "reviewreject:" + x.id
-                }
+                  callback_data: "reviewreject:" + review.id,
+                },
               ],
               [{
                 text: "🗑️ حذف نهائي",
-                callback_data: "reviewdel:" + x.id
-              }]
-            ]
-          }
+                callback_data: "reviewdel:" + review.id,
+              }],
+            ],
+          },
         });
       }
 
       return new Response("OK");
     }
 
-    // التعليقات المنشورة على الموقع
-    if (t === "✅ تعليقات الموقع") {
-      const r = await db(
-        "customer_reviews?select=id,name,review,rating,status,created_at&status=eq.approved&order=created_at.desc"
+    // =========================
+    // التعليقات المنشورة
+    // =========================
+
+    if (text === "✅ تعليقات الموقع") {
+      const response = await db(
+        "customer_reviews?select=id,name,review,rating,status,created_at&status=eq.approved&order=created_at.desc",
       );
 
-      const a = await r.json();
+      const rows = await response.json();
 
-      if (!r.ok || !Array.isArray(a)) {
+      if (!response.ok || !Array.isArray(rows)) {
         await menu(
-          c,
-          "⚠️ مقدرتش أجيب التعليقات المنشورة. راجع إعدادات قاعدة البيانات."
+          chat,
+          "⚠️ مقدرتش أجيب التعليقات المنشورة. راجع إعدادات قاعدة البيانات.",
         );
         return new Response("OK");
       }
 
-      if (!a.length) {
-        await menu(c, "📭 مفيش تعليقات معتمدة على الموقع حاليًا.");
+      if (rows.length === 0) {
+        await menu(chat, "📭 مفيش تعليقات معتمدة على الموقع حاليًا.");
         return new Response("OK");
       }
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "✅ التعليقات المنشورة على الموقع (" + a.length + ")"
+        chat_id: chat,
+        text: "✅ التعليقات المنشورة على الموقع (" + rows.length + ")",
       });
 
-      for (const x of a) {
+      for (const review of rows) {
         await tg("sendMessage", {
-          chat_id: c,
+          chat_id: chat,
           text:
-            "✅ تعليق منشور #" + x.id + "\n\n" +
-            "👤 الاسم: " + String(x.name ?? "") + "\n" +
-            "⭐ التقييم: " + String(x.rating ?? 5) + "/5\n\n" +
-            "📝 التعليق:\n" + String(x.review ?? "") +
+            "✅ تعليق منشور #" + review.id +
+            "\n\n👤 الاسم: " + String(review.name ?? "") +
+            "\n⭐ التقييم: " + String(review.rating ?? 5) + "/5" +
+            "\n\n📝 التعليق:\n" + String(review.review ?? "") +
             "\n\n📢 الحالة: منشور على الموقع",
           reply_markup: {
             inline_keyboard: [
               [{
                 text: "🔄 إرجاع للمراجعة وإخفاء",
-                callback_data: "reviewpending:" + x.id
+                callback_data: "reviewpending:" + review.id,
               }],
               [{
                 text: "🗑️ حذف نهائي",
-                callback_data: "reviewdel:" + x.id
-              }]
-            ]
-          }
+                callback_data: "reviewdel:" + review.id,
+              }],
+            ],
+          },
         });
       }
 
@@ -769,147 +836,181 @@ Deno.serve(async (req) => {
     }
 
     // =========================
-    // خطوات إضافة وتعديل الأعمال
+    // متابعة جلسات إضافة/تعديل الأعمال
     // =========================
-    const s = await sess(c);
 
-    if (s.state.startsWith("edit_")) {
-      const f = s.state.slice(5);
-      const id = Number(s.payload.id);
+    const session = await sess(chat);
 
-      if (f === "image" && m?.photo?.length) {
-        const image_url = await upload(m.photo.at(-1).file_id);
+    if (String(session.state).startsWith("edit_")) {
+      const field = session.state.slice(5);
+      const id = Number(session.payload.id);
 
-        const q = await db("works?id=eq." + id, {
+      if (field === "image" && message?.photo?.length) {
+        const imageUrl = await upload(
+          message.photo[message.photo.length - 1].file_id,
+        );
+
+        const result = await db("works?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
-          body: JSON.stringify({ image_url })
+          body: JSON.stringify({ image_url: imageUrl }),
         });
 
-        if (!q.ok) throw Error(await q.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await clear(c);
-        await menu(c, "✅ تم تغيير الصورة بنجاح.");
+        await clear(chat);
+        await menu(chat, "✅ تم تغيير الصورة بنجاح.");
         return new Response("OK");
       }
 
-      if (t) {
-        if (f === "category" && !cats.includes(t)) {
+      if (text) {
+        if (field === "category" && !cats.includes(text)) {
+          await tg("sendMessage", {
+            chat_id: chat,
+            text: "⚠️ اختار تصنيف من الأزرار الموجودة.",
+            reply_markup: catKeyboard,
+          });
           return new Response("OK");
         }
 
-        const body: any = {};
+        const key = field === "title"
+          ? "title"
+          : field === "category"
+          ? "category"
+          : "description";
 
-        body[
-          f === "title"
-            ? "title"
-            : f === "category"
-            ? "category"
-            : "description"
-        ] = f === "description" && t === "لا" ? "" : t;
+        const value = field === "description" && text === "لا" ? "" : text;
+        const body: Record<string, string> = { [key]: value };
 
-        const q = await db("works?id=eq." + id, {
+        const result = await db("works?id=eq." + id, {
           method: "PATCH",
           headers: { ...H, Prefer: "return=minimal" },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         });
 
-        if (!q.ok) throw Error(await q.text());
+        if (!result.ok) {
+          throw new Error(await result.text());
+        }
 
-        await clear(c);
-        await menu(c, "✅ تم تعديل العمل #" + id + " بنجاح.");
+        await clear(chat);
+        await menu(chat, "✅ تم تعديل العمل #" + id + " بنجاح.");
         return new Response("OK");
       }
     }
 
-    if (s.state === "image" && m?.photo?.length) {
-      const image_url = await upload(m.photo.at(-1).file_id);
+    if (session.state === "image" && message?.photo?.length) {
+      const imageUrl = await upload(
+        message.photo[message.photo.length - 1].file_id,
+      );
 
-      await set(c, "title", { image_url });
+      await set(chat, "title", { image_url: imageUrl });
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "📝 تمام! الصورة وصلت. ابعت اسم العمل."
+        chat_id: chat,
+        text: "📝 تمام! الصورة وصلت. ابعت اسم العمل.",
       });
 
       return new Response("OK");
     }
 
-    if (s.state === "title" && t) {
-      await set(c, "category", { ...s.payload, title: t });
+    if (session.state === "title" && text) {
+      await set(chat, "category", {
+        ...session.payload,
+        title: text,
+      });
 
       await tg("sendMessage", {
-        chat_id: c,
+        chat_id: chat,
         text: "🏷️ اختار تصنيف العمل من الـ16 خدمة:",
-        reply_markup: catKeyboard
+        reply_markup: catKeyboard,
       });
 
       return new Response("OK");
     }
 
-    if (s.state === "category" && t && cats.includes(t)) {
-      await set(c, "description", { ...s.payload, category: t });
+    if (session.state === "category" && text) {
+      if (!cats.includes(text)) {
+        await tg("sendMessage", {
+          chat_id: chat,
+          text: "⚠️ اختار تصنيف من الأزرار الموجودة.",
+          reply_markup: catKeyboard,
+        });
+        return new Response("OK");
+      }
+
+      await set(chat, "description", {
+        ...session.payload,
+        category: text,
+      });
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "✍️ اكتب وصف قصير، أو اكتب لا."
+        chat_id: chat,
+        text: "✍️ اكتب وصف قصير، أو اكتب لا.",
       });
 
       return new Response("OK");
     }
 
-    if (s.state === "description" && t) {
-      const p = {
-        ...s.payload,
-        description: t === "لا" ? "" : t
+    if (session.state === "description" && text) {
+      const payload = {
+        ...session.payload,
+        description: text === "لا" ? "" : text,
       };
 
-      await set(c, "confirm", p);
+      await set(chat, "confirm", payload);
 
       await tg("sendMessage", {
-        chat_id: c,
-        text: "✅ البيانات جاهزة. اكتب حفظ أو إلغاء."
+        chat_id: chat,
+        text:
+          "✅ البيانات جاهزة.\n" +
+          "الاسم: " + payload.title + "\n" +
+          "التصنيف: " + payload.category + "\n" +
+          "الوصف: " + (payload.description || "بدون وصف") +
+          "\n\nاكتب حفظ أو إلغاء.",
       });
 
       return new Response("OK");
     }
 
-    if (s.state === "confirm" && t === "حفظ") {
-      const p = s.payload;
+    if (session.state === "confirm" && text === "حفظ") {
+      const payload = session.payload;
 
-      const r = await db("works", {
+      const result = await db("works", {
         method: "POST",
         headers: { ...H, Prefer: "return=minimal" },
         body: JSON.stringify({
-          title: p.title,
-          category: p.category,
-          description: p.description || "",
-          image_url: p.image_url,
+          title: payload.title,
+          category: payload.category,
+          description: payload.description || "",
+          image_url: payload.image_url,
           is_visible: true,
           is_featured: false,
-          sort_order: 0
-        })
+          sort_order: 0,
+        }),
       });
 
-      if (!r.ok) throw Error(await r.text());
+      if (!result.ok) {
+        throw new Error(await result.text());
+      }
 
-      await clear(c);
-      await menu(c, "🎉 تمت إضافة العمل بنجاح!");
+      await clear(chat);
+      await menu(chat, "🎉 تمت إضافة العمل بنجاح!");
       return new Response("OK");
     }
 
-    if (t === "إلغاء") {
-      await clear(c);
-      await menu(c, "❌ تم الإلغاء.");
+    if (text === "إلغاء") {
+      await clear(chat);
+      await menu(chat, "❌ تم الإلغاء.");
       return new Response("OK");
     }
-
-  } catch (e) {
-    console.error("Telegram bot error:", e);
+  } catch (error) {
+    console.error("Telegram bot error:", error);
 
     await tg("sendMessage", {
-      chat_id: c,
-      text: "⚠️ حصل خطأ في البوت. جرّب تاني."
+      chat_id: chat,
+      text: "⚠️ حصل خطأ في البوت. جرّب تاني.",
     }).catch(() => {});
   }
 
