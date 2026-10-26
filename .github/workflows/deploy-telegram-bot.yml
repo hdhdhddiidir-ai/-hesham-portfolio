@@ -2,6 +2,12 @@ name: Deploy Telegram Bot to Supabase
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/functions/telegram-bot/**"
+      - ".github/workflows/deploy-telegram-bot.yml"
 
 jobs:
   deploy:
