@@ -156,6 +156,110 @@ const orderStatuses: Record<string, string> = {
   completed: "✅ مكتمل",
 };
 
+const orderFilters: Record<string, string> = {
+  all: "📥 كل الطلبات",
+  new: "🆕 الطلبات الجديدة",
+  accepted: "✅ الطلبات المقبولة",
+  in_progress: "🛠️ قيد التنفيذ",
+  completed: "🏁 الطلبات المكتملة",
+};
+
+async function showOrderMenu(chat: number) {
+  await tg("sendMessage", {
+    chat_id: chat,
+    text: "🛒 إدارة طلبات العملاء\n\nاختار القسم اللي عايز تشوفه:",
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: orderFilters.all, callback_data: "orderlist:all" }],
+        [
+          { text: orderFilters.new, callback_data: "orderlist:new" },
+          { text: orderFilters.accepted, callback_data: "orderlist:accepted" },
+        ],
+        [
+          { text: orderFilters.in_progress, callback_data: "orderlist:in_progress" },
+          { text: orderFilters.completed, callback_data: "orderlist:completed" },
+        ],
+        [{ text: "🏠 القائمة الرئيسية", callback_data: "ordermenu:home" }],
+      ],
+    },
+  });
+}
+
+async function showOrders(chat: number, status: string) {
+  const filter = status === "all" ? "" : "&status=eq." + encodeURIComponent(status);
+  const response = await db(
+    "customer_orders?select=id,customer_name,service,details,whatsapp,status,created_at,attachments&order=created_at.desc&limit=100" + filter,
+  );
+  const rows = await response.json();
+
+  if (!response.ok || !Array.isArray(rows)) {
+    await tg("sendMessage", {
+      chat_id: chat,
+      text: "⚠️ مش قادر أجيب الطلبات. راجع جدول customer_orders وصلاحيات قاعدة البيانات.",
+    });
+    return;
+  }
+
+  if (rows.length === 0) {
+    await tg("sendMessage", {
+      chat_id: chat,
+      text: "📭 مفيش طلبات في قسم: " + (orderFilters[status] || "الطلبات"),
+      reply_markup: {
+        inline_keyboard: [[{ text: "↩️ رجوع لأقسام الطلبات", callback_data: "ordermenu:list" }]],
+      },
+    });
+    return;
+  }
+
+  await tg("sendMessage", {
+    chat_id: chat,
+    text: (orderFilters[status] || "📥 الطلبات") + " — عدد الطلبات: " + rows.length,
+    reply_markup: {
+      inline_keyboard: [[{ text: "↩️ رجوع لأقسام الطلبات", callback_data: "ordermenu:list" }]],
+    },
+  });
+
+  for (const order of rows) {
+    const attachments = Array.isArray(order.attachments) && order.attachments.length
+      ? order.attachments.map((item: any) => typeof item === "string" ? item : JSON.stringify(item)).join("\n")
+      : "لا يوجد";
+    const createdAt = order.created_at
+      ? new Date(order.created_at).toLocaleString("ar-EG", { timeZone: "Africa/Cairo" })
+      : "غير متوفر";
+    const statusLabel = order.status === "accepted"
+      ? orderFilters.accepted
+      : (orderStatuses[order.status] || String(order.status || "جديد"));
+    const details =
+      "🛒 طلب رقم #" + order.id +
+      "\n\n👤 الاسم: " + String(order.customer_name || "—") +
+      "\n🎨 الخدمة: " + String(order.service || "—") +
+      "\n📱 واتساب: " + String(order.whatsapp || "—") +
+      "\n📝 التفاصيل: " + String(order.details || "—") +
+      "\n📎 المرفقات: " + attachments +
+      "\n\n📌 الحالة: " + statusLabel +
+      "\n🕒 التاريخ: " + createdAt;
+
+    await tg("sendMessage", {
+      chat_id: chat,
+      text: details,
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "🆕 جديد", callback_data: "orderstatus:" + order.id + ":new" },
+            { text: "✅ مقبول", callback_data: "orderstatus:" + order.id + ":accepted" },
+          ],
+          [
+            { text: "🛠️ قيد التنفيذ", callback_data: "orderstatus:" + order.id + ":in_progress" },
+            { text: "🏁 مكتمل", callback_data: "orderstatus:" + order.id + ":completed" },
+          ],
+          [{ text: "🗑️ حذف الطلب", callback_data: "orderdel:" + order.id }],
+          [{ text: "↩️ أقسام الطلبات", callback_data: "ordermenu:list" }],
+        ],
+      },
+    });
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "GET") {
     const result = await tg("setWebhook", {
@@ -325,13 +429,27 @@ Deno.serve(async (req) => {
         await menu(chat, "🗑️ تم حذف العمل #" + id + " بنجاح.");
       }
 
+      // التنقل داخل أقسام طلبات العملاء
+      if (data === "ordermenu:list") {
+        await showOrderMenu(chat);
+        return new Response("OK");
+      } else if (data === "ordermenu:home") {
+        await menu(chat);
+        return new Response("OK");
+      } else if (data.startsWith("orderlist:")) {
+        const status = data.slice("orderlist:".length);
+        if (!(status in orderFilters)) return new Response("OK");
+        await showOrders(chat, status);
+        return new Response("OK");
+      }
+
       // تحديث حالة طلب عميل
       else if (data.startsWith("orderstatus:")) {
         const parts = data.split(":");
         const id = Number(parts[1]);
         const status = parts[2];
 
-        if (!orderStatuses[status]) {
+        if (!(status in orderStatuses) && status !== "accepted") {
           return new Response("OK");
         }
 
@@ -348,11 +466,14 @@ Deno.serve(async (req) => {
           throw new Error(await result.text());
         }
 
-        await menu(
-          chat,
-          "✅ تم تحديث حالة الطلب #" + id + " إلى " +
-            orderStatuses[status],
-        );
+        await tg("sendMessage", {
+          chat_id: chat,
+          text: "✅ تم تحديث حالة الطلب #" + id + " إلى " +
+            (status === "accepted" ? orderFilters.accepted : orderStatuses[status]),
+          reply_markup: {
+            inline_keyboard: [[{ text: "↩️ أقسام الطلبات", callback_data: "ordermenu:list" }]],
+          },
+        });
       }
 
       // حذف طلب عميل
@@ -462,84 +583,7 @@ Deno.serve(async (req) => {
     // =========================
 
     if (text === "🛒 طلبات العملاء") {
-      const response = await db(
-        "customer_orders?select=id,customer_name,service,details,whatsapp,status,created_at,attachments&order=created_at.desc&limit=30",
-      );
-
-      const rows = await response.json();
-
-      if (!response.ok || !Array.isArray(rows)) {
-        console.error("Orders query failed:", rows);
-        await menu(
-          chat,
-          "⚠️ مش قادر أجيب الطلبات. راجع جدول customer_orders وصلاحيات قاعدة البيانات.",
-        );
-        return new Response("OK");
-      }
-
-      if (rows.length === 0) {
-        await menu(chat, "🛒 مفيش طلبات عملاء لسه.");
-        return new Response("OK");
-      }
-
-      await tg("sendMessage", {
-        chat_id: chat,
-        text: "🛒 طلبات العملاء — آخر " + rows.length + " طلب",
-      });
-
-      for (const order of rows) {
-        const attachments = Array.isArray(order.attachments) &&
-            order.attachments.length
-          ? order.attachments.map((item: any) =>
-            typeof item === "string" ? item : JSON.stringify(item)
-          ).join("\n")
-          : "لا يوجد";
-
-        const createdAt = order.created_at
-          ? new Date(order.created_at).toLocaleString("ar-EG", {
-            timeZone: "Africa/Cairo",
-          })
-          : "غير متوفر";
-
-        const details =
-          "🛒 طلب رقم #" + order.id +
-          "\n\n👤 الاسم: " + String(order.customer_name || "—") +
-          "\n🎨 الخدمة: " + String(order.service || "—") +
-          "\n📱 واتساب: " + String(order.whatsapp || "—") +
-          "\n📝 التفاصيل: " + String(order.details || "—") +
-          "\n📎 المرفقات: " + attachments +
-          "\n\n📌 الحالة: " +
-          (orderStatuses[order.status] || String(order.status || "جديد")) +
-          "\n🕒 التاريخ: " + createdAt;
-
-        await tg("sendMessage", {
-          chat_id: chat,
-          text: details,
-          reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: "🆕 جديد",
-                  callback_data: "orderstatus:" + order.id + ":new",
-                },
-                {
-                  text: "🛠️ قيد التنفيذ",
-                  callback_data: "orderstatus:" + order.id + ":in_progress",
-                },
-                {
-                  text: "✅ مكتمل",
-                  callback_data: "orderstatus:" + order.id + ":completed",
-                },
-              ],
-              [{
-                text: "🗑️ حذف الطلب",
-                callback_data: "orderdel:" + order.id,
-              }],
-            ],
-          },
-        });
-      }
-
+      await showOrderMenu(chat);
       return new Response("OK");
     }
 
