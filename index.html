@@ -1618,6 +1618,7 @@ function buildMenu() {
 function closeMenu() { menu.classList.remove('open'); themeBtn.setAttribute('aria-expanded', 'false'); }
 themeBtn.addEventListener('click', function (e) {
   e.stopPropagation();
+  closeSettingsMenu();
   var open = !menu.classList.contains('open');
   menu.classList.toggle('open', open); themeBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   if (open) { var c = menu.querySelector('[aria-checked=true]'); if (c) c.focus(); }
