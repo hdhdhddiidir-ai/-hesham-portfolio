@@ -720,7 +720,7 @@ html.maintenance-active #maintenancePage{display:flex}
 <a href="#orders" id="hhoNav">اطلب تصميم</a>
 <a href="#contact" data-i18n="navContact">تواصل معي</a>
 </nav>
-<div class="hh-nav-end"><button type="button" class="hh-lang" id="hhLang" data-i18n="switchLabel" data-i18n-aria="langAria" aria-label="Switch to English">EN</button></div>
+<div class="hh-nav-end"><button type="button" class="hh-lang hh-theme-toggle" id="hhThemeToggle" aria-label="تبديل الوضع الداكن والفاتح" title="الوضع الداكن / الوضع الفاتح">☀️</button></div>
 </div>
 </header>
 
@@ -920,36 +920,7 @@ function t(key, vars) {
   return s;
 }
 
-/* Translate live project descriptions for English visitors and cache results locally. */
-const workTranslationCache = new Map();
-async function translateWorkDescription(value) {
-  const original = String(value || '').trim();
-  if (!original || lang !== 'en' || !/[\u0600-\u06FF]/.test(original)) return original;
-  if (workTranslationCache.has(original)) return workTranslationCache.get(original);
-  try {
-    const stored = localStorage.getItem('hh_work_en:' + original);
-    if (stored) { workTranslationCache.set(original, stored); return stored; }
-  } catch (e) {}
-  const task = (async function () {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=' + encodeURIComponent(original);
-    const response = await fetch(url, { method: 'GET', mode: 'cors' });
-    if (!response.ok) throw new Error('Translation request failed');
-    const data = await response.json();
-    const translated = Array.isArray(data[0]) ? data[0].map(part => part[0] || '').join('').trim() : '';
-    if (!translated) throw new Error('Empty translation');
-    try { localStorage.setItem('hh_work_en:' + original, translated); } catch (e) {}
-    return translated;
-  })();
-  workTranslationCache.set(original, task);
-  try {
-    const result = await task;
-    workTranslationCache.set(original, result);
-    return result;
-  } catch (e) {
-    workTranslationCache.delete(original);
-    return original;
-  }
-}
+/* Project descriptions stay in their original language; no automatic translation requests. */
 function applyLang() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -2296,12 +2267,39 @@ updateUI();
 @media(prefers-reduced-motion:reduce){.hhx-modal,.hhx-modal-panel,.hhx-success-mark,.hhx-success-mark svg{animation:none!important}.hhx-success-mark svg{stroke-dashoffset:0}}
 /* Keep project descriptions out of the image cards; they remain available via the description modal. */
 .work-card .live-description{display:none!important}
+/* Accessible light theme, preserving the gold accent and existing layout. */
+html.hh-light-theme,html.hh-light-theme body{background:#f6f4ee!important;color:#222!important;color-scheme:light}
+html.hh-light-theme body{background-image:none!important}
+html.hh-light-theme #hhSky{opacity:.12}
+html.hh-light-theme .top-nav,html.hh-light-theme #topNav{background:rgba(250,248,242,.94)!important;border-color:#b99a4b55!important}
+html.hh-light-theme .top-logo,html.hh-light-theme .top-links a{color:#28251d!important}
+html.hh-light-theme .hh-lang{background:#fffdf7!important;color:#725710!important;border-color:#b99a4b88!important}
+html.hh-light-theme .page-section,html.hh-light-theme section,html.hh-light-theme footer{color:#28251d}
+html.hh-light-theme .work-card,html.hh-light-theme .service-card,html.hh-light-theme .review-card,html.hh-light-theme .contact-card,html.hh-light-theme .about-card,html.hh-light-theme .hhx-modal-panel,html.hh-light-theme .hhx-menu,html.hh-light-theme .hhx-settings-menu{background:linear-gradient(145deg,#fffdf8,#f0ede3)!important;color:#28251d!important;border-color:#b99a4b55!important;box-shadow:0 12px 35px #6c572018!important}
+html.hh-light-theme h1,html.hh-light-theme h2,html.hh-light-theme h3,html.hh-light-theme h4,html.hh-light-theme p,html.hh-light-theme li,html.hh-light-theme label,html.hh-light-theme .hhx-description-copy,html.hh-light-theme .hhx-modal-message{color:#28251d}
+html.hh-light-theme .hhx-modal{background:rgba(40,37,29,.48)!important}
+html.hh-light-theme .hhx-modal-subtitle{color:#6c6658}
+html.hh-light-theme input,html.hh-light-theme textarea,html.hh-light-theme select{background:#fffdf8!important;color:#28251d!important;border-color:#b99a4b66!important}
+html.hh-light-theme .hhx-modal-close{background:#f6f4ee;color:#28251d;border-color:#b99a4b55}
+html.hh-light-theme .hhx-description-button,html.hh-light-theme #hhx-review-open{background:#b99a4b12;color:#755b16;border-color:#b99a4b88}
+html.hh-light-theme .top-links a.active-nav{color:#9a741b!important}
+
 </style>
 <script id="hhx-premium-modals-and-inline-arrows">
 (function(){
 'use strict';
 function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn()}
 ready(function(){
+  var themeToggle=document.getElementById('hhThemeToggle');
+  function applyTheme(mode){
+    var light=mode==='light';
+    document.documentElement.classList.toggle('hh-light-theme',light);
+    if(themeToggle){themeToggle.textContent=light?'🌙':'☀️';themeToggle.title=light?'تفعيل الوضع الداكن':'تفعيل الوضع الفاتح';themeToggle.setAttribute('aria-label',themeToggle.title);}
+    try{localStorage.setItem('hh_site_theme',light?'light':'dark')}catch(e){}
+  }
+  var savedTheme='dark';try{savedTheme=localStorage.getItem('hh_site_theme')||'dark'}catch(e){}
+  applyTheme(savedTheme);
+  if(themeToggle)themeToggle.addEventListener('click',function(){applyTheme(document.documentElement.classList.contains('hh-light-theme')?'dark':'light')});
   var nav=document.getElementById('hhx-vertical-nav');
   var navEnd=document.querySelector('.hh-nav-end');
   if(nav&&navEnd){navEnd.insertBefore(nav,navEnd.firstChild);nav.setAttribute('aria-label','التنقل بين أقسام الموقع');}
