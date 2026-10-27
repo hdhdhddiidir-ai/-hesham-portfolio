@@ -638,10 +638,28 @@ Deno.serve(async (req) => {
         });
       }
     }
+    if (!T || !S) {
+      return new Response(JSON.stringify({
+        ok: false,
+        error: "Telegram bot token or webhook secret is not configured",
+      }), {
+        status: 503,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      });
+    }
+
     const result = await tg("setWebhook", {
       url: U + "/functions/v1/telegram-bot",
+      secret_token: S,
       drop_pending_updates: false,
     });
+
+    if (!result?.ok) {
+      return new Response(JSON.stringify({ ok: false, error: "Telegram webhook setup failed" }), {
+        status: 502,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      });
+    }
 
     return new Response(JSON.stringify({ ok: true, webhook: result }), {
       headers: { "Content-Type": "application/json" },
@@ -650,6 +668,21 @@ Deno.serve(async (req) => {
 
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
+  }
+
+  // Telegram must prove this request came from the configured webhook.
+  // Keep public website actions above this guard; only bot updates require this header.
+  if (!S) {
+    return new Response("Telegram webhook secret is not configured", {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+  if (req.headers.get("x-telegram-bot-api-secret-token") !== S) {
+    return new Response("Unauthorized", {
+      status: 401,
+      headers: { "Cache-Control": "no-store" },
+    });
   }
 
   let update: any;
