@@ -1104,8 +1104,11 @@ function activePortfolioFilter() {
 function applyPortfolioFilters() {
   const search = (document.getElementById('portfolioSearch')?.value || '').trim().toLocaleLowerCase();
   const filter = activePortfolioFilter();
+  const grid = document.getElementById('portfolioGrid');
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll('.work-card'));
   let visible = 0;
-  document.querySelectorAll('#portfolioGrid .work-card').forEach(card => {
+  cards.forEach(card => {
     const matchesCategory = filter === 'all' || card.dataset.category === filter;
     const matchesSearch = !search || (card.dataset.searchText || '').includes(search);
     const show = matchesCategory && matchesSearch;
@@ -1113,11 +1116,40 @@ function applyPortfolioFilters() {
     if (show) visible++;
   });
   const status = document.getElementById('portfolioFilterStatus');
+  const english = lang === 'en';
   if (status) {
-    const english = lang === 'en';
     status.textContent = english
       ? (visible === 1 ? '1 project shown' : visible + ' projects shown')
       : 'عدد المشاريع المعروضة: ' + visible;
+  }
+  let empty = grid.querySelector('.portfolio-no-results');
+  if (visible === 0 && cards.length > 0) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.className = 'review-empty grid-state portfolio-no-results';
+      empty.style.gridColumn = '1 / -1';
+      empty.style.padding = '28px 18px';
+      const message = document.createElement('p');
+      message.className = 'portfolio-empty-message';
+      const reset = document.createElement('button');
+      reset.type = 'button';
+      reset.className = 'portfolio-filter portfolio-reset';
+      reset.addEventListener('click', () => {
+        const input = document.getElementById('portfolioSearch');
+        if (input) input.value = '';
+        const all = document.querySelector('#portfolioFilterList [data-work-filter="all"]');
+        if (all) all.click();
+        else applyPortfolioFilters();
+      });
+      empty.append(message, reset);
+      grid.appendChild(empty);
+    }
+    const message = empty.querySelector('.portfolio-empty-message');
+    const reset = empty.querySelector('.portfolio-reset');
+    if (message) message.textContent = english ? 'No projects match your search. Try another keyword or category.' : 'مفيش مشاريع مطابقة للبحث. جرّب كلمة تانية أو اختار تصنيف مختلف.';
+    if (reset) reset.textContent = english ? 'Clear filters' : 'مسح البحث والتصفية';
+  } else if (empty) {
+    empty.remove();
   }
 }
 function syncPortfolioFilterLanguage() {
