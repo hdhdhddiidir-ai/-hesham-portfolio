@@ -2326,5 +2326,59 @@ ready(function(){
 })();
 </script>
 
+<style id="hhx-project-description-modal-style">
+.hhx-project-description-trigger{display:inline-flex;align-items:center;justify-content:center;gap:7px;margin:10px 8px 0 0;padding:9px 13px;border:1px solid #f5d76e70;border-radius:10px;background:#080808e8;color:#f5d76e;font:700 13px Cairo,sans-serif;cursor:pointer;transition:background .25s,border-color .25s,transform .25s;position:relative;z-index:4}
+.hhx-project-description-trigger:hover{background:#f5d76e18;border-color:#f5d76e;transform:translateY(-1px)}
+.hhx-project-description-overlay{position:fixed;inset:0;z-index:10050;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px)}
+.hhx-project-description-overlay.is-open{display:grid;animation:hhxFadeIn .22s ease both}
+.hhx-project-description-panel{position:relative;width:min(680px,96vw);max-height:min(82vh,780px);overflow:auto;padding:clamp(22px,5vw,38px);border:1px solid #f5d76e70;border-radius:20px;background:linear-gradient(145deg,#151515,#070707 75%);box-shadow:0 24px 90px #000b,0 0 35px #f5d76e0b;animation:hhxModalRise .28s cubic-bezier(.2,.8,.2,1) both;text-align:right}
+.hhx-project-description-close{position:absolute;top:14px;left:14px;width:38px;height:38px;border:1px solid #ffffff25;border-radius:50%;background:#ffffff08;color:#fff;font-size:23px;cursor:pointer}
+.hhx-project-description-kicker{margin:0 0 8px;color:#f5d76e;font-size:12px;letter-spacing:1.5px}
+.hhx-project-description-heading{margin:0 45px 18px 0;color:#f5d76e;font-size:clamp(21px,4vw,29px);line-height:1.6}
+.hhx-project-description-text{color:#f0f0f0;font-size:clamp(16px,2.8vw,20px);line-height:2.15;white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:plaintext}
+.hhx-project-description-text:empty:before{content:'لا يوجد وصف إضافي لهذا المشروع حاليًا.';color:#999}
+@media(prefers-reduced-motion:reduce){.hhx-project-description-overlay,.hhx-project-description-panel{animation:none!important}}
+</style>
+<script id="hhx-project-description-modal">
+(function(){
+'use strict';
+function init(){
+ if(document.getElementById('hhxProjectDescriptionOverlay'))return;
+ var overlay=document.createElement('div');
+ overlay.id='hhxProjectDescriptionOverlay';overlay.className='hhx-project-description-overlay';
+ overlay.setAttribute('aria-hidden','true');
+ overlay.innerHTML='<section class="hhx-project-description-panel" role="dialog" aria-modal="true" aria-labelledby="hhxProjectDescriptionHeading" dir="auto"><button type="button" class="hhx-project-description-close" aria-label="إغلاق الوصف">×</button><p class="hhx-project-description-kicker">تفاصيل المشروع</p><h2 class="hhx-project-description-heading" id="hhxProjectDescriptionHeading"></h2><div class="hhx-project-description-text" id="hhxProjectDescriptionText"></div></section>';
+ document.body.appendChild(overlay);
+ var heading=overlay.querySelector('#hhxProjectDescriptionHeading'),body=overlay.querySelector('#hhxProjectDescriptionText'),close=overlay.querySelector('.hhx-project-description-close'),lastTrigger=null;
+ function hide(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastTrigger&&document.contains(lastTrigger))lastTrigger.focus();}
+ function show(card,trigger){
+   var title=card.querySelector('.work-meta h3')?.textContent?.trim()||'وصف المشروع';
+   var desc=card.querySelector('.live-description')?.textContent?.trim()||'لا يوجد وصف إضافي لهذا المشروع حاليًا.';
+   heading.textContent=title;body.textContent=desc;lastTrigger=trigger;
+   overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';close.focus();
+ }
+ function addButton(card){
+   if(!card||card.querySelector('.hhx-project-description-trigger'))return;
+   var meta=card.querySelector('.work-meta');if(!meta)return;
+   var btn=document.createElement('button');btn.type='button';btn.className='hhx-project-description-trigger';btn.textContent='توضيح الوصف';btn.setAttribute('aria-label','توضيح وصف '+(card.querySelector('h3')?.textContent?.trim()||'المشروع'));
+   meta.appendChild(btn);
+ }
+ document.querySelectorAll('.work-card').forEach(addButton);
+ var grid=document.querySelector('.portfolio-grid');
+ if(grid)new MutationObserver(function(records){records.forEach(function(record){record.addedNodes.forEach(function(node){if(node.nodeType!==1)return;if(node.matches&&node.matches('.work-card'))addButton(node);if(node.querySelectorAll)node.querySelectorAll('.work-card').forEach(addButton);});});}).observe(grid,{childList:true,subtree:true});
+ // Capture this button before the card's regular click handler opens the image viewer.
+ document.addEventListener('click',function(e){
+   var btn=e.target.closest('.hhx-project-description-trigger');if(!btn)return;
+   e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+   show(btn.closest('.work-card'),btn);
+ },true);
+ close.addEventListener('click',hide);
+ overlay.addEventListener('click',function(e){if(e.target===overlay)hide();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('is-open'))hide();});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
