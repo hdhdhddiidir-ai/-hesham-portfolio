@@ -1576,9 +1576,21 @@ function uploadFiles(files) {
   return Promise.all(files.map(function (f, i) {
     var safe = f.name.replace(/[^\w.\-]+/g, '_').slice(-80);
     var path = 'orders/' + stamp + '/' + i + '-' + safe;
-    return fetch(SUPABASE_URL + '/storage/v1/object/' + ORDERS_BUCKET + '/' + path, {
-      method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': f.type || 'application/octet-stream', 'x-upsert': 'false' }, body: f
-    }).then(function (r) { return r.ok ? ORDERS_BUCKET + '/' + path : null; }).catch(function () { return null; });
+    var data = new FormData();
+    data.append('file', f, safe);
+    return fetch(SUPABASE_URL + '/functions/v1/telegram-bot?action=upload-order-attachment', {
+      method: 'POST',
+      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY },
+      body: data
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (body) {
+        if (!r.ok || !body.path) throw new Error(body.error || ('Upload failed: ' + r.status));
+        return body.path;
+      });
+    }).catch(function (err) {
+      try { console.warn('Attachment upload failed:', f.name, err && err.message); } catch (x) {}
+      return null;
+    });
   })).then(function (res) {
     var failed = res.some(function (x) { return !x; });
     var list = res.map(function (x, i) { return x || ('[not uploaded] ' + files[i].name); });
