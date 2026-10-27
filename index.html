@@ -787,6 +787,7 @@ html.maintenance-active #maintenancePage{display:flex}
 <button type="button" class="portfolio-filter" data-work-filter="business-design" aria-pressed="false">تصميمات شركات</button>
 <button type="button" class="portfolio-filter" data-work-filter="social-posts" aria-pressed="false">بوستات وستوري</button>
 <button type="button" class="portfolio-filter" data-work-filter="digital-design" aria-pressed="false">تصميمات رقمية</button>
+<button type="button" class="portfolio-filter" data-work-filter="other" aria-pressed="false">تصنيفات أخرى</button>
 </div>
 <p class="portfolio-filter-status" id="portfolioFilterStatus" aria-live="polite"></p>
 </div>
@@ -1216,7 +1217,7 @@ function syncPortfolioFilterLanguage() {
   const english = lang === 'en';
   const labels = english
     ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
-    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
+    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', other:'تصنيفات أخرى', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
   document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
     button.textContent = labels[button.dataset.workFilter] || labels.all;
   });
