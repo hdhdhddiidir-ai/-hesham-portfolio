@@ -1223,7 +1223,10 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && qp
 var layer = document.getElementById('hhMeteorLayer');
 var INTERVAL = params.get('meteor') === 'fast' ? 9000 : 90000;
 var meteorTimer = null, flying = false;
-function startMeteors() { if (meteorTimer) return; meteorTimer = setInterval(launchMeteor, INTERVAL); }
+function startMeteors() { if (document.documentElement.classList.contains('hh-no-meteors') || meteorTimer) return; meteorTimer = setInterval(launchMeteor, INTERVAL); }
+function stopMeteors() { if (meteorTimer) { clearInterval(meteorTimer); meteorTimer = null; } if (layer) layer.querySelectorAll('.hh-meteor,.hh-spark').forEach(function(el){el.remove();}); flying = false; }
+window.HH_startMeteors = startMeteors;
+window.HH_stopMeteors = stopMeteors;
 function spark(x, y) {
   var n = 10;
   for (var i = 0; i < n; i++) {
@@ -1236,7 +1239,7 @@ function spark(x, y) {
   }
 }
 function launchMeteor() {
-  if (flying || document.hidden) return;
+  if (flying || document.hidden || document.documentElement.classList.contains('hh-no-meteors')) return;
   flying = true;
   var m = document.createElement('div'); m.className = 'hh-meteor';
   m.innerHTML = '<span class="hh-meteor-head"><span class="hh-meteor-tail"></span></span><span class="hh-meteor-label"></span><button type="button" class="hh-meteor-btn"></button>';
@@ -1413,7 +1416,7 @@ function applyTexts() {
   document.getElementById('hhxTour').setAttribute('aria-label', T('tourAria'));
   settingsBtn.setAttribute('aria-label',T('settingsAria'));
   document.getElementById('hhtX').setAttribute('aria-label', T('tDone'));
-  fillServices(); buildMenu(); if (tourOn) renderStep();
+  fillServices(); buildMenu(); buildSettingsMenu(); if (tourOn) renderStep();
 }
 
 var form = document.getElementById('hhoForm');
