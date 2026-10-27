@@ -458,12 +458,12 @@ body:has(#home.active-page) .floating-wa{display:flex}
 
 /* header end: language + portrait (no text) */
 #topNav .top-nav-inner::after{display:none!important}
-.hh-nav-end{display:flex;align-items:center;gap:12px;justify-self:end;margin-inline-start:auto;flex:none}
-.hh-avatar{width:50px;height:50px;flex:none}
-.hh-avatar img{width:46px;height:46px}
+.hh-nav-end{display:flex;align-items:center;justify-content:center;gap:12px;justify-self:end;align-self:center;margin:0;flex:none;min-width:0;position:relative;z-index:2}
+.hh-avatar{display:flex;align-items:center;justify-content:center;width:58px;height:58px;flex:none;margin:0;line-height:0}
+.hh-avatar img{width:50px;height:50px;max-width:none;max-height:none}
 .hh-lang{min-width:42px;height:34px;padding:0 10px;border-radius:20px;border:1px solid #f5d76e66;background:#0a0a0acc;color:#f5d76e;font:700 13px Montserrat,Cairo,sans-serif;cursor:pointer;transition:.25s}
 .hh-lang:hover,.hh-lang:focus-visible{background:#f5d76e;color:#111;box-shadow:0 0 16px #f5d76e88}
-@media(max-width:900px){.hh-nav-end{gap:8px}.hh-avatar{width:42px;height:42px}.hh-avatar img{width:38px;height:38px}.hh-lang{height:30px;min-width:36px;font-size:12px}
+@media(max-width:900px){.hh-nav-end{gap:8px;justify-self:end}.hh-avatar{width:46px;height:46px}.hh-avatar img{width:40px;height:40px}.hh-lang{height:30px;min-width:36px;font-size:12px}
   html body #home.page-section,html body #about.page-section,html body #work.page-section,html body #services.page-section,html body #reviews.page-section,html body #contact.page-section{padding-top:135px!important}
   html{scroll-padding-top:120px}}
 
@@ -520,27 +520,7 @@ body{overflow-x:hidden}
 @media(max-width:700px){html body .page-section .wrap{padding-inline:18px!important;box-sizing:border-box;max-width:100%}}
 
 </style>
-<style id="hh-profile-translation-fix">
-.hh-profile-card{position:relative;display:block;width:min(100%,390px);height:clamp(390px,48vw,520px);padding:0;border:1px solid #f5d76e55;border-radius:28px;overflow:hidden;background:#090909;cursor:zoom-in;box-shadow:0 28px 85px #000b,0 0 42px #f5d76e0b;isolation:isolate;transition:transform .3s,border-color .3s,box-shadow .3s}
-.hh-profile-card:hover{transform:translateY(-5px);border-color:#f5d76eaa;box-shadow:0 32px 95px #000c,0 0 42px #f5d76e16}
-.hh-profile-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 30%;transition:transform .5s}
-.hh-profile-card:hover img{transform:scale(1.025)}
-.hh-profile-card:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#030303e8);pointer-events:none}
-.hh-profile-caption{position:absolute;z-index:2;bottom:22px;inset-inline:22px;display:flex;align-items:end;justify-content:space-between;gap:12px;text-align:start;color:#fff}
-.hh-profile-caption strong{font:800 clamp(20px,2.5vw,27px) Montserrat,Cairo,sans-serif;letter-spacing:.02em}
-.hh-profile-caption .hh-profile-role{display:block;color:#f5d76e;font-size:11px;line-height:1.7;margin-top:5px}
-.hh-profile-zoom{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid #f5d76e66;border-radius:50%;background:#080808bb;color:#f5d76e;font-size:20px}
-.hh-profile-modal{position:fixed;inset:0;z-index:100001;display:none;align-items:center;justify-content:center;padding:20px;background:#000e;backdrop-filter:blur(14px)}
-.hh-profile-modal.open{display:flex}
-.hh-profile-modal img{display:block;max-width:min(92vw,850px);max-height:88vh;width:auto;height:auto;object-fit:contain;border:1px solid #f5d76e55;border-radius:14px;box-shadow:0 25px 100px #000}
-.hh-profile-modal-close{position:absolute;top:18px;inset-inline-end:18px;width:46px;height:46px;border:1px solid #ffffff35;border-radius:50%;background:#111;color:#fff;font-size:28px;cursor:pointer}
-.hh-profile-modal-close:hover{color:#f5d76e;border-color:#f5d76e}
-.hh-profile-card:focus-visible,.hh-profile-modal-close:focus-visible{outline:3px solid #f5d76e;outline-offset:4px}
-html[dir=ltr] .hh-profile-caption{direction:ltr}
-@media(max-width:900px){.hh-profile-card{width:min(100%,390px);height:clamp(380px,105vw,500px)}.about-visual{min-height:0!important}}
-@media(max-width:500px){.hh-profile-card{width:min(100%,340px);height:420px;border-radius:22px}.hh-profile-modal{padding:10px}.hh-profile-modal img{max-width:96vw;max-height:84vh}}
-@media(prefers-reduced-motion:reduce){.hh-profile-card,.hh-profile-card img{transition:none!important}}
-</style>
+
 </head>
 <body class="hh-welcome-on">
 <canvas id="hhSky" aria-hidden="true"></canvas>
@@ -614,7 +594,7 @@ html[dir=ltr] .hh-profile-caption{direction:ltr}
 </div></main>
 
 <section id="about" class="section page-section"><div class="wrap about about-deep">
-<div class="about-visual"><button type="button" class="hh-profile-card" id="hhProfileOpen" aria-label="عرض صورة هشام هاني بحجم كبير"><img id="hhProfileLarge" alt="Hesham Hane" decoding="async"><span class="hh-profile-caption"><span><strong>Hesham Hane</strong><span class="hh-profile-role" id="hhProfileCaptionRole">GRAPHIC DESIGNER · VIEW PORTRAIT</span></span><span class="hh-profile-zoom" aria-hidden="true">↗</span></span></button><div class="about-orbit"><span>CREATIVE</span><span>VISION</span><span>DESIGN</span></div></div>
+<div class="about-visual"><div class="hbox" role="img" aria-label="Hesham Hane monogram"><div class="bigH">H</div><i class="gold-dot"></i><i class="gold-line"></i></div><div class="about-orbit"><span>CREATIVE</span><span>VISION</span><span>DESIGN</span></div></div>
 <div class="about-copy"><div class="kicker">01 / ABOUT ME</div><div class="about-eyebrow">HESHAM HANE · DESIGNER</div>
 <h2 class="about-title" data-i18n-html="aboutTitle">أنا مش بس بعمل تصميم…<br><em>أنا ببني نفسي مع كل تصميم.</em></h2>
 <p class="about-lead" data-i18n-html="aboutP1">أنا <strong>Hesham Hane</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.</p>
@@ -688,7 +668,6 @@ html[dir=ltr] .hh-profile-caption{direction:ltr}
 
 <a class="floating-wa" href="https://wa.me/201118313357" target="_blank" rel="noopener" data-i18n-aria="waAria" aria-label="تواصل معي على واتساب"><span class="wa-icon">◉</span><span data-i18n="waBtn">تواصل معي</span></a>
 
-<div class="hh-profile-modal" id="hhProfileModal" role="dialog" aria-modal="true" aria-label="Portrait of Hesham Hane" aria-hidden="true"><button type="button" class="hh-profile-modal-close" id="hhProfileClose" aria-label="Close portrait">×</button><img id="hhProfileModalImage" alt="Hesham Hane portrait" decoding="async"></div>
 <div class="lightbox" id="lightbox" aria-hidden="true">
   <div class="lightbox-box" id="lightboxBox" role="dialog" aria-modal="true" data-i18n-aria="lbAria" aria-label="عرض المشروع">
     <button class="lightbox-close" id="lightboxClose" type="button" data-i18n-aria="lbClose" aria-label="إغلاق">×</button>
@@ -760,27 +739,6 @@ async function translateWorkDescription(value) {
     return original;
   }
 }
-function initProfilePortrait() {
-  const source = document.querySelector('.hh-avatar img');
-  const portrait = document.getElementById('hhProfileLarge');
-  const modal = document.getElementById('hhProfileModal');
-  const modalImage = document.getElementById('hhProfileModalImage');
-  const open = document.getElementById('hhProfileOpen');
-  const close = document.getElementById('hhProfileClose');
-  if (!source || !portrait || !modal || !modalImage || !open || !close) return;
-  portrait.src = source.currentSrc || source.src;
-  modalImage.src = portrait.src;
-  function openPortrait() { modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; close.focus(); }
-  function closePortrait() { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; open.focus(); }
-  open.addEventListener('click', openPortrait);
-  close.addEventListener('click', closePortrait);
-  modal.addEventListener('click', e => { if (e.target === modal) closePortrait(); });
-  document.addEventListener('keydown', e => { if (modal.classList.contains('open') && e.key === 'Escape') closePortrait(); });
-  const caption = document.getElementById('hhProfileCaptionRole');
-  if (caption) caption.textContent = lang === 'ar' ? 'مصمم جرافيك · اضغط لعرض الصورة' : 'GRAPHIC DESIGNER · VIEW PORTRAIT';
-}
-
-
 function applyLang() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -789,14 +747,6 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
-  const profileOpen = document.getElementById('hhProfileOpen');
-  const profileClose = document.getElementById('hhProfileClose');
-  if (profileOpen) profileOpen.setAttribute('aria-label', lang === 'ar' ? 'عرض صورة هشام هاني بحجم كبير' : 'View Hesham Hane portrait in full size');
-  if (profileClose) profileClose.setAttribute('aria-label', lang === 'ar' ? 'إغلاق الصورة' : 'Close portrait');
-  const profileModal = document.getElementById('hhProfileModal');
-  if (profileModal) profileModal.setAttribute('aria-label', lang === 'ar' ? 'صورة هشام هاني' : 'Portrait of Hesham Hane');
-  const profileRole = document.getElementById('hhProfileCaptionRole');
-  if (profileRole) profileRole.textContent = lang === 'ar' ? 'مصمم جرافيك · اضغط لعرض الصورة' : 'GRAPHIC DESIGNER · VIEW PORTRAIT';
   renderStatus();
   renderWorks(true);
   renderReviews(true);
@@ -1186,7 +1136,6 @@ document.addEventListener('keydown', e => {
 });
 
 /* ---------- Start ---------- */
-initProfilePortrait();
 applyLang();
 setPage();
 // Prime both feeds once so data is ready when the visitor opens those pages.
