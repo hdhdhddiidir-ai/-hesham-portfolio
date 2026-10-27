@@ -187,6 +187,86 @@ async function showOrderMenu(chat: number) {
   });
 }
 
+
+function attachmentPath(value: any): { bucket: string; path: string; name: string } | null {
+  const raw = typeof value === "string"
+    ? value.trim()
+    : String(value?.path || value?.url || value?.name || "");
+  if (!raw || raw.startsWith("[not uploaded]")) return null;
+
+  let bucket = B;
+  let path = raw;
+  if (/^https?:\/\//i.test(raw)) {
+    try {
+      const url = new URL(raw);
+      const marker = "/storage/v1/object/";
+      const at = url.pathname.indexOf(marker);
+      if (at < 0) return null;
+      path = decodeURIComponent(url.pathname.slice(at + marker.length));
+      path = path.replace(/^(public|authenticated|sign)\//, "");
+    } catch {
+      return null;
+    }
+  }
+
+  path = path.replace(/^\/+/, "");
+  if (path.startsWith(B + "/")) {
+    path = path.slice(B.length + 1);
+  } else if (path.includes("/")) {
+    const first = path.split("/")[0];
+    if (first && first !== "orders" && first !== "order-attachments") {
+      bucket = first;
+      path = path.slice(first.length + 1);
+    }
+  }
+  if (!path) return null;
+  const name = path.split("/").pop() || "attachment";
+  return { bucket, path, name };
+}
+
+async function sendOrderAttachment(chat: number, value: any, orderId: number) {
+  const parsed = attachmentPath(value);
+  if (!parsed) return false;
+
+  const downloaded = await fetch(
+    U + "/storage/v1/object/authenticated/" + parsed.bucket + "/" +
+      parsed.path.split("/").map(encodeURIComponent).join("/"),
+    { headers: { apikey: K, Authorization: "Bearer " + K } },
+  );
+  if (!downloaded.ok) {
+    throw new Error("تعذر تنزيل مرفق الطلب #" + orderId + ": " + downloaded.status);
+  }
+
+  const blob = await downloaded.blob();
+  const contentType = downloaded.headers.get("content-type") ||
+    (/\.pdf$/i.test(parsed.name) ? "application/pdf" : "application/octet-stream");
+  const file = new File([blob], parsed.name, { type: contentType });
+  const isImage = contentType.startsWith("image/") &&
+    !/\.svg$/i.test(parsed.name);
+  const method = isImage ? "sendPhoto" : "sendDocument";
+  const form = new FormData();
+  form.append("chat_id", String(chat));
+  form.append(isImage ? "photo" : "document", file, parsed.name);
+  form.append("caption", "📎 مرفق من طلب العميل #" + orderId + "\n" + parsed.name);
+
+  const response = await fetch("https://api.telegram.org/bot" + T + "/" + method, {
+    method: "POST",
+    body: form,
+  });
+  const result = await response.json();
+  if (!response.ok || !result.ok) {
+    throw new Error("Telegram رفض إرسال مرفق الطلب #" + orderId);
+  }
+  return true;
+}
+
+function attachmentName(value: any): string {
+  const parsed = attachmentPath(value);
+  if (parsed) return parsed.name;
+  const raw = typeof value === "string" ? value : String(value?.name || "مرفق");
+  return raw.startsWith("[not uploaded]") ? raw : "مرفق";
+}
+
 async function showOrders(chat: number, status: string) {
   const filter = status === "all" ? "" : "&status=eq." + encodeURIComponent(status);
   const response = await db(
@@ -222,8 +302,11 @@ async function showOrders(chat: number, status: string) {
   });
 
   for (const order of rows) {
-    const attachments = Array.isArray(order.attachments) && order.attachments.length
-      ? order.attachments.map((item: any) => typeof item === "string" ? item : JSON.stringify(item)).join("\n")
+    const attachmentItems = Array.isArray(order.attachments) ? order.attachments : [];
+    const attachments = attachmentItems.length
+      ? attachmentItems.map((item: any, index: number) =>
+        (index + 1) + ". " + attachmentName(item)
+      ).join("\n")
       : "لا يوجد";
     const createdAt = order.created_at
       ? new Date(order.created_at).toLocaleString("ar-EG", { timeZone: "Africa/Cairo" })
@@ -259,6 +342,24 @@ async function showOrders(chat: number, status: string) {
         ],
       },
     });
+
+    for (const item of attachmentItems) {
+      try {
+        const sent = await sendOrderAttachment(chat, item, Number(order.id));
+        if (!sent && typeof item === "string" && item.startsWith("[not uploaded]")) {
+          await tg("sendMessage", {
+            chat_id: chat,
+            text: "⚠️ الملف ده لم يتم رفعه من الموقع: " + item.replace("[not uploaded]", "").trim(),
+          });
+        }
+      } catch (error) {
+        console.error("Order attachment delivery failed:", error);
+        await tg("sendMessage", {
+          chat_id: chat,
+          text: "⚠️ مقدرتش أفتح مرفقًا في الطلب #" + order.id + ". راجع صلاحيات Storage أو الملف نفسه.",
+        });
+      }
+    }
   }
 }
 
