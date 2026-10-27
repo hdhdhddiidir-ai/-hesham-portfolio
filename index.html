@@ -1738,9 +1738,9 @@ html.hh-reduce-motion *,html.hh-reduce-motion *::before,html.hh-reduce-motion *:
 </style>
 
 <div class="hhx-fabs" id="hhxFabs">
-  <button type="button" class="hhx-fab" id="hhxTheme" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxSettings" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxTour" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTheme" title="ألوان الموقع" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxSettings" title="إعدادات الشكل والحركة" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTour" title="جولة تعريفية" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
 </div>
 <div class="hhx-menu" id="hhxMenu" role="menu"></div>
 <div class="hhx-menu hhx-settings-menu" id="hhxSettingsMenu" role="group" aria-label="إعدادات المظهر"></div>
@@ -2203,6 +2203,7 @@ html { scroll-padding-top: 92px !important; }
 }
 </style>
 
+<style id="hhx-immersive-navigation-css">
 /* Immersive chapter navigation: quieter canvas, clearer focus */
 :root{--hhx-nav-accent:var(--hho-acc,#f5d76e);--hhx-nav-panel:rgba(12,13,17,.94)}
 #hhSky{opacity:.16!important}
@@ -2241,6 +2242,8 @@ html { scroll-padding-top: 92px !important; }
 @media(prefers-reduced-motion:reduce){.hhx-map-card,#hhx-progress span,#hhx-map-overlay{transition:none!important}}
 
 
+</style>
+
 <script id="hhx-immersive-navigation">
 (function(){
 'use strict';
@@ -2265,7 +2268,7 @@ current.appendChild(el('div',{id:'hhx-current-name'},'البداية'));
 var progress=el('div',{id:'hhx-progress','aria-hidden':'true'});progress.appendChild(el('span'));
 current.appendChild(progress);
 var open=el('button',{id:'hhx-explore-open','type':'button','aria-haspopup':'dialog','aria-controls':'hhx-map-overlay'});
-open.appendChild(el('span',{class:'hhx-dock-icon','aria-hidden':'true'},'⌘'));
+open.appendChild(el('span',{class:'hhx-dock-icon','aria-hidden':'true'},'MAP'));
 open.appendChild(el('span',{},'استكشف الموقع'));
 var next=el('button',{id:'hhx-chapter-next','type':'button','aria-label':'القسم التالي','title':'القسم التالي'},'↓');
 dock.appendChild(open);dock.appendChild(current);dock.appendChild(next);
