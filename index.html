@@ -1223,7 +1223,10 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && qp
 var layer = document.getElementById('hhMeteorLayer');
 var INTERVAL = params.get('meteor') === 'fast' ? 9000 : 90000;
 var meteorTimer = null, flying = false;
-function startMeteors() { if (meteorTimer) return; meteorTimer = setInterval(launchMeteor, INTERVAL); }
+function startMeteors() { if (document.documentElement.classList.contains('hh-no-meteors') || meteorTimer) return; meteorTimer = setInterval(launchMeteor, INTERVAL); }
+function stopMeteors() { if (meteorTimer) { clearInterval(meteorTimer); meteorTimer = null; } if (layer) layer.querySelectorAll('.hh-meteor,.hh-spark').forEach(function(el){el.remove();}); flying = false; }
+window.HH_startMeteors = startMeteors;
+window.HH_stopMeteors = stopMeteors;
 function spark(x, y) {
   var n = 10;
   for (var i = 0; i < n; i++) {
@@ -1236,7 +1239,7 @@ function spark(x, y) {
   }
 }
 function launchMeteor() {
-  if (flying || document.hidden) return;
+  if (flying || document.hidden || document.documentElement.classList.contains('hh-no-meteors')) return;
   flying = true;
   var m = document.createElement('div'); m.className = 'hh-meteor';
   m.innerHTML = '<span class="hh-meteor-head"><span class="hh-meteor-tail"></span></span><span class="hh-meteor-label"></span><button type="button" class="hh-meteor-btn"></button>';
@@ -1309,6 +1312,18 @@ body.hh-welcome-on .hhx-fabs{opacity:0;pointer-events:none}
 html[data-hh-theme=light] #hhSky{filter:invert(1) hue-rotate(180deg)}
 @media(max-width:600px){.hhx-menu{left:58px;bottom:12px;min-width:180px}}
 
+/* Per-visitor visual preferences, saved on this device */
+.hhx-settings-menu{min-width:260px;max-width:calc(100vw - 82px);gap:8px}
+.hhx-setting{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:9px;color:var(--hho-fg);font-size:13px;line-height:1.5;cursor:pointer}
+.hhx-setting:hover{background:#ffffff08}
+.hhx-setting input{accent-color:var(--hho-acc);width:17px;height:17px;flex:none}
+.hhx-settings-note{font-size:10px;color:var(--hho-mut);line-height:1.7;padding:4px 8px}
+html.hh-no-meteors #hhMeteorLayer{display:none!important}
+html.hh-no-sky #hhSky{display:none!important}
+html.hh-reduce-glow *{text-shadow:none!important;box-shadow:none!important;filter:none!important}
+html.hh-reduce-motion *,html.hh-reduce-motion *::before,html.hh-reduce-motion *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+@media(max-width:600px){.hhx-settings-menu{min-width:230px}}
+
 /* tour */
 .hht-spot{position:fixed;z-index:1160;border-radius:14px;pointer-events:none;border:2px solid var(--hho-acc);box-shadow:0 0 0 9999px #000a,0 0 24px var(--hho-acc);transition:top .35s,left .35s,width .35s,height .35s;display:none}
 .hht-card{position:fixed;z-index:1161;left:50%;bottom:22px;transform:translateX(-50%);width:min(420px,calc(100vw - 24px));background:var(--hho-bg);color:var(--hho-fg);border:1px solid var(--hho-acc);border-radius:16px;padding:18px 18px 14px;box-shadow:0 20px 60px #000c,0 0 26px color-mix(in srgb,var(--hho-acc) 35%,transparent);display:none;font-family:Cairo,sans-serif}
@@ -1327,9 +1342,11 @@ html[data-hh-theme=light] #hhSky{filter:invert(1) hue-rotate(180deg)}
 
 <div class="hhx-fabs" id="hhxFabs">
   <button type="button" class="hhx-fab" id="hhxTheme" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxSettings" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
   <button type="button" class="hhx-fab" id="hhxTour" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
 </div>
 <div class="hhx-menu" id="hhxMenu" role="menu"></div>
+<div class="hhx-menu hhx-settings-menu" id="hhxSettingsMenu" role="group" aria-label="إعدادات المظهر"></div>
 <div class="hht-spot" id="hhtSpot" aria-hidden="true"></div>
 <div class="hht-card" id="hhtCard" role="dialog" aria-live="polite">
   <button type="button" class="hht-x" id="hhtX" aria-label="إنهاء">×</button>
@@ -1351,7 +1368,7 @@ var TX = {
  ar: {ordTitle:'اطلب تصميمك',ordIntro:'احكيلي فكرتك وأنا هتواصل معاك على واتساب في أقرب وقت.',ordName:'الاسم',ordNamePh:'اسمك بالكامل',ordService:'نوع الخدمة',ordServicePh:'اختار نوع التصميم',ordOther:'خدمة أخرى',ordDetails:'تفاصيل الطلب',ordDetailsPh:'اشرح التصميم اللي محتاجه: الفكرة، الألوان، المقاسات، أي نص هيتكتب...',ordWa:'رقم واتساب',ordFiles:'المرفقات (اختياري)',ordFilesHint:'صور أو PDF — حتى 5 ملفات، 10MB لكل ملف.',ordSubmit:'إرسال الطلب',ordSending:'جاري الإرسال...',ordSideT:'إزاي الطلب بيمشي؟',ordS1:'تبعت تفاصيل فكرتك من النموذج.',ordS2:'أراجع الطلب وأتواصل معاك على واتساب.',ordS3:'نتفق على التفاصيل ونبدأ التنفيذ.',
   eName:'اكتب اسمك (حرفين على الأقل).',eService:'اختار نوع الخدمة.',eDetails:'اكتب تفاصيل الطلب (10 حروف على الأقل).',eWa:'اكتب رقم واتساب صحيح (أرقام فقط).',eFiles:'المرفقات: حتى 5 ملفات صور أو PDF، وكل ملف أقل من 10MB.',eFix:'من فضلك راجع الحقول المطلوبة.',
   ok:'✅ تم إرسال طلبك بنجاح! هتواصل معاك على واتساب قريب.',okNoFiles:'✅ تم إرسال طلبك بنجاح، لكن المرفقات ماترفعتش. ابعتها على <a href="'+WA+'" target="_blank" rel="noopener">واتساب</a> من فضلك.',fail:'❌ حصلت مشكلة ومقدرناش نبعت الطلب. جرّب تاني بعد شوية أو تواصل معايا على <a href="'+WA+'" target="_blank" rel="noopener">واتساب</a>.',offline:'❌ مفيش اتصال بالإنترنت. اتأكد من الاتصال وجرّب تاني.',slow:'استنى ثواني قبل ما تبعت طلب جديد.',
-  navOrders:'اطلب تصميم',themeAria:'ألوان الموقع',themeTitle:'اختار ألوان الموقع',tourAria:'جولة تعريفية',
+  navOrders:'اطلب تصميم',themeAria:'ألوان الموقع',themeTitle:'اختار ألوان الموقع',settingsAria:'إعدادات المظهر',settingsTitle:'بسّط شكل الموقع',settingMeteors:'إيقاف الشهاب المتحرك',settingGlow:'تقليل التوهج والظلال',settingMotion:'تقليل الأنيميشن والحركة',settingSky:'إخفاء خلفية النجوم',settingsNote:'اختياراتك محفوظة على جهازك، وتقدر ترجع للشكل الأصلي في أي وقت.',resetVisuals:'استعادة الشكل الأصلي',tourAria:'جولة تعريفية',
   tNext:'التالي',tPrev:'السابق',tDone:'إنهاء',tOf:'{i} من {n}',
   t0t:'أهلاً بيك 👋',t0d:'أنا مساعدك الصغير. هاخدك في جولة سريعة على أقسام الموقع. تقدر تنهيها في أي وقت.',
   t1t:'من أنا',t1d:'هنا هتتعرف على هشام، رحلته في التصميم وطريقة شغله.',
@@ -1363,7 +1380,7 @@ var TX = {
  en: {ordTitle:'Order your design',ordIntro:'Tell me your idea and I\'ll reach out on WhatsApp as soon as possible.',ordName:'Name',ordNamePh:'Your full name',ordService:'Service type',ordServicePh:'Choose a design type',ordOther:'Other service',ordDetails:'Order details',ordDetailsPh:'Describe what you need: idea, colors, sizes, any text to include...',ordWa:'WhatsApp number',ordFiles:'Attachments (optional)',ordFilesHint:'Images or PDF — up to 5 files, 10MB each.',ordSubmit:'Send order',ordSending:'Sending...',ordSideT:'How it works',ordS1:'Send your idea through the form.',ordS2:'I review it and contact you on WhatsApp.',ordS3:'We agree on details and start.',
   eName:'Enter your name (at least 2 characters).',eService:'Choose a service.',eDetails:'Describe your order (at least 10 characters).',eWa:'Enter a valid WhatsApp number (digits only).',eFiles:'Attachments: up to 5 images or PDFs, each under 10MB.',eFix:'Please check the required fields.',
   ok:'✅ Your order was sent! I\'ll contact you on WhatsApp soon.',okNoFiles:'✅ Your order was sent, but the attachments could not be uploaded. Please send them on <a href="'+WA+'" target="_blank" rel="noopener">WhatsApp</a>.',fail:'❌ Something went wrong and the order wasn\'t sent. Try again shortly or message me on <a href="'+WA+'" target="_blank" rel="noopener">WhatsApp</a>.',offline:'❌ No internet connection. Check it and try again.',slow:'Please wait a few seconds before sending another order.',
-  navOrders:'Order',themeAria:'Site colors',themeTitle:'Choose site colors',tourAria:'Guided tour',
+  navOrders:'Order',themeAria:'Site colors',themeTitle:'Choose site colors',settingsAria:'Appearance settings',settingsTitle:'Simplify the visuals',settingMeteors:'Disable shooting star',settingGlow:'Reduce glow and shadows',settingMotion:'Reduce animations and motion',settingSky:'Hide starry background',settingsNote:'Your choices are saved on this device. Restore the original look anytime.',resetVisuals:'Restore original look',tourAria:'Guided tour',
   tNext:'Next',tPrev:'Back',tDone:'Finish',tOf:'{i} of {n}',
   t0t:'Welcome 👋',t0d:'I\'m your little guide. Let me show you around the site. You can end the tour anytime.',
   t1t:'About me',t1d:'Get to know Hesham, his design journey and how he works.',
@@ -1397,8 +1414,9 @@ function applyTexts() {
   var nav = document.getElementById('hhoNav'); if (nav) nav.textContent = T('navOrders');
   document.getElementById('hhxTheme').setAttribute('aria-label', T('themeAria'));
   document.getElementById('hhxTour').setAttribute('aria-label', T('tourAria'));
+  settingsBtn.setAttribute('aria-label',T('settingsAria'));
   document.getElementById('hhtX').setAttribute('aria-label', T('tDone'));
-  fillServices(); buildMenu(); if (tourOn) renderStep();
+  fillServices(); buildMenu(); buildSettingsMenu(); if (tourOn) renderStep();
 }
 
 var form = document.getElementById('hhoForm');
@@ -1481,6 +1499,11 @@ var THEMES = [
   { id: 'gold', name: 'Luxury Gold', sw: 'linear-gradient(135deg,#050505 50%,#f5d76e 50%)' },
   { id: 'blue', name: 'Neon Blue', sw: 'linear-gradient(135deg,#050505 50%,#3fd8ff 50%)', hue: 192, sat: 1 },
   { id: 'purple', name: 'Royal Purple', sw: 'linear-gradient(135deg,#050505 50%,#b57bff 50%)', hue: 272, sat: .9 },
+  { id: 'emerald', name: 'Emerald Green', sw: 'linear-gradient(135deg,#050505 50%,#55d6a0 50%)', hue: 153, sat: .82 },
+  { id: 'rose', name: 'Soft Rose', sw: 'linear-gradient(135deg,#050505 50%,#f28bb8 50%)', hue: 337, sat: .72 },
+  { id: 'teal', name: 'Ocean Teal', sw: 'linear-gradient(135deg,#050505 50%,#54d7d0 50%)', hue: 177, sat: .78 },
+  { id: 'copper', name: 'Copper Bronze', sw: 'linear-gradient(135deg,#050505 50%,#d99568 50%)', hue: 23, sat: .72 },
+  { id: 'sapphire', name: 'Sapphire Blue', sw: 'linear-gradient(135deg,#050505 50%,#729bff 50%)', hue: 223, sat: .8 },
   { id: 'light', name: 'Pure Light', sw: 'linear-gradient(135deg,#f7f3ea 50%,#c8962a 50%)', light: true }
 ];
 var origCss = null;
@@ -1527,6 +1550,11 @@ var VARS = {
   gold:   ['#f5d76e', '#fff1a8', '#0a0a0af2', '#ffffff', '#aaaaaa', '#f5d76e40', '#111111'],
   blue:   ['#3fd8ff', '#b3f0ff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#3fd8ff40', '#04121a'],
   purple: ['#b57bff', '#e2cbff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#b57bff40', '#14081f'],
+  emerald:['#55d6a0', '#b7f3d7', '#0a0a0af2', '#ffffff', '#aaaaaa', '#55d6a040', '#081b14'],
+  rose:   ['#f28bb8', '#ffd3e5', '#0a0a0af2', '#ffffff', '#aaaaaa', '#f28bb840', '#210d17'],
+  teal:   ['#54d7d0', '#b9f3ef', '#0a0a0af2', '#ffffff', '#aaaaaa', '#54d7d040', '#08201f'],
+  copper: ['#d99568', '#f2c7aa', '#0a0a0af2', '#ffffff', '#aaaaaa', '#d9956840', '#21130b'],
+  sapphire:['#729bff', '#c9d8ff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#729bff40', '#0b1226'],
   light:  ['#a8781c', '#c8962a', '#fbf8f1f5', '#1d1810', '#5a5348', '#a8781c55', '#ffffff']
 };
 var currentTheme = 'gold';
@@ -1542,6 +1570,39 @@ function applyTheme(id, save) {
   buildMenu();
 }
 var menu = document.getElementById('hhxMenu'), themeBtn = document.getElementById('hhxTheme');
+var settingsMenu = document.getElementById('hhxSettingsMenu'), settingsBtn = document.getElementById('hhxSettings');
+var visualPrefs = { meteors: false, glow: false, motion: false, sky: false };
+try { var storedPrefs = JSON.parse(localStorage.getItem('hh_visual_settings') || '{}'); Object.keys(visualPrefs).forEach(function(k){ if (typeof storedPrefs[k] === 'boolean') visualPrefs[k] = storedPrefs[k]; }); } catch(e) {}
+function applyVisualPrefs(save) {
+  var root = document.documentElement;
+  root.classList.toggle('hh-no-meteors', visualPrefs.meteors);
+  root.classList.toggle('hh-reduce-glow', visualPrefs.glow);
+  root.classList.toggle('hh-reduce-motion', visualPrefs.motion);
+  root.classList.toggle('hh-no-sky', visualPrefs.sky);
+  if (visualPrefs.meteors) {
+    var layer = document.getElementById('hhMeteorLayer');
+    if (layer) layer.querySelectorAll('.hh-meteor,.hh-spark').forEach(function(el){el.remove();});
+    if (window.HH_stopMeteors) window.HH_stopMeteors();
+  } else if (!document.body.classList.contains('hh-welcome-on') && window.HH_startMeteors) window.HH_startMeteors();
+  settingsMenu.querySelectorAll('input[data-pref]').forEach(function(input){input.checked=!!visualPrefs[input.dataset.pref];});
+  if (save) { try { localStorage.setItem('hh_visual_settings', JSON.stringify(visualPrefs)); } catch(e) {} }
+}
+function buildSettingsMenu() {
+  if (!settingsMenu) return;
+  settingsMenu.innerHTML = '';
+  var title = document.createElement('b'); title.textContent = T('settingsTitle'); settingsMenu.appendChild(title);
+  [['meteors','settingMeteors'],['glow','settingGlow'],['motion','settingMotion'],['sky','settingSky']].forEach(function(item){
+    var label=document.createElement('label'); label.className='hhx-setting';
+    var input=document.createElement('input'); input.type='checkbox'; input.dataset.pref=item[0]; input.checked=!!visualPrefs[item[0]];
+    input.addEventListener('change',function(){visualPrefs[item[0]]=input.checked;applyVisualPrefs(true);});
+    var span=document.createElement('span'); span.textContent=T(item[1]); label.append(input,span); settingsMenu.appendChild(label);
+  });
+  var note=document.createElement('div'); note.className='hhx-settings-note'; note.textContent=T('settingsNote'); settingsMenu.appendChild(note);
+  var reset=document.createElement('button'); reset.type='button'; reset.className='hhx-opt'; reset.textContent=T('resetVisuals');
+  reset.addEventListener('click',function(){Object.keys(visualPrefs).forEach(function(k){visualPrefs[k]=false;});applyVisualPrefs(true);closeSettingsMenu();applyTheme('gold',true);});
+  settingsMenu.appendChild(reset);
+}
+function closeSettingsMenu(){settingsMenu.classList.remove('open');settingsBtn.setAttribute('aria-expanded','false');}
 function buildMenu() {
   if (!menu) return;
   menu.innerHTML = '';
@@ -1557,11 +1618,13 @@ function buildMenu() {
 function closeMenu() { menu.classList.remove('open'); themeBtn.setAttribute('aria-expanded', 'false'); }
 themeBtn.addEventListener('click', function (e) {
   e.stopPropagation();
+  closeSettingsMenu();
   var open = !menu.classList.contains('open');
   menu.classList.toggle('open', open); themeBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   if (open) { var c = menu.querySelector('[aria-checked=true]'); if (c) c.focus(); }
 });
-document.addEventListener('click', function (e) { if (menu.classList.contains('open') && !menu.contains(e.target)) closeMenu(); });
+settingsBtn.addEventListener('click',function(e){e.stopPropagation();closeMenu();var open=!settingsMenu.classList.contains('open');settingsMenu.classList.toggle('open',open);settingsBtn.setAttribute('aria-expanded',open?'true':'false');if(open){var first=settingsMenu.querySelector('input');if(first)first.focus();}});
+document.addEventListener('click', function (e) { if (menu.classList.contains('open') && !menu.contains(e.target)) closeMenu(); if(settingsMenu.classList.contains('open')&&!settingsMenu.contains(e.target)&&e.target!==settingsBtn)closeSettingsMenu(); });
 
 /* ---------- Guided tour ---------- */
 var STEPS = [
@@ -1619,7 +1682,7 @@ document.getElementById('hhtX').addEventListener('click', endTour);
 addEventListener('scroll', function () { if (tourOn) placeSpot(); }, { passive: true });
 addEventListener('resize', function () { if (tourOn) placeSpot(); });
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') { if (tourOn) endTour(); if (menu.classList.contains('open')) { closeMenu(); themeBtn.focus(); } }
+  if (e.key === 'Escape') { if (tourOn) endTour(); if (menu.classList.contains('open')) { closeMenu(); themeBtn.focus(); } if(settingsMenu.classList.contains('open')){closeSettingsMenu();settingsBtn.focus();} }
   if (tourOn && (e.key === 'ArrowRight' || e.key === 'ArrowLeft') && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) {
     var fwd = (e.key === 'ArrowLeft') === (document.documentElement.dir === 'rtl');
     fwd ? (step >= STEPS.length - 1 ? endTour() : go(step + 1)) : go(step - 1);
@@ -1634,6 +1697,8 @@ if (window.HH_setLang) {
 
 var saved = 'gold'; try { saved = localStorage.getItem('hh_theme') || 'gold'; } catch (e) {}
 applyTheme(saved, false);
+buildSettingsMenu();
+applyVisualPrefs(false);
 applyTexts();
 })();
 </script>
