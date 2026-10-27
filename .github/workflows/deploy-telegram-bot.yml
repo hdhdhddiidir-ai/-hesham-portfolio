@@ -30,3 +30,14 @@ jobs:
           supabase functions deploy telegram-bot \
             --project-ref "$SUPABASE_PROJECT_ID" \
             --use-api
+
+      - name: Register Telegram webhook and verify configuration
+        env:
+          SUPABASE_PROJECT_ID: cdyrtfixvghjjptkuzxg
+        run: |
+          response="$(curl --silent --show-error --fail-with-body "https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/telegram-bot")"
+          echo "$response" | jq -e '.ok == true and .webhook.ok == true' >/dev/null || {
+            echo "::error::Webhook registration failed. Check TELEGRAM_BOT_TOKEN and TELEGRAM_WEBHOOK_SECRET in Supabase Function Secrets."
+            exit 1
+          }
+          echo "Telegram webhook registered successfully."
