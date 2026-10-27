@@ -2256,5 +2256,138 @@ updateUI();
 })();
 </script>
 
+
+<style id="hhx-premium-modals-and-inline-arrows">
+/* Keep section arrows inside the existing header bar; no floating widget. */
+#hhx-vertical-nav{position:static!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:5px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;margin-inline:8px}
+#hhx-vertical-nav .hhx-nav-center{display:none!important}
+#hhx-vertical-nav .hhx-nav-arrow{width:34px!important;height:34px!important;border-radius:10px!important;border:1px solid #f5d76e55!important;background:#f5d76e0b!important;color:var(--gold)!important;font-size:20px!important}
+#hhx-vertical-nav .hhx-nav-arrow:hover{background:#f5d76e20!important;box-shadow:0 0 16px #f5d76e20!important}
+.hh-nav-end{display:flex;align-items:center;gap:7px}
+#reviewsList{display:none!important}
+#reviewStatus,#hhoStatus{display:none!important}
+#hhx-review-open{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin:6px 0 22px;padding:12px 20px;border:1px solid #f5d76e70;border-radius:12px;background:linear-gradient(135deg,#f5d76e18,#f5d76e04);color:#f5d76e;font:700 14px Cairo,sans-serif;cursor:pointer;transition:.25s}
+#hhx-review-open:hover{background:#f5d76e20;box-shadow:0 0 25px #f5d76e15;transform:translateY(-2px)}
+.hhx-modal{position:fixed;inset:0;z-index:5000;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+.hhx-modal.open{display:grid;animation:hhxFadeIn .22s ease both}
+.hhx-modal-panel{position:relative;width:min(760px,96vw);max-height:min(86vh,900px);overflow:auto;border:1px solid #f5d76e55;border-radius:24px;padding:clamp(22px,4vw,38px);background:radial-gradient(circle at 50% 0,#f5d76e13,transparent 45%),linear-gradient(145deg,#111,#050505 75%);box-shadow:0 25px 100px #000c,0 0 55px #f5d76e0c;animation:hhxModalRise .32s cubic-bezier(.2,.8,.2,1) both}
+.hhx-modal-close{position:sticky;float:left;top:0;z-index:2;width:38px;height:38px;border:1px solid #ffffff25;border-radius:12px;background:#111;color:#eee;font-size:24px;cursor:pointer}
+.hhx-modal-title{margin:0 48px 9px 0;color:#f5d76e;font-size:clamp(24px,4vw,34px);font-weight:800}
+.hhx-modal-subtitle{margin:0 0 24px;color:#aaa;font-size:14px;line-height:1.9}
+.hhx-modal #reviewsList{display:grid!important;max-height:55vh;overflow:auto;gap:14px;padding:3px}
+.hhx-modal .review-card{padding:22px;border-color:#f5d76e35;background:linear-gradient(140deg,#f5d76e0c,#ffffff03 65%);box-shadow:inset 0 0 24px #f5d76e04,0 8px 28px #0005;border-radius:18px}
+.hhx-modal .review-card p{font-size:16px;line-height:2.1;color:#eee;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-modal .review-head strong{font-size:15px}
+.hhx-modal .review-stars{font-size:17px;text-shadow:0 0 12px #f5d76e35}
+.hhx-success-mark{width:76px;height:76px;margin:8px auto 22px;border:2px solid #f5d76e;border-radius:50%;display:grid;place-items:center;color:#f5d76e;font-size:42px;box-shadow:0 0 28px #f5d76e25;animation:hhxCheckPop .55s cubic-bezier(.2,.8,.2,1) both}
+.hhx-success-mark svg{width:42px;height:42px;stroke:currentColor;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:50;stroke-dashoffset:50;animation:hhxDrawCheck .55s .2s ease forwards}
+.hhx-modal-message{text-align:center;font-size:clamp(17px,3vw,21px);line-height:2;color:#eee;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-modal-message strong{color:#f5d76e}
+.hhx-modal .hhx-modal-panel--notice{width:min(520px,96vw);text-align:center}
+.hhx-description-button{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:9px 14px;border:1px solid #f5d76e66;border-radius:10px;background:#f5d76e0b;color:#f5d76e;font:700 13px Cairo,sans-serif;cursor:pointer;transition:.25s}
+.hhx-description-button:hover{background:#f5d76e1b;box-shadow:0 0 18px #f5d76e18}
+.hhx-description-copy{font-size:clamp(17px,2.6vw,21px);line-height:2.15;color:#f0f0f0;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-description-copy:empty:before{content:'لا يوجد وصف إضافي لهذا المشروع حاليًا.';color:#999}
+@keyframes hhxFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes hhxModalRise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes hhxCheckPop{0%{opacity:0;transform:scale(.55) rotate(-20deg)}70%{transform:scale(1.12) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes hhxDrawCheck{to{stroke-dashoffset:0}}
+@media(max-width:800px){#hhx-vertical-nav{margin-inline:2px;gap:4px!important}#hhx-vertical-nav .hhx-nav-arrow{width:31px!important;height:31px!important;font-size:18px!important}.hh-nav-end{gap:4px}.hhx-modal-panel{border-radius:19px}.hhx-modal #reviewsList{max-height:58vh}}
+@media(prefers-reduced-motion:reduce){.hhx-modal,.hhx-modal-panel,.hhx-success-mark,.hhx-success-mark svg{animation:none!important}.hhx-success-mark svg{stroke-dashoffset:0}}
+</style>
+<script id="hhx-premium-modals-and-inline-arrows">
+(function(){
+'use strict';
+function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn()}
+ready(function(){
+  var nav=document.getElementById('hhx-vertical-nav');
+  var navEnd=document.querySelector('.hh-nav-end');
+  if(nav&&navEnd){navEnd.insertBefore(nav,navEnd.firstChild);nav.setAttribute('aria-label','التنقل بين أقسام الموقع');}
+  var lang=document.documentElement.lang==='en'||document.documentElement.dir==='ltr';
+  function makeModal(id,title,subtitle,extraClass){
+    var modal=document.createElement('div');modal.className='hhx-modal';modal.id=id;modal.setAttribute('aria-hidden','true');
+    var panel=document.createElement('section');panel.className='hhx-modal-panel '+(extraClass||'');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby',id+'Title');
+    var close=document.createElement('button');close.type='button';close.className='hhx-modal-close';close.setAttribute('aria-label',lang?'Close':'إغلاق');close.textContent='×';
+    var h=document.createElement('h2');h.className='hhx-modal-title';h.id=id+'Title';h.textContent=title;
+    var sub=document.createElement('p');sub.className='hhx-modal-subtitle';sub.textContent=subtitle||'';
+    panel.append(close,h,sub);modal.appendChild(panel);document.body.appendChild(modal);
+    function hide(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+    function show(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';close.focus();}
+    close.addEventListener('click',hide);modal.addEventListener('click',function(e){if(e.target===modal)hide()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))hide()});
+    return {modal:modal,panel:panel,body:panel,show:show,hide:hide,close:close,subtitle:sub,title:h};
+  }
+  var reviewModal=makeModal('hhxReviewsModal',lang?'Client reviews':'آراء العملاء',lang?'Approved reviews from visitors':'آراء العملاء المعتمدة — كل الآراء في مكان واحد');
+  var reviewList=document.getElementById('reviewsList');
+  var reviewLayout=document.querySelector('#reviews .reviews-layout');
+  var reviewForm=document.getElementById('reviewForm');
+  if(reviewList&&reviewLayout){
+    var openReviews=document.createElement('button');openReviews.type='button';openReviews.id='hhx-review-open';openReviews.textContent=lang?'✦  View reviews':'✦  عرض الآراء';
+    openReviews.addEventListener('click',function(){reviewModal.show()});
+    if(reviewForm)reviewForm.insertAdjacentElement('afterend',openReviews);
+    reviewModal.body.appendChild(reviewList);
+  }
+  var notice=makeModal('hhxNoticeModal',lang?'Message':'تم بنجاح','', 'hhx-modal-panel--notice');
+  notice.title.style.textAlign='center';notice.subtitle.style.display='none';
+  var mark=document.createElement('div');mark.className='hhx-success-mark';mark.setAttribute('aria-hidden','true');
+  mark.innerHTML='<svg viewBox="0 0 48 48"><path d="M10 25l9 9L38 14"/></svg>';
+  var message=document.createElement('div');message.className='hhx-modal-message';
+  notice.body.appendChild(mark);notice.body.appendChild(message);
+  var lastNotice='';
+  function showNotice(raw){
+    var value=String(raw||'').replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+    if(!value||value===lastNotice)return;lastNotice=value;
+    var success=/تم|success|thank|review|مراجعة|بنجاح/i.test(value);
+    mark.style.borderColor=success?'#f5d76e':'#e9b86d';mark.style.color=success?'#f5d76e':'#e9b86d';
+    mark.innerHTML=success?'<svg viewBox="0 0 48 48"><path d="M10 25l9 9L38 14"/></svg>':'<span aria-hidden="true">!</span>';
+    message.textContent=value;
+    notice.title.textContent=success?(lang?'Sent successfully':'تم بنجاح'):(lang?'Please check':'تنبيه');
+    notice.show();
+  }
+  ['reviewStatus','hhoStatus'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var seen='';
+    new MutationObserver(function(){
+      var v=(el.innerText||el.textContent||'').trim();
+      if(v&&v!==seen){seen=v;showNotice(v)}
+    }).observe(el,{subtree:true,childList:true,characterData:true});
+  });
+  // Keep the review form compact: approved reviews only appear in the modal.
+  // Project descriptions open in a dedicated, readable modal instead of tiny card text.
+  var descModal=makeModal('hhxDescriptionModal',lang?'Project description':'وصف المشروع',lang?'Project details':'تفاصيل المشروع');
+  var descCopy=document.createElement('div');descCopy.className='hhx-description-copy';descModal.body.appendChild(descCopy);
+  document.querySelectorAll('.work-card').forEach(function(card){
+    var meta=card.querySelector('.work-meta');if(!meta||meta.querySelector('.hhx-description-button'))return;
+    var btn=document.createElement('button');btn.type='button';btn.className='hhx-description-button';btn.textContent=lang?'View description ↗':'عرض الوصف ↗';
+    btn.addEventListener('click',function(e){
+      e.preventDefault();e.stopPropagation();
+      var d=card.querySelector('.live-description');
+      var text=(d&&d.textContent||'').trim();
+      var title=(card.querySelector('h3')&&card.querySelector('h3').textContent||'').trim();
+      descModal.title.textContent=(lang?'Description: ':'وصف: ')+title;
+      descCopy.textContent=text|| (lang?'No additional description is available for this project yet.':'لا يوجد وصف إضافي لهذا المشروع حاليًا.');
+      descModal.show();
+    });
+    meta.appendChild(btn);
+  });
+  // Existing portfolio content can be rendered asynchronously; add description controls to later cards too.
+  var cardObserver=new MutationObserver(function(records){
+    records.forEach(function(rec){rec.addedNodes.forEach(function(node){
+      if(node.nodeType!==1)return;
+      var cards=[];if(node.matches&&node.matches('.work-card'))cards.push(node);
+      if(node.querySelectorAll)cards=cards.concat(Array.from(node.querySelectorAll('.work-card')));
+      cards.forEach(function(card){
+        var meta=card.querySelector('.work-meta');if(!meta||meta.querySelector('.hhx-description-button'))return;
+        var btn=document.createElement('button');btn.type='button';btn.className='hhx-description-button';btn.textContent=lang?'View description ↗':'عرض الوصف ↗';
+        btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var d=card.querySelector('.live-description');var title=(card.querySelector('h3')&&card.querySelector('h3').textContent||'').trim();descModal.title.textContent=(lang?'Description: ':'وصف: ')+title;descCopy.textContent=(d&&d.textContent||'').trim()||(lang?'No additional description is available for this project yet.':'لا يوجد وصف إضافي لهذا المشروع حاليًا.');descModal.show()});
+        meta.appendChild(btn);
+      });
+    })});
+  });
+  var portfolio=document.querySelector('.portfolio-grid');if(portfolio)cardObserver.observe(portfolio,{childList:true,subtree:true});
+});
+})();
+</script>
+
 </body>
 </html>
