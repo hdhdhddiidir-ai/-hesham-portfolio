@@ -2203,56 +2203,30 @@ html { scroll-padding-top: 92px !important; }
 }
 </style>
 
-<style id="hhx-vertical-navigation-css">
-/* Compact premium vertical section control */
-#hhx-vertical-nav{position:fixed;z-index:1200;right:clamp(12px,2vw,26px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;direction:rtl;padding:11px 9px;border:1px solid rgba(245,215,110,.34);border-radius:20px;background:linear-gradient(160deg,rgba(20,20,25,.94),rgba(5,6,10,.88));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 12px 36px #0008,0 0 22px rgba(245,215,110,.08);color:#f7f4ea;font:inherit}
-#hhx-vertical-nav button{font:inherit;cursor:pointer;color:inherit}
-#hhx-vertical-nav .hhx-nav-arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(245,215,110,.22);border-radius:13px;background:rgba(255,255,255,.035);font-size:23px;line-height:1;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s}
-#hhx-vertical-nav .hhx-nav-arrow:hover{background:rgba(245,215,110,.14);border-color:rgba(245,215,110,.7);box-shadow:0 0 15px rgba(245,215,110,.12)}
-#hhx-vertical-nav .hhx-nav-arrow:active{transform:scale(.94)}
-#hhx-vertical-nav .hhx-nav-center{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:105px;min-width:74px;padding:3px 0}
-#hhx-vertical-nav .hhx-nav-count{font-size:10px;letter-spacing:.12em;color:#d9c66f}
-#hhx-vertical-nav .hhx-nav-name{font-size:12px;font-weight:750;text-align:center;line-height:1.5;overflow-wrap:anywhere}
-#hhx-vertical-nav .hhx-nav-track{width:4px;height:38px;background:#ffffff1c;border-radius:8px;overflow:hidden}
-#hhx-vertical-nav .hhx-nav-track span{display:block;width:100%;height:0;background:linear-gradient(180deg,#fff0a4,#d3a936);border-radius:8px;transition:height .25s ease}
-@media(max-width:520px){#hhx-vertical-nav{right:9px;padding:8px 6px;gap:7px;border-radius:16px}#hhx-vertical-nav .hhx-nav-arrow{width:36px;height:36px;border-radius:11px;font-size:21px}#hhx-vertical-nav .hhx-nav-center{min-width:62px;max-width:72px}#hhx-vertical-nav .hhx-nav-name{font-size:11px}#hhx-vertical-nav .hhx-nav-track{height:30px}}
-@media(prefers-reduced-motion:reduce){#hhx-vertical-nav *{transition:none!important}}
+<style id="hhx-bar-navigation-css">
+/* Keep section arrows inside the existing top navigation bar — no floating widget. */
+.hh-nav-end{display:flex;align-items:center;gap:8px;flex:none}
+.hh-bar-arrow{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid #f5d76e45;border-radius:10px;background:#f5d76e0a;color:var(--gold);font:700 20px/1 Cairo,sans-serif;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.hh-bar-arrow:hover{background:#f5d76e20;border-color:#f5d76eaa}
+.hh-bar-arrow:active{transform:scale(.94)}
+.hh-bar-arrow:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:900px){.hh-nav-end{position:absolute;top:12px;left:10px;gap:5px}.hh-bar-arrow{width:32px;height:32px}.hh-nav-end .hh-lang{margin-inline-start:2px}}
+@media(prefers-reduced-motion:reduce){.hh-bar-arrow{transition:none}}
 </style>
-<script id="hhx-vertical-navigation">
+<script id="hhx-bar-navigation">
 (function(){
 'use strict';
-if(document.getElementById('hhx-vertical-nav'))return;
-var sections=[
-{id:'home',ar:'الرئيسية',en:'Home'},
-{id:'about',ar:'من أنا',en:'About'},
-{id:'work',ar:'أعمالي',en:'Portfolio'},
-{id:'services',ar:'خدماتي',en:'Services'},
-{id:'reviews',ar:'التقييمات',en:'Reviews'},
-{id:'orders',ar:'اطلب تصميم',en:'Order a design'},
-{id:'contact',ar:'تواصل معي',en:'Contact'}
-].map(function(s){return {id:s.id,ar:s.ar,en:s.en,node:document.getElementById(s.id)}}).filter(function(s){return !!s.node});
-if(!sections.length)return;
-function isEn(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr'||(window.HH_getLang&&window.HH_getLang()==='en')}
-function label(s){return isEn()?s.en:s.ar}
-function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
-var nav=el('nav','');nav.id='hhx-vertical-nav';nav.setAttribute('aria-label','التنقل بين أقسام الموقع');
-var prev=el('button','hhx-nav-arrow','↑');prev.type='button';prev.setAttribute('aria-label','القسم السابق');prev.title='القسم السابق';
-var center=el('div','hhx-nav-center');
-var count=el('div','hhx-nav-count','01 / '+String(sections.length).padStart(2,'0'));
-var name=el('div','hhx-nav-name',label(sections[0]));
-var track=el('div','hhx-nav-track');var fill=el('span','');track.appendChild(fill);
-center.appendChild(count);center.appendChild(name);center.appendChild(track);
-var next=el('button','hhx-nav-arrow','↓');next.type='button';next.setAttribute('aria-label','القسم التالي');next.title='القسم التالي';
-nav.appendChild(prev);nav.appendChild(center);nav.appendChild(next);document.body.appendChild(nav);
-var active=0,lockUntil=0,scrollTimer=0;
-function updateUI(){var s=sections[active];count.textContent=String(active+1).padStart(2,'0')+' / '+String(sections.length).padStart(2,'0');name.textContent=label(s);fill.style.height=((active+1)/sections.length*100)+'%';prev.title=isEn()?'Previous section':'القسم السابق';next.title=isEn()?'Next section':'القسم التالي';prev.setAttribute('aria-label',isEn()?'Previous section':'القسم السابق');next.setAttribute('aria-label',isEn()?'Next section':'القسم التالي');nav.setAttribute('aria-label',isEn()?'Navigate between site sections':'التنقل بين أقسام الموقع')}
-function go(index){active=Math.max(0,Math.min(sections.length-1,index));lockUntil=Date.now()+900;updateUI();sections[active].node.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});window.clearTimeout(scrollTimer);scrollTimer=window.setTimeout(detect,950)}
-function detect(){if(Date.now()<lockUntil)return;var anchor=Math.min(window.innerHeight*.42,260),best=0,bestDistance=Infinity;sections.forEach(function(s,i){var r=s.node.getBoundingClientRect();var distance=Math.abs((r.top+Math.min(r.height,window.innerHeight)*.22)-anchor);if(r.bottom>70&&r.top<window.innerHeight-40&&distance<bestDistance){best=i;bestDistance=distance}});if(best!==active){active=best;updateUI()}}
-prev.addEventListener('click',function(){go(active-1)});next.addEventListener('click',function(){go(active+1)});
-var scheduled=false;window.addEventListener('scroll',function(){if(!scheduled){scheduled=true;requestAnimationFrame(function(){scheduled=false;detect()})}},{passive:true});
-window.addEventListener('resize',detect,{passive:true});
-var lang=document.getElementById('hhLang');if(lang)lang.addEventListener('click',function(){setTimeout(updateUI,100)});
-updateUI();
+var host=document.querySelector('.hh-nav-end');
+var links=Array.prototype.slice.call(document.querySelectorAll('.top-links a[href^="#"]'));
+var pages=links.map(function(a){return {id:a.getAttribute('href').slice(1),link:a,node:document.getElementById(a.getAttribute('href').slice(1))};}).filter(function(p){return !!p.node;});
+if(!host||!pages.length)return;
+function currentIndex(){var active=pages.findIndex(function(p){return p.link.classList.contains('active-nav')||p.link.getAttribute('aria-current')==='true';});if(active>=0)return active;var marker=Math.min(window.innerHeight*.32,250),best=0;pages.forEach(function(p,i){var r=p.node.getBoundingClientRect();if(r.top<=marker)best=i;});return best;}
+function go(delta){var i=Math.max(0,Math.min(pages.length-1,currentIndex()+delta));var p=pages[i];if(!p)return;p.node.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});p.link.click();}
+function makeArrow(symbol,label,delta){var b=document.createElement('button');b.type='button';b.className='hh-bar-arrow';b.textContent=symbol;b.setAttribute('aria-label',label);b.title=label;b.addEventListener('click',function(){go(delta);});return b;}
+var up=makeArrow('↑','القسم السابق',-1),down=makeArrow('↓','القسم التالي',1);
+host.insertBefore(up,host.firstChild);host.insertBefore(down,up.nextSibling);
+function localize(){var en=document.documentElement.lang==='en'||document.documentElement.dir==='ltr';up.setAttribute('aria-label',en?'Previous section':'القسم السابق');up.title=en?'Previous section':'القسم السابق';down.setAttribute('aria-label',en?'Next section':'القسم التالي');down.title=en?'Next section':'القسم التالي';}
+var lang=document.getElementById('hhLang');if(lang)lang.addEventListener('click',function(){setTimeout(localize,100)});localize();
 })();
 </script>
 
