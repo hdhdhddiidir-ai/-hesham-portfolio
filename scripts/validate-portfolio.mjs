@@ -58,7 +58,7 @@ assert.match(edge, /x-telegram-bot-api-secret-token/, "Webhook updates validate 
 assert.match(edge, /status: 401/, "Invalid webhook secrets are rejected");
 assert.match(edge, /function handleCreateOrder/, "Order creation handler exists");
 assert.match(edge, /function handleSubmissionNotification/, "Submission notification handler exists");
-assert.match(bot, /const cats = \[/, "Bot service category list exists");
+assert.match(bot, /const cats\s*=\s*\[/, "Bot service category list exists");
 assert.ok(categories.every(([, label]) => bot.includes(label)), "Bot retains the 16 services");
 
 let checkedScripts = 0;
