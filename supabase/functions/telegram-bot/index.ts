@@ -433,9 +433,8 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
   try {
     const input = await req.json();
     const type = String(input?.type || "");
-    const id = Number(input?.id);
-    if (!Number.isSafeInteger(id) || id < 1 || !["order", "review"].includes(type)) {
-      return new Response(JSON.stringify({ error: "Invalid submission" }), { status: 400, headers: cors });
+    if (!["order", "review"].includes(type)) {
+      return new Response(JSON.stringify({ error: "Invalid submission type" }), { status: 400, headers: cors });
     }
 
     const payload = input?.payload || {};
