@@ -418,6 +418,76 @@ async function handleOrderAttachmentUpload(req: Request): Promise<Response> {
 }
 
 
+async function handleCreateOrder(req: Request): Promise<Response> {
+  const cors = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "apikey, authorization, content-type",
+    "Cache-Control": "no-store",
+    "Content-Type": "application/json",
+  };
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: cors });
+  if (!K) return new Response(JSON.stringify({ error: "Order service is not configured" }), { status: 500, headers: cors });
+
+  try {
+    const input = await req.json();
+    const payload = input?.payload && typeof input.payload === "object" ? input.payload : input;
+    const customer_name = String(payload?.customer_name || "").trim();
+    const service = String(payload?.service || "").trim();
+    const details = String(payload?.details || "").trim();
+    const whatsapp = String(payload?.whatsapp || "").replace(/[\s\-()]/g, "");
+    if (customer_name.length < 2 || customer_name.length > 80 ||
+        service.length < 1 || service.length > 120 ||
+        details.length < 10 || details.length > 2000 ||
+        !/^\+?\d{8,15}$/.test(whatsapp)) {
+      return new Response(JSON.stringify({ error: "بيانات الطلب غير مكتملة أو غير صحيحة." }), { status: 400, headers: cors });
+    }
+
+    const row = { customer_name, service, details, whatsapp, attachments: [], status: "new" };
+    const savedResponse = await db("customer_orders?select=id,customer_name,service,details,whatsapp,status,created_at,attachments", {
+      method: "POST",
+      headers: { ...H, Prefer: "return=representation" },
+      body: JSON.stringify(row),
+    });
+    const responseText = await savedResponse.text();
+    if (!savedResponse.ok) {
+      console.error("Customer order insert failed:", savedResponse.status, responseText.slice(0, 1000));
+      return new Response(JSON.stringify({ error: "تعذر حفظ الطلب في قاعدة البيانات.", code: savedResponse.status }), { status: 500, headers: cors });
+    }
+
+    let saved: any;
+    try {
+      const rows = JSON.parse(responseText);
+      saved = Array.isArray(rows) ? rows[0] : null;
+    } catch {
+      saved = null;
+    }
+    if (!saved?.id) {
+      console.error("Customer order insert returned no row:", responseText.slice(0, 500));
+      return new Response(JSON.stringify({ error: "تمت محاولة حفظ الطلب لكن لم يصل تأكيد من قاعدة البيانات." }), { status: 500, headers: cors });
+    }
+
+    // Saving the order is the primary operation. Telegram notification failures must not
+    // tell the customer that their order failed after it has already been stored.
+    try {
+      const notification = await handleSubmissionNotification(new Request(
+        U + "/functions/v1/telegram-bot?action=notify-submission",
+        { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "order", payload: saved }) },
+      ));
+      if (!notification.ok) console.error("Order saved but Telegram notification failed:", notification.status, (await notification.text()).slice(0, 500));
+    } catch (error) {
+      console.error("Order saved but Telegram notification failed:", error);
+    }
+
+    return new Response(JSON.stringify({ ok: true, id: saved.id }), { status: 201, headers: cors });
+  } catch (error) {
+    console.error("Create customer order failed:", error);
+    return new Response(JSON.stringify({ error: "حصل خطأ أثناء حفظ الطلب." }), { status: 500, headers: cors });
+  }
+}
+
+
 async function handleSubmissionNotification(req: Request): Promise<Response> {
   const cors = {
     "Access-Control-Allow-Origin": "*",
@@ -548,6 +618,7 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
 Deno.serve(async (req) => {
   const requestUrl = new URL(req.url);
   if (requestUrl.searchParams.get("action") === "upload-order-attachment") return handleOrderAttachmentUpload(req);
+  if (requestUrl.searchParams.get("action") === "create-order") return handleCreateOrder(req);
   if (requestUrl.searchParams.get("action") === "notify-submission") return handleSubmissionNotification(req);
   if (req.method === "GET") {
     const requestUrl = new URL(req.url);
