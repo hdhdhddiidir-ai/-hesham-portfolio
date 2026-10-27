@@ -508,15 +508,32 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
         "📝 التفاصيل: " + String(item.details || "—").slice(0, 1800) + "\n\n" +
         "🕒 الوقت: " + createdAt;
     } else {
-      message = "💬 تعليق جديد محتاج مراجعة!\n\n" +
-        "🆔 رقم التعليق: #" + item.id + "\n" +
-        "👤 الاسم: " + String(item.name || "—").slice(0, 100) + "\n" +
-        "⭐ التقييم: " + String(item.rating ?? "—") + "/5\n" +
-        "📝 التعليق: " + String(item.review || "—").slice(0, 2500) + "\n" +
-        "📌 الحالة: " + String(item.status || "pending") + "\n\n" +
+      const rating = Math.max(0, Math.min(5, Number(item.rating) || 0));
+      const stars = "⭐".repeat(rating) + "☆".repeat(5 - rating);
+      message = "💬 تعليق جديد محتاج مراجعة!\\n\\n" +
+        "🆔 رقم التعليق: #" + item.id + "\\n" +
+        "👤 الاسم: " + String(item.name || "—").slice(0, 100) + "\\n" +
+        stars + " (" + rating + "/5)\\n" +
+        "📝 التعليق: " + String(item.review || "—").slice(0, 2500) + "\\n" +
+        "📌 الحالة: " + String(item.status || "pending") + "\\n\\n" +
         "🕒 الوقت: " + createdAt;
     }
-    const sent = await tg("sendMessage", { chat_id: A, text: message });
+    const reviewMarkup = type === "review"
+      ? {
+        inline_keyboard: [
+          [
+            { text: "✅ موافقة ونشر", callback_data: "reviewapprove:" + item.id },
+            { text: "🚫 رفض", callback_data: "reviewreject:" + item.id },
+          ],
+          [{ text: "🗑️ حذف نهائي", callback_data: "reviewdel:" + item.id }],
+        ],
+      }
+      : undefined;
+    const sent = await tg("sendMessage", {
+      chat_id: A,
+      text: message,
+      ...(reviewMarkup ? { reply_markup: reviewMarkup } : {}),
+    });
     if (!sent?.ok) {
       await db("bot_sessions?chat_id=eq." + guardId, { method: "DELETE" });
       throw new Error("Telegram notification failed");
