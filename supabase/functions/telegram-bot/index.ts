@@ -510,12 +510,12 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
     } else {
       const rating = Math.max(0, Math.min(5, Number(item.rating) || 0));
       const stars = "⭐".repeat(rating) + "☆".repeat(5 - rating);
-      message = "💬 تعليق جديد محتاج مراجعة!\\n\\n" +
-        "🆔 رقم التعليق: #" + item.id + "\\n" +
-        "👤 الاسم: " + String(item.name || "—").slice(0, 100) + "\\n" +
-        stars + " (" + rating + "/5)\\n" +
-        "📝 التعليق: " + String(item.review || "—").slice(0, 2500) + "\\n" +
-        "📌 الحالة: " + String(item.status || "pending") + "\\n\\n" +
+      message = "💬 تعليق جديد محتاج مراجعة!\n\n" +
+        "🆔 رقم التعليق: #" + item.id + "\n" +
+        "👤 الاسم: " + String(item.name || "—").slice(0, 100) + "\n" +
+        stars + " (" + rating + "/5)\n" +
+        "📝 التعليق: " + String(item.review || "—").slice(0, 2500) + "\n" +
+        "📌 الحالة: " + String(item.status || "pending") + "\n\n" +
         "🕒 الوقت: " + createdAt;
     }
     const reviewMarkup = type === "review"
