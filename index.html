@@ -2202,5 +2202,111 @@ html { scroll-padding-top: 92px !important; }
   *, *::before, *::after { scroll-behavior:auto !important; }
 }
 </style>
+
+/* Immersive chapter navigation: quieter canvas, clearer focus */
+:root{--hhx-nav-accent:var(--hho-acc,#f5d76e);--hhx-nav-panel:rgba(12,13,17,.94)}
+#hhSky{opacity:.16!important}
+#hhMeteorLayer{opacity:.28!important}
+.home-modern-glow{opacity:.22!important}
+.home-modern-ring{opacity:.24!important}
+#hhx-experience-dock{position:fixed;z-index:1500;inset-inline-end:22px;bottom:22px;display:flex;align-items:center;gap:10px;direction:rtl;padding:9px 12px;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 36%,transparent);border-radius:18px;background:rgba(8,9,12,.88);backdrop-filter:blur(18px);box-shadow:0 12px 44px #0008;color:#f7f4ea;font:inherit}
+#hhx-experience-dock button{font:inherit;cursor:pointer;color:inherit}
+#hhx-explore-open{border:0;border-radius:12px;background:var(--hhx-nav-accent);color:#17140b!important;font-weight:800;padding:11px 15px;display:flex;align-items:center;gap:9px}
+#hhx-explore-open .hhx-dock-icon{font-size:18px}
+#hhx-current-chapter{display:flex;flex-direction:column;min-width:105px;gap:3px}
+#hhx-current-chapter small{font-size:10px;color:#aaa;letter-spacing:.08em}
+#hhx-current-name{font-size:12px;font-weight:700}
+#hhx-progress{height:2px;background:#ffffff20;border-radius:5px;overflow:hidden;margin-top:3px}
+#hhx-progress span{display:block;height:100%;width:0;background:var(--hhx-nav-accent);transition:width .3s ease}
+#hhx-chapter-next{width:36px;height:36px;border-radius:11px;border:1px solid #ffffff24;background:#ffffff08;font-size:18px}
+#hhx-map-overlay{position:fixed;inset:0;z-index:10000;background:rgba(3,4,7,.78);backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .22s ease}
+#hhx-map-overlay.is-open{display:flex;opacity:1}
+#hhx-map-panel{width:min(980px,100%);max-height:min(86vh,850px);overflow:auto;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 30%,#ffffff12);border-radius:28px;background:radial-gradient(ellipse at 90% 0%,color-mix(in srgb,var(--hhx-nav-accent) 10%,transparent),transparent 42%),linear-gradient(145deg,#15161b,#090a0d 72%);box-shadow:0 35px 100px #000b;color:#f7f4ed;padding:clamp(20px,4vw,42px)}
+.hhx-map-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px}
+.hhx-map-kicker{font-size:11px;letter-spacing:.16em;color:var(--hhx-nav-accent);font-weight:800}
+.hhx-map-title{font-size:clamp(27px,4vw,44px);line-height:1.15;margin:9px 0 8px;font-weight:900}
+.hhx-map-subtitle{color:#a9a9ae;font-size:14px;max-width:560px;line-height:1.8}
+#hhx-map-close{width:42px;height:42px;flex:none;border-radius:14px;border:1px solid #ffffff22;background:#ffffff08;color:#fff;font-size:25px;cursor:pointer}
+#hhx-map-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hhx-map-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:start;gap:11px;min-height:145px;padding:19px;border:1px solid #ffffff16;border-radius:19px;background:linear-gradient(145deg,#ffffff0b,#ffffff03);color:#fff;cursor:pointer;transition:transform .22s ease,border-color .22s ease,background .22s ease;overflow:hidden;font:inherit}
+.hhx-map-card:before{content:"";position:absolute;inset-inline-start:0;top:0;width:3px;height:100%;background:var(--hhx-nav-accent);transform:scaleY(0);transform-origin:top;transition:transform .22s ease}
+.hhx-map-card:hover,.hhx-map-card:focus-visible{transform:translateY(-3px);border-color:color-mix(in srgb,var(--hhx-nav-accent) 60%,transparent);background:#ffffff0d;outline:none}
+.hhx-map-card:hover:before,.hhx-map-card:focus-visible:before{transform:scaleY(1)}
+.hhx-map-num{font-size:11px;color:var(--hhx-nav-accent);font-weight:900;letter-spacing:.12em}
+.hhx-map-card strong{font-size:18px;font-weight:850}
+.hhx-map-card span:last-child{font-size:12px;line-height:1.7;color:#a6a6ac}
+.hhx-map-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid #ffffff12;color:#888;font-size:11px}
+.hhx-map-foot b{color:var(--hhx-nav-accent);font-weight:700}
+@media(max-width:650px){#hhx-experience-dock{inset-inline:12px;bottom:12px;justify-content:space-between;padding:8px;border-radius:16px;gap:7px}#hhx-explore-open{padding:10px 12px;font-size:12px}#hhx-current-chapter{min-width:0;flex:1;padding-inline:4px}#hhx-current-name{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#hhx-chapter-next{width:34px;height:34px;flex:none}#hhx-map-overlay{padding:10px}#hhx-map-panel{padding:20px 14px;border-radius:22px;max-height:92vh}.hhx-map-head{margin-bottom:18px}.hhx-map-subtitle{font-size:12px}#hhx-map-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.hhx-map-card{min-height:126px;padding:13px;border-radius:15px;gap:8px}.hhx-map-card strong{font-size:15px}.hhx-map-card span:last-child{font-size:11px}.hhx-map-foot{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.hhx-map-card,#hhx-progress span,#hhx-map-overlay{transition:none!important}}
+
+
+<script id="hhx-immersive-navigation">
+(function(){
+'use strict';
+if(document.getElementById('hhx-experience-dock'))return;
+var sections=[
+{id:'home',ar:'البداية',en:'Home',descAr:'واجهة الموقع وبداية الحكاية',descEn:'The opening and the first impression'},
+{id:'about',ar:'حكايتي',en:'About',descAr:'تعرّف على المصمم وطريقته',descEn:'Meet the designer and the process'},
+{id:'work',ar:'معرض الأعمال',en:'Selected work',descAr:'استكشف المشاريع والتصميمات',descEn:'Explore projects and selected designs'},
+{id:'services',ar:'الخدمات الـ16',en:'16 services',descAr:'اختار نوع التصميم المناسب لفكرتك',descEn:'Find the right service for your idea'},
+{id:'reviews',ar:'آراء العملاء',en:'Testimonials',descAr:'تجارب وتقييمات العملاء',descEn:'Client feedback and ratings'},
+{id:'orders',ar:'ابدأ مشروعك',en:'Start a project',descAr:'حوّل فكرتك لطلب واضح',descEn:'Turn your idea into a project brief'},
+{id:'contact',ar:'تواصل مباشر',en:'Contact',descAr:'خلينا نتكلم عن فكرتك',descEn:'Let’s talk about your next idea'}
+];
+function isEn(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr'||(window.HH_getLang&&window.HH_getLang()==='en')}
+function label(s){return isEn()?s.en:s.ar}
+function desc(s){return isEn()?s.descEn:s.descAr}
+function el(tag,attrs,txt){var n=document.createElement(tag);Object.keys(attrs||{}).forEach(function(k){if(k==='class')n.className=attrs[k];else n.setAttribute(k,attrs[k])});if(txt!=null)n.textContent=txt;return n}
+var dock=el('div',{id:'hhx-experience-dock','aria-label':'Site navigation'});
+var current=el('div',{id:'hhx-current-chapter'});
+current.appendChild(el('small',{},'01 / 07'));
+current.appendChild(el('div',{id:'hhx-current-name'},'البداية'));
+var progress=el('div',{id:'hhx-progress','aria-hidden':'true'});progress.appendChild(el('span'));
+current.appendChild(progress);
+var open=el('button',{id:'hhx-explore-open','type':'button','aria-haspopup':'dialog','aria-controls':'hhx-map-overlay'});
+open.appendChild(el('span',{class:'hhx-dock-icon','aria-hidden':'true'},'⌘'));
+open.appendChild(el('span',{},'استكشف الموقع'));
+var next=el('button',{id:'hhx-chapter-next','type':'button','aria-label':'القسم التالي','title':'القسم التالي'},'↓');
+dock.appendChild(open);dock.appendChild(current);dock.appendChild(next);
+var overlay=el('div',{id:'hhx-map-overlay','aria-hidden':'true'});
+var panel=el('div',{id:'hhx-map-panel',role:'dialog','aria-modal':'true','aria-labelledby':'hhx-map-title'});
+var head=el('div',{class:'hhx-map-head'}), copy=el('div',{});
+copy.appendChild(el('div',{class:'hhx-map-kicker'},'HESHAM HANE  /  EXPERIENCE MAP'));
+copy.appendChild(el('h2',{id:'hhx-map-title',class:'hhx-map-title'},'استكشف بطريقتك'));
+copy.appendChild(el('div',{class:'hhx-map-subtitle'},'كل الموقع قدامك في خريطة واحدة. اختار وجهتك بدل ما تفضل تنزل وتطلع.'));
+var close=el('button',{id:'hhx-map-close',type:'button','aria-label':'إغلاق'},'×');
+head.appendChild(copy);head.appendChild(close);
+var grid=el('div',{id:'hhx-map-grid'});
+var cards=[];
+sections.forEach(function(s,i){
+var card=el('button',{class:'hhx-map-card',type:'button','data-target':s.id});
+card.appendChild(el('span',{class:'hhx-map-num'},String(i+1).padStart(2,'0')+'  /  CHAPTER'));
+card.appendChild(el('strong',{},s.ar));
+card.appendChild(el('span',{},s.descAr));
+card.addEventListener('click',function(){goTo(s.id);hideMap()});
+grid.appendChild(card);cards.push({node:card,section:s,index:i});
+});
+var foot=el('div',{class:'hhx-map-foot'});
+foot.appendChild(el('span',{},'تنقّل مباشر • مناسب للموبايل والكمبيوتر'));
+foot.appendChild(el('b',{},'DESIGN / EXPLORE / CREATE'));
+panel.appendChild(head);panel.appendChild(grid);panel.appendChild(foot);overlay.appendChild(panel);
+document.body.appendChild(dock);document.body.appendChild(overlay);
+var active=0,previousFocus=null;
+function goTo(id){var target=document.getElementById(id);if(!target)return;target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});history.replaceState(null,'','#'+id)}
+function setActive(index){active=Math.max(0,Math.min(sections.length-1,index));var s=sections[active];current.querySelector('small').textContent=String(active+1).padStart(2,'0')+' / '+String(sections.length).padStart(2,'0');document.getElementById('hhx-current-name').textContent=label(s);progress.firstChild.style.width=((active+1)/sections.length*100)+'%';next.setAttribute('aria-label',isEn()?'Next: '+s.en:'القسم التالي: '+s.ar);next.title=isEn()?'Next: '+s.en:'القسم التالي: '+s.ar;cards.forEach(function(c){c.node.querySelector('strong').textContent=label(c.section);c.node.querySelector('span:last-child').textContent=desc(c.section);c.node.setAttribute('aria-current',c.index===active?'location':'false');c.node.style.borderColor=c.index===active?'color-mix(in srgb,var(--hhx-nav-accent) 65%,transparent)':'';c.node.style.background=c.index===active?'#ffffff10':''})}
+function showMap(){previousFocus=document.activeElement;overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setActive(active);close.focus()}
+function hideMap(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';if(previousFocus&&previousFocus.focus)previousFocus.focus()}
+open.addEventListener('click',showMap);close.addEventListener('click',hideMap);overlay.addEventListener('click',function(e){if(e.target===overlay)hideMap()});next.addEventListener('click',function(){goTo(sections[(active+1)%sections.length].id)});
+document.addEventListener('keydown',function(e){if(!overlay.classList.contains('is-open'))return;if(e.key==='Escape'){hideMap();return}if(e.key==='Tab'){var focusables=panel.querySelectorAll('button');if(!focusables.length)return;var first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+var ticking=false;
+function update(){ticking=false;var best=0,bestDistance=Infinity;sections.forEach(function(s,i){var node=document.getElementById(s.id);if(!node)return;var rect=node.getBoundingClientRect();var distance=Math.abs(rect.top-110);if(rect.top<=window.innerHeight*.58&&distance<bestDistance){best=i;bestDistance=distance}});setActive(best)}
+window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+window.addEventListener('resize',update);
+var langButton=document.getElementById('hhLang');if(langButton)langButton.addEventListener('click',function(){setTimeout(function(){setActive(active);var kicker=panel.querySelector('.hhx-map-kicker');kicker.textContent=isEn()?'HESHAM HANE  /  EXPERIENCE MAP':'HESHAM HANE  /  خريطة التجربة';document.getElementById('hhx-map-title').textContent=isEn()?'Explore your way':'استكشف بطريقتك';panel.querySelector('.hhx-map-subtitle').textContent=isEn()?'The whole site in one map. Choose a destination instead of endlessly scrolling.':'كل الموقع قدامك في خريطة واحدة. اختار وجهتك بدل ما تفضل تنزل وتطلع.';open.lastChild.textContent=isEn()?'Explore site':'استكشف الموقع';foot.firstChild.textContent=isEn()?'Jump anywhere • Designed for mobile and desktop':'تنقّل مباشر • مناسب للموبايل والكمبيوتر';next.textContent=isEn()?'↓':'↓'},100)});
+setActive(0);update();
+})();
+</script>
+
 </body>
 </html>
