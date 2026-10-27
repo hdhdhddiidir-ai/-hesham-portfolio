@@ -438,16 +438,48 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
       return new Response(JSON.stringify({ error: "Invalid submission" }), { status: 400, headers: cors });
     }
 
+    const payload = input?.payload || {};
     const table = type === "order" ? "customer_orders" : "customer_reviews";
     const fields = type === "order"
       ? "id,customer_name,service,details,whatsapp,created_at"
       : "id,name,review,rating,status,created_at";
-    const fetched = await db(table + "?id=eq." + id + "&select=" + fields + "&limit=1");
+    const query = new URLSearchParams();
+    query.set("select", fields);
+    query.set("order", "created_at.desc");
+    query.set("limit", "1");
+    query.set("created_at", "gte." + new Date(Date.now() - 10 * 60 * 1000).toISOString());
+    if (type === "order") {
+      const customerName = String(payload.customer_name || "").trim();
+      const service = String(payload.service || "").trim();
+      const details = String(payload.details || "").trim();
+      const whatsapp = String(payload.whatsapp || "").trim();
+      if (customerName.length < 2 || service.length < 1 || details.length < 10 || whatsapp.length < 8) {
+        return new Response(JSON.stringify({ error: "Invalid order payload" }), { status: 400, headers: cors });
+      }
+      query.set("customer_name", "eq." + customerName);
+      query.set("service", "eq." + service);
+      query.set("details", "eq." + details);
+      query.set("whatsapp", "eq." + whatsapp);
+      query.set("status", "eq.new");
+    } else {
+      const name = String(payload.name || "").trim();
+      const review = String(payload.review || "").trim();
+      const rating = Number(payload.rating);
+      if (!name || name.length > 80 || review.length < 3 || review.length > 1000 || rating < 1 || rating > 5) {
+        return new Response(JSON.stringify({ error: "Invalid review payload" }), { status: 400, headers: cors });
+      }
+      query.set("name", "eq." + name);
+      query.set("review", "eq." + review);
+      query.set("rating", "eq." + rating);
+      query.set("status", "eq.pending");
+    }
+    const fetched = await db(table + "?" + query.toString());
     const rows = await fetched.json();
     if (!fetched.ok || !Array.isArray(rows) || !rows[0]) {
-      return new Response(JSON.stringify({ error: "Submission not found" }), { status: 404, headers: cors });
+      return new Response(JSON.stringify({ error: "Submission not found in recent records" }), { status: 404, headers: cors });
     }
     const item = rows[0];
+    const id = Number(item.id);
     const created = Date.parse(item.created_at || "");
     if (!Number.isFinite(created) || Date.now() - created > 10 * 60 * 1000 || created > Date.now() + 60 * 1000) {
       return new Response(JSON.stringify({ error: "Submission is outside the notification window" }), { status: 403, headers: cors });
