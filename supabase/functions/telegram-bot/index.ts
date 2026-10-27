@@ -625,15 +625,21 @@ Deno.serve(async (req) => {
     if (requestUrl.searchParams.get("maintenance-status") === "1") {
       try {
         const response = await db("bot_sessions?chat_id=eq." + MAINTENANCE_CHAT_ID + "&select=state&limit=1");
+        if (!response.ok) {
+          return new Response(JSON.stringify({ enabled: false, error: "maintenance_status_unavailable" }), {
+            status: 503,
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store, max-age=0" },
+          });
+        }
         const rows = await response.json();
-        const enabled = response.ok && Array.isArray(rows) && rows[0]?.state === "maintenance_on";
+        const enabled = Array.isArray(rows) && rows[0]?.state === "maintenance_on";
         return new Response(JSON.stringify({ enabled }), {
           status: 200,
           headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store, max-age=0" },
         });
       } catch {
-        return new Response(JSON.stringify({ enabled: false }), {
-          status: 200,
+        return new Response(JSON.stringify({ enabled: false, error: "maintenance_status_unavailable" }), {
+          status: 503,
           headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store, max-age=0" },
         });
       }
