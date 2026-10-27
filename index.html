@@ -5,6 +5,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
 <title>هشام هاني — مصمم جرافيك</title>
+<meta name="description" content="بورتفوليو هشام هاني — تصميم جرافيك، شعارات وهوية بصرية، إعلانات ومطبوعات. استعرض الأعمال واطلب تصميمك بسهولة.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://hesham-portfolio.vercel.app/">
+<meta name="theme-color" content="#050505">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_EG">
+<meta property="og:title" content="هشام هاني — مصمم جرافيك">
+<meta property="og:description" content="استعرض أعمال هشام هاني في التصميم الجرافيكي والهوية البصرية، واطلب تصميمك بسهولة.">
+<meta property="og:url" content="https://hesham-portfolio.vercel.app/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"هشام هاني","url":"https://hesham-portfolio.vercel.app/","jobTitle":"مصمم جرافيك","knowsAbout":["Graphic Design","Brand Identity","Logo Design","Advertising Design","Print Design"]}</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@600;700;800&display=swap');
 :root{--bg:#050505;--gold:#f5d76e;--muted:#aaa}
@@ -637,6 +648,19 @@ html.maintenance-active #maintenancePage{display:flex}
 }
 </style>
 
+<style id="portfolio-search-filters">
+.portfolio-tools{display:grid;gap:14px;margin:26px 0 22px;padding:16px;border:1px solid #f5d76e20;border-radius:18px;background:linear-gradient(145deg,#111,#080808);box-shadow:0 14px 38px #0005}
+.portfolio-search-label{display:grid;gap:8px;color:var(--gold);font-size:12px;font-weight:800}
+#portfolioSearch{width:100%;min-height:48px;padding:12px 15px;border:1px solid #f5d76e30;border-radius:12px;background:#070707;color:#fff;font:inherit;outline:none;box-shadow:0 0 14px #f5d76e08;transition:border-color .2s,box-shadow .2s}
+#portfolioSearch:focus{border-color:#f5d76eaa;box-shadow:0 0 0 3px #f5d76e12,0 0 22px #f5d76e20}
+.portfolio-filter-list{display:flex;flex-wrap:wrap;gap:8px}
+.portfolio-filter{border:1px solid #ffffff16;border-radius:999px;padding:8px 13px;background:#ffffff04;color:#aaa;font:700 12px Cairo,sans-serif;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.portfolio-filter:hover{border-color:#f5d76e70;color:#fff;transform:translateY(-1px)}
+.portfolio-filter.is-active,.portfolio-filter[aria-pressed="true"]{background:linear-gradient(135deg,#f5d76e,#d9ae35);border-color:#f5d76e;color:#111;box-shadow:0 5px 18px #f5d76e18}
+.portfolio-filter-status{margin:0;color:#777;font-size:11px;min-height:1em}
+.work-card.filter-hidden{display:none!important}
+@media(max-width:600px){.portfolio-tools{padding:12px;border-radius:14px}.portfolio-filter-list{gap:6px}.portfolio-filter{padding:8px 10px;font-size:11px}}
+</style>
 </head>
 <body class="hh-welcome-on">
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
@@ -724,7 +748,20 @@ html.maintenance-active #maintenancePage{display:flex}
 <div class="buttons"><a class="btn primary" href="#work" data-i18n="aboutBtnWork">اكتشف أعمالي →</a><a class="btn" href="#contact" data-i18n="aboutBtnTalk">خلينا نتكلم ✉</a></div>
 <div class="about-signature"><span class="signature-dot" aria-hidden="true"></span><span class="signature-name">Hesham Hane</span></div></div></div></section>
 
-<section id="work" class="section page-section"><div class="wrap"><div class="kicker">02 / PORTFOLIO</div><h2 data-i18n="workTitle">شوية من شغلي.</h2><p class="work-intro" data-i18n="workIntro">تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.</p><div class="portfolio-grid" id="portfolioGrid"><div class="review-empty grid-state" style="grid-column:1/-1" data-i18n="worksLoading">جاري تحميل أعمالي...</div></div></div></section>
+<section id="work" class="section page-section"><div class="wrap"><div class="kicker">02 / PORTFOLIO</div><h2 data-i18n="workTitle">شوية من شغلي.</h2><p class="work-intro" data-i18n="workIntro">تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.</p>
+<div class="portfolio-tools" id="portfolioTools" role="search" aria-label="البحث في المشاريع">
+<label class="portfolio-search-label" for="portfolioSearch"><span id="portfolioSearchLabel">ابحث في المشاريع</span><input id="portfolioSearch" type="search" autocomplete="off" aria-label="ابحث باسم المشروع أو وصفه" placeholder="اسم المشروع أو نوع التصميم..."></label>
+<div class="portfolio-filter-list" id="portfolioFilterList" role="group" aria-label="تصفية المشاريع">
+<button type="button" class="portfolio-filter is-active" data-work-filter="all" aria-pressed="true">الكل</button>
+<button type="button" class="portfolio-filter" data-work-filter="branding" aria-pressed="false">شعارات وهوية</button>
+<button type="button" class="portfolio-filter" data-work-filter="social" aria-pressed="false">سوشيال ميديا</button>
+<button type="button" class="portfolio-filter" data-work-filter="advertising" aria-pressed="false">إعلانات</button>
+<button type="button" class="portfolio-filter" data-work-filter="print" aria-pressed="false">مطبوعات</button>
+<button type="button" class="portfolio-filter" data-work-filter="other" aria-pressed="false">أخرى</button>
+</div>
+<p class="portfolio-filter-status" id="portfolioFilterStatus" aria-live="polite"></p>
+</div>
+<div class="portfolio-grid" id="portfolioGrid"><div class="review-empty grid-state" style="grid-column:1/-1" data-i18n="worksLoading">جاري تحميل أعمالي...</div></div></div></section>
 
 <section id="services" class="section page-section"><div class="wrap"><div class="kicker">03 / SERVICES</div><h2 data-i18n="servicesTitle">خدماتي</h2><p class="services-intro" data-i18n="servicesIntro">كل فكرة ليها شكلها الصح — وأنا أحولها لتصميم يليق بيها.</p><div class="services-list">
 <div class="service-item"><span class="service-icon">🎨</span><div><b>01</b><h3 data-i18n="s01t">تصميم جرافيك</h3><p data-i18n="s01d">تصميمات جرافيكية متنوعة حسب احتياجك وفكرتك.</p></div></div>
@@ -881,6 +918,7 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
   renderStatus();
   renderWorks(true);
+  syncPortfolioFilterLanguage();
   renderReviews(true);
 }
 window.HH_t = t;
@@ -1018,7 +1056,8 @@ function buildWorkCard(w, i) {
   const art = document.createElement('article');
   art.className = 'work-card';
   art.dataset.workId = w.id;
-  art.dataset.category = matchCat(w.category) || 'branding';
+  art.dataset.category = matchCat(w.category) || 'other';
+  art.dataset.searchText = [w.title, w.description, w.category].filter(Boolean).join(' ').toLocaleLowerCase();
   art.tabIndex = 0;
 
   const vis = document.createElement('div');
@@ -1058,6 +1097,61 @@ function buildWorkCard(w, i) {
   return art;
 }
 
+function activePortfolioFilter() {
+  const active = document.querySelector('#portfolioFilterList .portfolio-filter[aria-pressed="true"]');
+  return active ? active.dataset.workFilter : 'all';
+}
+function applyPortfolioFilters() {
+  const search = (document.getElementById('portfolioSearch')?.value || '').trim().toLocaleLowerCase();
+  const filter = activePortfolioFilter();
+  let visible = 0;
+  document.querySelectorAll('#portfolioGrid .work-card').forEach(card => {
+    const matchesCategory = filter === 'all' || card.dataset.category === filter;
+    const matchesSearch = !search || (card.dataset.searchText || '').includes(search);
+    const show = matchesCategory && matchesSearch;
+    card.classList.toggle('filter-hidden', !show);
+    if (show) visible++;
+  });
+  const status = document.getElementById('portfolioFilterStatus');
+  if (status) {
+    const english = lang === 'en';
+    status.textContent = english
+      ? (visible === 1 ? '1 project shown' : visible + ' projects shown')
+      : 'عدد المشاريع المعروضة: ' + visible;
+  }
+}
+function syncPortfolioFilterLanguage() {
+  const english = lang === 'en';
+  const labels = english
+    ? { all:'All', branding:'Logos & identity', social:'Social media', advertising:'Advertising', print:'Print', other:'Other', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
+    : { all:'الكل', branding:'شعارات وهوية', social:'سوشيال ميديا', advertising:'إعلانات', print:'مطبوعات', other:'أخرى', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
+  document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
+    button.textContent = labels[button.dataset.workFilter] || labels.all;
+  });
+  const label = document.getElementById('portfolioSearchLabel');
+  const input = document.getElementById('portfolioSearch');
+  const tools = document.getElementById('portfolioTools');
+  if (label) label.textContent = labels.search;
+  if (input) { input.placeholder = labels.placeholder; input.setAttribute('aria-label', labels.aria); }
+  if (tools) tools.setAttribute('aria-label', labels.search);
+  applyPortfolioFilters();
+}
+(function initPortfolioFilters() {
+  const input = document.getElementById('portfolioSearch');
+  if (input) input.addEventListener('input', applyPortfolioFilters);
+  document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(item => {
+        const active = item === button;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      applyPortfolioFilters();
+    });
+  });
+  syncPortfolioFilterLanguage();
+})();
+
 // Keyed reconcile: unchanged cards keep the same DOM node (no flicker, no image reload).
 function renderWorks(force) {
   if (!lastWorks) return;
@@ -1087,6 +1181,7 @@ function renderWorks(force) {
   });
   workNodes.forEach((rec, id) => { if (!seen.has(id)) { rec.el.remove(); workNodes.delete(id); } });
   renderedWorksSig = lastWorksSig;
+  applyPortfolioFilters();
 }
 
 async function loadWorks() {
