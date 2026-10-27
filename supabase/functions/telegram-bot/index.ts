@@ -363,7 +363,63 @@ async function showOrders(chat: number, status: string) {
   }
 }
 
+
+async function handleOrderAttachmentUpload(req: Request): Promise<Response> {
+  const cors = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "apikey, authorization, content-type",
+    "Cache-Control": "no-store",
+  };
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...cors, "Content-Type": "application/json" } });
+  if (!K) return new Response(JSON.stringify({ error: "Storage service is not configured" }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+
+  try {
+    const form = await req.formData();
+    const file = form.get("file");
+    if (!(file instanceof File)) return new Response(JSON.stringify({ error: "Missing file" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"];
+    if (!allowed.includes(file.type)) return new Response(JSON.stringify({ error: "Only JPG, PNG, WEBP, GIF, and PDF files are allowed" }), { status: 415, headers: { ...cors, "Content-Type": "application/json" } });
+    if (file.size < 1 || file.size > 10 * 1024 * 1024) return new Response(JSON.stringify({ error: "File must be smaller than 10 MB" }), { status: 413, headers: { ...cors, "Content-Type": "application/json" } });
+
+    const bucket = "order-attachments";
+    const bucketCheck = await fetch(U + "/storage/v1/bucket/" + bucket, { headers: { apikey: K, Authorization: "Bearer " + K } });
+    if (bucketCheck.status === 404) {
+      const created = await fetch(U + "/storage/v1/bucket", {
+        method: "POST",
+        headers: { apikey: K, Authorization: "Bearer " + K, "Content-Type": "application/json" },
+        body: JSON.stringify({ id: bucket, name: bucket, public: false, file_size_limit: 10485760, allowed_mime_types: allowed }),
+      });
+      if (!created.ok && created.status !== 409) {
+        const detail = await created.text();
+        throw new Error("Could not initialize attachment storage: " + detail.slice(0, 300));
+      }
+    } else if (!bucketCheck.ok) {
+      throw new Error("Could not check attachment storage: " + bucketCheck.status);
+    }
+
+    const safeName = file.name.replace(/[^\\w.\\-]+/g, "_").slice(-80) || "attachment";
+    const path = "orders/" + Date.now() + "-" + crypto.randomUUID().slice(0, 8) + "/" + safeName;
+    const uploaded = await fetch(U + "/storage/v1/object/" + bucket + "/" + path.split("/").map(encodeURIComponent).join("/"), {
+      method: "POST",
+      headers: { apikey: K, Authorization: "Bearer " + K, "Content-Type": file.type, "x-upsert": "false" },
+      body: file,
+    });
+    if (!uploaded.ok) {
+      const detail = await uploaded.text();
+      throw new Error("Storage upload failed (" + uploaded.status + "): " + detail.slice(0, 300));
+    }
+    return new Response(JSON.stringify({ path: bucket + "/" + path, name: safeName }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
+  } catch (error) {
+    console.error("Order attachment upload failed:", error);
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Upload failed" }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+  }
+}
+
 Deno.serve(async (req) => {
+  const requestUrl = new URL(req.url);
+  if (requestUrl.searchParams.get("action") === "upload-order-attachment") return handleOrderAttachmentUpload(req);
   if (req.method === "GET") {
     const requestUrl = new URL(req.url);
     if (requestUrl.searchParams.get("maintenance-status") === "1") {
