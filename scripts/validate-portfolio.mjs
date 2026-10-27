@@ -50,7 +50,9 @@ for (const [id, label] of categories) {
 assert.equal(matchCat("legacy uncategorized category"), null, "Unknown categories remain uncategorized");
 
 assert.match(html, /maintenance-status=1/, "Website polls maintenance status");
+assert.match(html, /setInterval\(function\(\)[\s\S]*?10000\)/, "Open tabs refresh maintenance state periodically");
 assert.match(html, /id="maintenancePage"/, "Maintenance page exists");
+assert.match(edge, /maintenance_status_unavailable/, "Maintenance status API reports database failures");
 assert.match(edge, /callback_data: "maintenance:on"/, "Bot has maintenance enable action");
 assert.match(edge, /callback_data: "maintenance:off"/, "Bot has maintenance disable action");
 assert.match(edge, /secret_token: S/, "Webhook registration configures secret token");

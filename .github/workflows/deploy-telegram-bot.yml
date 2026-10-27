@@ -41,3 +41,13 @@ jobs:
             exit 1
           }
           echo "Telegram webhook registered successfully."
+      - name: Verify maintenance status API and database connectivity
+        env:
+          SUPABASE_PROJECT_ID: cdyrtfixvghjjptkuzxg
+        run: |
+          response="$(curl --silent --show-error --fail-with-body "https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/telegram-bot?maintenance-status=1")"
+          echo "$response" | jq -e '(.enabled | type) == "boolean" and (.error == null)' >/dev/null || {
+            echo "::error::Maintenance status check failed. Check the Supabase database connection and bot_sessions table access."
+            exit 1
+          }
+          echo "Maintenance status API and database query are healthy."
