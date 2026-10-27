@@ -2264,7 +2264,7 @@ updateUI();
 #hhx-vertical-nav .hhx-nav-arrow{width:34px!important;height:34px!important;border-radius:10px!important;border:1px solid #f5d76e55!important;background:#f5d76e0b!important;color:var(--gold)!important;font-size:20px!important}
 #hhx-vertical-nav .hhx-nav-arrow:hover{background:#f5d76e20!important;box-shadow:0 0 16px #f5d76e20!important}
 .hh-nav-end{display:flex;align-items:center;gap:7px}
-#reviewsList{display:none!important}
+#reviewsList{display:none!important}\n#reviews .reviews-layout{display:block!important;max-width:760px}\n#reviews .review-form{width:100%}
 #reviewStatus,#hhoStatus{display:none!important}
 #hhx-review-open{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin:6px 0 22px;padding:12px 20px;border:1px solid #f5d76e70;border-radius:12px;background:linear-gradient(135deg,#f5d76e18,#f5d76e04);color:#f5d76e;font:700 14px Cairo,sans-serif;cursor:pointer;transition:.25s}
 #hhx-review-open:hover{background:#f5d76e20;box-shadow:0 0 25px #f5d76e15;transform:translateY(-2px)}
@@ -2324,7 +2324,7 @@ ready(function(){
   if(reviewList&&reviewLayout){
     var openReviews=document.createElement('button');openReviews.type='button';openReviews.id='hhx-review-open';openReviews.textContent=lang?'✦  View reviews':'✦  عرض الآراء';
     openReviews.addEventListener('click',function(){reviewModal.show()});
-    if(reviewForm)reviewForm.insertAdjacentElement('afterend',openReviews);
+    if(reviewLayout&&reviewLayout.parentNode)reviewLayout.parentNode.insertBefore(openReviews,reviewLayout);
     reviewModal.body.appendChild(reviewList);
   }
   var notice=makeModal('hhxNoticeModal',lang?'Message':'تم بنجاح','', 'hhx-modal-panel--notice');
