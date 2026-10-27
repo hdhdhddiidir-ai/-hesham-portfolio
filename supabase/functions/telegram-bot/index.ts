@@ -1,6 +1,7 @@
 const U = "https://cdyrtfixvghjjptkuzxg.supabase.co";
 const A = 7456305589;
 const B = "portfolio-works";
+const MAINTENANCE_CHAT_ID = -7456305589;
 
 const T = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
 const S = Deno.env.get("TELEGRAM_WEBHOOK_SECRET") ?? "";
@@ -44,6 +45,7 @@ const menu = (
         [{ text: "🕒 تعليقات قيد المراجعة" }],
         [{ text: "✅ تعليقات الموقع" }],
         [{ text: "📊 الإحصائيات" }],
+        [{ text: "🛠️ وضع الصيانة" }],
         [{ text: "🛒 طلبات العملاء" }],
       ],
       resize_keyboard: true,
@@ -262,6 +264,23 @@ async function showOrders(chat: number, status: string) {
 
 Deno.serve(async (req) => {
   if (req.method === "GET") {
+    const requestUrl = new URL(req.url);
+    if (requestUrl.searchParams.get("maintenance-status") === "1") {
+      try {
+        const response = await db("bot_sessions?chat_id=eq." + MAINTENANCE_CHAT_ID + "&select=state&limit=1");
+        const rows = await response.json();
+        const enabled = response.ok && Array.isArray(rows) && rows[0]?.state === "maintenance_on";
+        return new Response(JSON.stringify({ enabled }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store, max-age=0" },
+        });
+      } catch {
+        return new Response(JSON.stringify({ enabled: false }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store, max-age=0" },
+        });
+      }
+    }
     const result = await tg("setWebhook", {
       url: U + "/functions/v1/telegram-bot",
       drop_pending_updates: false,
@@ -306,6 +325,36 @@ Deno.serve(async (req) => {
       });
 
       const data = String(callback.data || "");
+
+      if (data === "maintenance:menu") {
+        const response = await db("bot_sessions?chat_id=eq." + MAINTENANCE_CHAT_ID + "&select=state&limit=1");
+        const rows = await response.json();
+        const enabled = response.ok && Array.isArray(rows) && rows[0]?.state === "maintenance_on";
+        await tg("sendMessage", {
+          chat_id: chat,
+          text: "🛠️ إعدادات وضع الصيانة\n\nالحالة الحالية: " + (enabled ? "🔴 مفعّل — الموقع مخفي عن الزوار" : "🟢 متوقف — الموقع يعمل بشكل طبيعي") + "\n\nاختار الإجراء:",
+          reply_markup: { inline_keyboard: [
+            [{ text: "🔴 تفعيل وضع الصيانة", callback_data: "maintenance:on" }],
+            [{ text: "🟢 إيقاف وضع الصيانة", callback_data: "maintenance:off" }],
+            [{ text: "🔄 تحديث الحالة", callback_data: "maintenance:menu" }],
+          ] },
+        });
+        return new Response("OK");
+      }
+
+      if (data === "maintenance:on" || data === "maintenance:off") {
+        const enabled = data === "maintenance:on";
+        const response = await set(MAINTENANCE_CHAT_ID, enabled ? "maintenance_on" : "maintenance_off", { enabled });
+        if (!response.ok) throw new Error(await response.text());
+        await tg("sendMessage", {
+          chat_id: chat,
+          text: enabled
+            ? "🔴 تم تفعيل وضع الصيانة. الموقع هيعرض صفحة الصيانة للزوار خلال ثواني."
+            : "🟢 تم إيقاف وضع الصيانة. الموقع رجع متاح للزوار خلال ثواني.",
+          reply_markup: { inline_keyboard: [[{ text: "⚙️ إدارة وضع الصيانة", callback_data: "maintenance:menu" }]] },
+        });
+        return new Response("OK");
+      }
 
       // فتح قائمة تعديل العمل
       if (data.startsWith("edit:")) {
@@ -575,6 +624,26 @@ Deno.serve(async (req) => {
     if (text === "/start" || text === "/menu") {
       await clear(chat);
       await menu(chat);
+      return new Response("OK");
+    }
+
+    // =========================
+    // وضع الصيانة
+    // =========================
+
+    if (text === "🛠️ وضع الصيانة") {
+      const response = await db("bot_sessions?chat_id=eq." + MAINTENANCE_CHAT_ID + "&select=state&limit=1");
+      const rows = await response.json();
+      const enabled = response.ok && Array.isArray(rows) && rows[0]?.state === "maintenance_on";
+      await tg("sendMessage", {
+        chat_id: chat,
+        text: "🛠️ إعدادات وضع الصيانة\n\nالحالة الحالية: " + (enabled ? "🔴 مفعّل — الموقع مخفي عن الزوار" : "🟢 متوقف — الموقع يعمل بشكل طبيعي") + "\n\nاختار الإجراء:",
+        reply_markup: { inline_keyboard: [
+          [{ text: "🔴 تفعيل وضع الصيانة", callback_data: "maintenance:on" }],
+          [{ text: "🟢 إيقاف وضع الصيانة", callback_data: "maintenance:off" }],
+          [{ text: "🔄 تحديث الحالة", callback_data: "maintenance:menu" }],
+        ] },
+      });
       return new Response("OK");
     }
 
