@@ -720,7 +720,7 @@ html.maintenance-active #maintenancePage{display:flex}
 <a href="#orders" id="hhoNav">اطلب تصميم</a>
 <a href="#contact" data-i18n="navContact">تواصل معي</a>
 </nav>
-<div class="hh-nav-end"><button type="button" class="hh-lang hh-theme-toggle" id="hhThemeToggle" aria-label="تبديل الوضع الداكن والفاتح" title="الوضع الداكن / الوضع الفاتح">☀️</button></div>
+<div class="hh-nav-end"></div>
 </div>
 </header>
 
@@ -1123,15 +1123,8 @@ function buildWorkCard(w, i) {
   const h3 = document.createElement('h3'); h3.dir = 'auto'; h3.textContent = w.title || '';
   meta.append(small, h3);
   if (w.description) {
-    const p = document.createElement('p'); p.className = 'live-description'; p.dir = 'auto'; p.textContent = lang === 'en' ? 'Translating description…' : w.description;
+    const p = document.createElement('p'); p.className = 'live-description'; p.dir = 'auto'; p.textContent = w.description;
     meta.appendChild(p);
-    const originalDescription = w.description;
-    translateWorkDescription(originalDescription).then(translated => {
-      if (p.isConnected && lang === 'en' && p.closest('.work-card')?.dataset.workId === String(w.id)) {
-        p.textContent = translated;
-        p.dir = 'auto';
-      }
-    });
   }
   const btn = document.createElement('button');
   btn.className = 'view-work'; btn.type = 'button'; btn.textContent = t('viewWork');
@@ -2267,39 +2260,14 @@ updateUI();
 @media(prefers-reduced-motion:reduce){.hhx-modal,.hhx-modal-panel,.hhx-success-mark,.hhx-success-mark svg{animation:none!important}.hhx-success-mark svg{stroke-dashoffset:0}}
 /* Keep project descriptions out of the image cards; they remain available via the description modal. */
 .work-card .live-description{display:none!important}
-/* Accessible light theme, preserving the gold accent and existing layout. */
-html.hh-light-theme,html.hh-light-theme body{background:#f6f4ee!important;color:#222!important;color-scheme:light}
-html.hh-light-theme body{background-image:none!important}
-html.hh-light-theme #hhSky{opacity:.12}
-html.hh-light-theme .top-nav,html.hh-light-theme #topNav{background:rgba(250,248,242,.94)!important;border-color:#b99a4b55!important}
-html.hh-light-theme .top-logo,html.hh-light-theme .top-links a{color:#28251d!important}
-html.hh-light-theme .hh-lang{background:#fffdf7!important;color:#725710!important;border-color:#b99a4b88!important}
-html.hh-light-theme .page-section,html.hh-light-theme section,html.hh-light-theme footer{color:#28251d}
-html.hh-light-theme .work-card,html.hh-light-theme .service-card,html.hh-light-theme .review-card,html.hh-light-theme .contact-card,html.hh-light-theme .about-card,html.hh-light-theme .hhx-modal-panel,html.hh-light-theme .hhx-menu,html.hh-light-theme .hhx-settings-menu{background:linear-gradient(145deg,#fffdf8,#f0ede3)!important;color:#28251d!important;border-color:#b99a4b55!important;box-shadow:0 12px 35px #6c572018!important}
-html.hh-light-theme h1,html.hh-light-theme h2,html.hh-light-theme h3,html.hh-light-theme h4,html.hh-light-theme p,html.hh-light-theme li,html.hh-light-theme label,html.hh-light-theme .hhx-description-copy,html.hh-light-theme .hhx-modal-message{color:#28251d}
-html.hh-light-theme .hhx-modal{background:rgba(40,37,29,.48)!important}
-html.hh-light-theme .hhx-modal-subtitle{color:#6c6658}
-html.hh-light-theme input,html.hh-light-theme textarea,html.hh-light-theme select{background:#fffdf8!important;color:#28251d!important;border-color:#b99a4b66!important}
-html.hh-light-theme .hhx-modal-close{background:#f6f4ee;color:#28251d;border-color:#b99a4b55}
-html.hh-light-theme .hhx-description-button,html.hh-light-theme #hhx-review-open{background:#b99a4b12;color:#755b16;border-color:#b99a4b88}
-html.hh-light-theme .top-links a.active-nav{color:#9a741b!important}
-
+.work-card .work-visual{position:relative;z-index:1}
+#lightboxProjectDescription{display:block!important;white-space:pre-wrap;overflow-wrap:anywhere;line-height:2}
 </style>
 <script id="hhx-premium-modals-and-inline-arrows">
 (function(){
 'use strict';
 function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn()}
 ready(function(){
-  var themeToggle=document.getElementById('hhThemeToggle');
-  function applyTheme(mode){
-    var light=mode==='light';
-    document.documentElement.classList.toggle('hh-light-theme',light);
-    if(themeToggle){themeToggle.textContent=light?'🌙':'☀️';themeToggle.title=light?'تفعيل الوضع الداكن':'تفعيل الوضع الفاتح';themeToggle.setAttribute('aria-label',themeToggle.title);}
-    try{localStorage.setItem('hh_site_theme',light?'light':'dark')}catch(e){}
-  }
-  var savedTheme='dark';try{savedTheme=localStorage.getItem('hh_site_theme')||'dark'}catch(e){}
-  applyTheme(savedTheme);
-  if(themeToggle)themeToggle.addEventListener('click',function(){applyTheme(document.documentElement.classList.contains('hh-light-theme')?'dark':'light')});
   var nav=document.getElementById('hhx-vertical-nav');
   var navEnd=document.querySelector('.hh-nav-end');
   if(nav&&navEnd){navEnd.insertBefore(nav,navEnd.firstChild);nav.setAttribute('aria-label','التنقل بين أقسام الموقع');}
@@ -2353,38 +2321,7 @@ ready(function(){
     }).observe(el,{subtree:true,childList:true,characterData:true});
   });
   // Keep the review form compact: approved reviews only appear in the modal.
-  // Project descriptions open in a dedicated, readable modal instead of tiny card text.
-  var descModal=makeModal('hhxDescriptionModal',lang?'Project description':'وصف المشروع',lang?'Project details':'تفاصيل المشروع');
-  var descCopy=document.createElement('div');descCopy.className='hhx-description-copy';descModal.body.appendChild(descCopy);
-  document.querySelectorAll('.work-card').forEach(function(card){
-    var meta=card.querySelector('.work-meta');if(!meta||meta.querySelector('.hhx-description-button'))return;
-    var btn=document.createElement('button');btn.type='button';btn.className='hhx-description-button';btn.textContent=lang?'View description ↗':'عرض الوصف ↗';
-    btn.addEventListener('click',function(e){
-      e.preventDefault();e.stopPropagation();
-      var d=card.querySelector('.live-description');
-      var text=(d&&d.textContent||'').trim();
-      var title=(card.querySelector('h3')&&card.querySelector('h3').textContent||'').trim();
-      descModal.title.textContent=(lang?'Description: ':'وصف: ')+title;
-      descCopy.textContent=text|| (lang?'No additional description is available for this project yet.':'لا يوجد وصف إضافي لهذا المشروع حاليًا.');
-      descModal.show();
-    });
-    meta.appendChild(btn);
-  });
-  // Existing portfolio content can be rendered asynchronously; add description controls to later cards too.
-  var cardObserver=new MutationObserver(function(records){
-    records.forEach(function(rec){rec.addedNodes.forEach(function(node){
-      if(node.nodeType!==1)return;
-      var cards=[];if(node.matches&&node.matches('.work-card'))cards.push(node);
-      if(node.querySelectorAll)cards=cards.concat(Array.from(node.querySelectorAll('.work-card')));
-      cards.forEach(function(card){
-        var meta=card.querySelector('.work-meta');if(!meta||meta.querySelector('.hhx-description-button'))return;
-        var btn=document.createElement('button');btn.type='button';btn.className='hhx-description-button';btn.textContent=lang?'View description ↗':'عرض الوصف ↗';
-        btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var d=card.querySelector('.live-description');var title=(card.querySelector('h3')&&card.querySelector('h3').textContent||'').trim();descModal.title.textContent=(lang?'Description: ':'وصف: ')+title;descCopy.textContent=(d&&d.textContent||'').trim()||(lang?'No additional description is available for this project yet.':'لا يوجد وصف إضافي لهذا المشروع حاليًا.');descModal.show()});
-        meta.appendChild(btn);
-      });
-    })});
-  });
-  var portfolio=document.querySelector('.portfolio-grid');if(portfolio)cardObserver.observe(portfolio,{childList:true,subtree:true});
+
 });
 })();
 </script>
