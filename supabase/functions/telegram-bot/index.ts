@@ -526,7 +526,6 @@ async function handleSubmissionNotification(req: Request): Promise<Response> {
             { text: "🚫 رفض", callback_data: "reviewreject:" + item.id },
           ],
           [{ text: "🗑️ حذف نهائي", callback_data: "reviewdel:" + item.id }],
-          [{ text: "🕒 فتح قائمة المراجعة", callback_data: "reviewlist:pending" }],
         ],
       }
       : undefined;
