@@ -771,11 +771,22 @@ html.maintenance-active #maintenancePage{display:flex}
 <label class="portfolio-search-label" for="portfolioSearch"><span id="portfolioSearchLabel">ابحث في المشاريع</span><input id="portfolioSearch" type="search" autocomplete="off" aria-label="ابحث باسم المشروع أو وصفه" placeholder="اسم المشروع أو نوع التصميم..."></label>
 <div class="portfolio-filter-list" id="portfolioFilterList" role="group" aria-label="تصفية المشاريع">
 <button type="button" class="portfolio-filter is-active" data-work-filter="all" aria-pressed="true">الكل</button>
-<button type="button" class="portfolio-filter" data-work-filter="branding" aria-pressed="false">شعارات وهوية</button>
-<button type="button" class="portfolio-filter" data-work-filter="social" aria-pressed="false">سوشيال ميديا</button>
+<button type="button" class="portfolio-filter" data-work-filter="logo-identity" aria-pressed="false">لوجو وهوية بصرية</button>
+<button type="button" class="portfolio-filter" data-work-filter="business-card" aria-pressed="false">كروت شخصية</button>
 <button type="button" class="portfolio-filter" data-work-filter="advertising" aria-pressed="false">إعلانات</button>
-<button type="button" class="portfolio-filter" data-work-filter="print" aria-pressed="false">مطبوعات</button>
-<button type="button" class="portfolio-filter" data-work-filter="other" aria-pressed="false">أخرى</button>
+<button type="button" class="portfolio-filter" data-work-filter="restaurant-menu" aria-pressed="false">منيو مطاعم</button>
+<button type="button" class="portfolio-filter" data-work-filter="invitations" aria-pressed="false">دعوات</button>
+<button type="button" class="portfolio-filter" data-work-filter="social-ads" aria-pressed="false">إعلانات سوشيال</button>
+<button type="button" class="portfolio-filter" data-work-filter="graphic-design" aria-pressed="false">تصميم جرافيك</button>
+<button type="button" class="portfolio-filter" data-work-filter="print-design" aria-pressed="false">تصميم مطبوعات</button>
+<button type="button" class="portfolio-filter" data-work-filter="flyer" aria-pressed="false">فلاير</button>
+<button type="button" class="portfolio-filter" data-work-filter="brochure" aria-pressed="false">بروشور</button>
+<button type="button" class="portfolio-filter" data-work-filter="stickers-labels" aria-pressed="false">استيكرات وليبلز</button>
+<button type="button" class="portfolio-filter" data-work-filter="posters-banners" aria-pressed="false">بوسترات وبانرات</button>
+<button type="button" class="portfolio-filter" data-work-filter="packaging" aria-pressed="false">تصميم عبوات</button>
+<button type="button" class="portfolio-filter" data-work-filter="business-design" aria-pressed="false">تصميمات شركات</button>
+<button type="button" class="portfolio-filter" data-work-filter="social-posts" aria-pressed="false">بوستات وستوري</button>
+<button type="button" class="portfolio-filter" data-work-filter="digital-design" aria-pressed="false">تصميمات رقمية</button>
 </div>
 <p class="portfolio-filter-status" id="portfolioFilterStatus" aria-live="polite"></p>
 </div>
@@ -1070,10 +1081,23 @@ function stateNode(key, extraClass) {
 function matchCat(raw) {
   const c = String(raw || '').toLowerCase().trim();
   if (!c) return null;
-  if (c.includes('سوش') || c.includes('social')) return 'social';
+  // The bot's 16 service labels may include emoji prefixes and English or Arabic names.
+  if (c.includes('كارت') || c.includes('كروت') || c.includes('business card')) return 'business-card';
+  if (c.includes('دعوة') || c.includes('دعوات') || c.includes('invitation')) return 'invitations';
+  if (c.includes('منيو') || c.includes('مطعم') || c.includes('restaurant menu') || c === 'menu' || c.includes('menu design')) return 'restaurant-menu';
+  if (c.includes('إعلان سوش') || c.includes('اعلان سوش') || c.includes('social media ad') || c.includes('social ads')) return 'social-ads';
+  if (c.includes('بوست') || c.includes('ستوري') || c.includes('social media posts') || c.includes('social media post') || c === 'social' || c.includes('سوشيال ميديا')) return 'social-posts';
+  if (c.includes('فلاير') || c.includes('flyer')) return 'flyer';
+  if (c.includes('بروشور') || c.includes('brochure')) return 'brochure';
+  if (c.includes('استيكر') || c.includes('ستيكر') || c.includes('ليبل') || c.includes('label') || c.includes('sticker')) return 'stickers-labels';
+  if (c.includes('بانر') || c.includes('بوستر') || c.includes('poster') || c.includes('banner')) return 'posters-banners';
+  if (c.includes('عبوة') || c.includes('تغليف') || c.includes('packaging')) return 'packaging';
+  if (c.includes('شركة') || c.includes('شركات') || c.includes('business & company') || c.includes('company design')) return 'business-design';
+  if (c.includes('رقمي') || c.includes('رقمية') || c.includes('digital design')) return 'digital-design';
+  if (c.includes('طباعة') || c.includes('مطبوع') || c.includes('print')) return 'print-design';
+  if (c.includes('جرافيك') || c.includes('graphic design') || c.includes('تصميم عام')) return 'graphic-design';
+  if (c.includes('لوجو') || c.includes('هوية') || c.includes('logo') || c.includes('brand') || c === 'branding') return 'logo-identity';
   if (c.includes('إعلان') || c.includes('اعلان') || c.includes('advert')) return 'advertising';
-  if (c.includes('طباعة') || c.includes('مطبوع') || c.includes('print') || c.includes('منيو') || c.includes('menu')) return 'print';
-  if (c.includes('لوجو') || c.includes('logo') || c.includes('هوية') || c.includes('brand')) return 'branding';
   return null;
 }
 function categoryLabel(raw) {
@@ -1191,8 +1215,8 @@ function applyPortfolioFilters() {
 function syncPortfolioFilterLanguage() {
   const english = lang === 'en';
   const labels = english
-    ? { all:'All', branding:'Logos & identity', social:'Social media', advertising:'Advertising', print:'Print', other:'Other', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
-    : { all:'الكل', branding:'شعارات وهوية', social:'سوشيال ميديا', advertising:'إعلانات', print:'مطبوعات', other:'أخرى', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
+    ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
+    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
   document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
     button.textContent = labels[button.dataset.workFilter] || labels.all;
   });
@@ -2137,6 +2161,33 @@ applyTexts();
 .hho-form input:not([type=checkbox]):not([type=radio]),.hho-form textarea,.hho-form select,.review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]),.review-form textarea{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 42%,transparent)!important;box-shadow:0 0 0 1px var(--hh-field-glow-soft),0 0 13px var(--hh-field-glow),inset 0 0 8px var(--hh-field-glow-soft)!important;transition:border-color .22s ease,box-shadow .22s ease,background-color .22s ease!important}
 .hho-form input:not([type=checkbox]):not([type=radio]):focus,.hho-form textarea:focus,.hho-form select:focus,.review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]):focus,.review-form textarea:focus{border-color:var(--hho-acc,#f5d76e)!important;box-shadow:0 0 0 2px var(--hh-field-glow),0 0 22px var(--hh-field-glow),inset 0 0 10px var(--hh-field-glow-soft)!important}
 html.hh-reduce-glow .hho-form input:not([type=checkbox]):not([type=radio]),html.hh-reduce-glow .hho-form textarea,html.hh-reduce-glow .hho-form select,html.hh-reduce-glow .review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]),html.hh-reduce-glow .review-form textarea{box-shadow:none!important}
+</style>
+
+<style id="portfolio-navigation-and-filter-polish">
+/* A calmer, consistent navigation rhythm and usable 16-service filter on every screen. */
+html { scroll-padding-top: 92px !important; }
+.page-section, #home.page-section { scroll-margin-top: 92px !important; }
+#portfolioFilterList { align-items:center; gap:8px; }
+#portfolioFilterList .portfolio-filter { flex:0 0 auto; }
+#portfolioTools { border-color:#f5d76e22; box-shadow:0 14px 42px #0005; }
+#portfolioSearch { min-height:46px; border-color:#f5d76e35; }
+#portfolioSearch:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+@media (max-width:900px) {
+  html { scroll-padding-top: 128px !important; }
+  .page-section, #home.page-section { scroll-margin-top: 128px !important; }
+  #portfolioFilterList { flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-inline:contain; padding:4px 2px 10px; scrollbar-width:thin; }
+  #portfolioFilterList .portfolio-filter { white-space:nowrap; }
+}
+@media (max-width:600px) {
+  html { scroll-padding-top: 132px !important; }
+  .page-section, #home.page-section { scroll-margin-top: 132px !important; }
+  #portfolioFilterList { margin-inline:-2px; }
+  #portfolioTools { gap:12px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto !important; }
+  *, *::before, *::after { scroll-behavior:auto !important; }
+}
 </style>
 </body>
 </html>
