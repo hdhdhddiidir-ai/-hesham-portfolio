@@ -616,11 +616,26 @@ html.maintenance-active #maintenancePage{display:flex}
   var lang='ar';
   try{if(localStorage.getItem('hh_lang')==='en')lang='en'}catch(e){}
   window.__hhMaintenanceLang=lang;
+  var firstCheck=true;
+  function refreshMaintenance(){
+    fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
+      .then(function(d){
+        root.classList.toggle('maintenance-active',d.enabled===true);
+        root.classList.remove('maintenance-checking');
+        firstCheck=false;
+      })
+      .catch(function(){
+        root.classList.remove('maintenance-checking');
+        firstCheck=false;
+      });
+  }
   window.setTimeout(function(){root.classList.remove('maintenance-checking')},3000);
-  fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
-    .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
-    .then(function(d){root.classList.remove('maintenance-checking');if(d.enabled)root.classList.add('maintenance-active')})
-    .catch(function(){root.classList.remove('maintenance-checking')});
+  refreshMaintenance();
+  // Keep already-open visitor tabs in sync with the Telegram maintenance toggle.
+  window.setInterval(function(){
+    if(document.visibilityState!=='hidden')refreshMaintenance();
+  },10000);
 })();
 </script>
 
