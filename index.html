@@ -1737,13 +1737,15 @@ if (form) {
     btn.disabled = true; btn.textContent = T('ordSending'); setStatus('', '');
     Promise.resolve().then(function () {
       var row = { customer_name: d.customer_name, service: d.service, details: d.details, whatsapp: d.whatsapp, attachments: [], status: 'new' };
-      return fetch(SUPABASE_URL + '/rest/v1/' + ORDERS_TABLE, {
+      return fetch(SUPABASE_URL + '/functions/v1/telegram-bot?action=create-order', {
         method: 'POST',
-        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify(row)
+        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payload: row })
       }).then(function (r) {
-        if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t); });
-        return notifyTelegram('order', row);
+        return r.json().catch(function () { return {}; }).then(function (body) {
+          if (!r.ok || !body.ok) throw new Error('Order API ' + r.status + ': ' + String(body.error || 'Unknown error'));
+          return body;
+        });
       }).then(function () {
         lastSent = Date.now();
         form.reset(); fillServices();
