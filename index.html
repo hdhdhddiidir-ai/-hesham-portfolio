@@ -1965,5 +1965,13 @@ applyTexts();
 })();
 </script>
 
+
+<!-- Always-on, theme-aware field glow. Focus only intensifies it. -->
+<style id="hh-always-on-field-glow">
+:root{--hh-field-glow:color-mix(in srgb,var(--hho-acc,#f5d76e) 22%,transparent);--hh-field-glow-soft:color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)}
+.hho-form input:not([type=checkbox]):not([type=radio]),.hho-form textarea,.hho-form select,.review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]),.review-form textarea{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 42%,transparent)!important;box-shadow:0 0 0 1px var(--hh-field-glow-soft),0 0 13px var(--hh-field-glow),inset 0 0 8px var(--hh-field-glow-soft)!important;transition:border-color .22s ease,box-shadow .22s ease,background-color .22s ease!important}
+.hho-form input:not([type=checkbox]):not([type=radio]):focus,.hho-form textarea:focus,.hho-form select:focus,.review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]):focus,.review-form textarea:focus{border-color:var(--hho-acc,#f5d76e)!important;box-shadow:0 0 0 2px var(--hh-field-glow),0 0 22px var(--hh-field-glow),inset 0 0 10px var(--hh-field-glow-soft)!important}
+html.hh-reduce-glow .hho-form input:not([type=checkbox]):not([type=radio]),html.hh-reduce-glow .hho-form textarea,html.hh-reduce-glow .hho-form select,html.hh-reduce-glow .review-form input:not([type=radio]):not([type=checkbox]):not([type=hidden]):not([type=submit]),html.hh-reduce-glow .review-form textarea{box-shadow:none!important}
+</style>
 </body>
 </html>
