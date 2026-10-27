@@ -59,6 +59,38 @@ body.page-mode{overflow-x:hidden;padding-right:0}
 .case-study-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.case-study-item{border:1px solid #ffffff12;background:#0d0d0dcc;border-radius:10px;padding:10px 12px}.case-study-item small{display:block;color:var(--gold);font-size:9px;letter-spacing:1.5px;margin-bottom:4px}.case-study-item span{color:#ddd;font-size:12px;line-height:1.7}.case-study-cta{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid #ffffff12}.case-study-cta strong{font-size:14px}.case-study-wa,.floating-wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}.case-study-wa{background:var(--gold);color:#090909;padding:10px 16px;border-radius:9px;font-weight:800;font-size:12px;white-space:nowrap}.case-study-wa:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .floating-wa{position:fixed;right:20px;bottom:20px;z-index:18;background:#25D366;color:#fff;border:1px solid #ffffff22;border-radius:999px;padding:12px 16px;box-shadow:0 10px 35px #0008,0 0 24px #25d36655;font-weight:800;font-size:12px;transition:.25s}.floating-wa:hover{transform:translateY(-3px);box-shadow:0 14px 40px #0009,0 0 30px #25d36677}.floating-wa .wa-icon{font-size:17px;line-height:1}
 @media(max-width:700px){.case-study-panel{max-height:48%;padding:14px 16px 18px}.case-study-grid{grid-template-columns:1fr}.case-study-cta{align-items:stretch;flex-direction:column}.case-study-wa{width:100%}.floating-wa{right:12px;bottom:12px;padding:11px 14px}.lightbox-box{height:96vh;width:96vw}}
+
+/* Consistent soft glow for every visitor-facing form field */
+input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="submit"]),
+textarea,
+select,
+.hho-picker-trigger {
+  color: #fff;
+  background-color: #090909;
+  border: 1px solid #f5d76e38;
+  border-radius: 12px;
+  transition: border-color .25s ease, box-shadow .25s ease, background-color .25s ease, transform .25s ease;
+}
+input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="submit"]):hover,
+textarea:hover,
+select:hover,
+.hho-picker-trigger:hover {
+  border-color: #f5d76e70;
+  box-shadow: 0 0 0 1px #f5d76e0c, 0 0 18px #f5d76e0d;
+}
+input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="submit"]):focus,
+textarea:focus,
+select:focus,
+.hho-picker-trigger:focus-visible {
+  outline: none;
+  border-color: #f5d76eaa;
+  box-shadow: 0 0 0 3px #f5d76e12, 0 0 22px #f5d76e20, inset 0 0 12px #f5d76e05;
+  background-color: #0b0a06;
+}
+input::placeholder, textarea::placeholder { color: #777; opacity: 1; }
+.review-form input:not([type="radio"]):not([type="checkbox"]),
+.review-form textarea { border-color: #f5d76e30; box-shadow: 0 0 0 1px #f5d76e04; }
+.star-picker input { box-shadow: none !important; }
 </style>
 
 <style id="final-premium-ui">
@@ -782,6 +814,20 @@ const REVIEWS_TABLE = 'customer_reviews';
 const WA = 'https://wa.me/201118313357';
 const PAGES = ['home', 'about', 'work', 'services', 'reviews', 'orders', 'contact'];
 
+async function notifyTelegram(type, id) {
+  try {
+    if (!id || !['order', 'review'].includes(type)) return;
+    await fetch(SUPABASE_URL + '/functions/v1/telegram-bot?action=notify-submission', {
+      method: 'POST',
+      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: type, id: id })
+    });
+  } catch (err) {
+    try { console.warn('Telegram notification could not be sent:', err && err.message); } catch (x) {}
+  }
+}
+
+
 /* ---------- i18n ---------- */
 const I18N = { ar: {"navHome": "الرئيسية", "navAbout": "من أنا", "navWork": "أعمالي", "navServices": "خدماتي", "navReviews": "التقييمات", "navContact": "تواصل معي", "homeTag": "أحوّل الأفكار إلى تصاميم بصرية مؤثرة.", "homeBtnWork": "مشاهدة أعمالي →", "homeBtnContact": "تواصل معي ✉", "aboutTitle": "أنا مش بس بعمل تصميم…<br><em>أنا ببني نفسي مع كل تصميم.</em>", "aboutP1": "أنا <strong>Hesham Hane</strong>، طالب في <strong>تالتة ثانوي</strong>، وببني في نفس الوقت طريقي في مجال التصميم والعمل الحر. بدأت من فضولي تجاه الجرافيك، ومع الوقت اتحول الفضول لشغف، والشغف لرحلة حقيقية بتكبر يوم بعد يوم.", "aboutP2": "بالنسبة لي، التصميم مش مجرد ألوان وصور؛ هو طريقة لتحويل فكرة بسيطة إلى شكل يخلي الناس <strong>تشوف، تفهم، وتحس</strong>. عشان كده بحاول في كل شغل أوازن بين الشكل القوي والفكرة الواضحة، وأتعلم من كل تجربة بدل ما أكرر نفس الخطوة.", "aboutP3": "بشتغل على <strong>اللوجوهات والهوية البصرية والإعلانات والسوشيال ميديا والـBusiness Cards والمنيوهات والمطبوعات</strong> وغيرها من التصميمات الرقمية والمطبوعة. هدفي إني أطور مستوايا باستمرار وأوصل لشغل أقدر أكون فخور بيه.", "st1": "أتعلّم باستمرار", "st1s": "كل مشروع فرصة جديدة", "st2": "أهتم بالتفاصيل", "st2s": "الفكرة قبل الزحمة", "st3": "أبني مستقبلي", "st3s": "خطوة وراء خطوة", "aboutQuote": "“البداية الصغيرة مش معناها إن الحلم صغير… المهم إنك تفضل ماشي.”", "aboutBtnWork": "اكتشف أعمالي →", "aboutBtnTalk": "خلينا نتكلم ✉", "workTitle": "شوية من شغلي.", "workIntro": "تصميمات اتعملت عشان تفرق، مش عشان تتملي مساحة.", "worksLoading": "جاري تحميل أعمالي...", "servicesTitle": "خدماتي", "servicesIntro": "كل فكرة ليها شكلها الصح — وأنا أحولها لتصميم يليق بيها.", "s01t": "تصميم جرافيك", "s01d": "تصميمات جرافيكية متنوعة حسب احتياجك وفكرتك.", "s02t": "لوجو وهوية بصرية", "s02d": "شعار وهوية متكاملة تعبر عن البراند باحتراف.", "s03t": "كروت شخصية", "s03d": "كروت شخصية وبيزنس كارد بشكل أنيق وواضح.", "s04t": "إعلانات", "s04d": "تصميم إعلاني جذاب للحملات والعروض والمنتجات.", "s05t": "إعلانات سوشيال ميديا", "s05d": "بوستات وستوري وحملات متناسقة للسوشيال.", "s06t": "مطبوعات", "s06d": "تصميمات جاهزة للطباعة بجودة وتنظيم احترافي.", "s07t": "فلاير", "s07d": "فلايرات إعلانية وعروض بشكل جذاب وواضح.", "s08t": "بروشور", "s08d": "بروشورات تعريفية وتسويقية مرتبة واحترافية.", "s09t": "منيو مطاعم", "s09d": "منيوهات مرتبة وشهية بصريًا للمطاعم والكافيهات.", "s10t": "دعوات وأفراح ومناسبات", "s10d": "دعوات أنيقة للأفراح والمناسبات والفعاليات.", "s11t": "استيكرات وليبلات", "s11d": "تصميم استيكرات وليبلات للمنتجات والمشروعات.", "s12t": "بوسترات وبانرات", "s12d": "تصميمات كبيرة وواضحة للإعلانات والطباعة.", "s13t": "تصميمات تغليف وعبوات", "s13d": "تغليف وعبوات تبرز المنتج بشكل مميز واحترافي.", "s14t": "تصميمات للمحلات والشركات", "s14d": "تصاميم تساعد نشاطك يظهر بشكل احترافي ومميز.", "s15t": "تصميم بوستات وستوري", "s15d": "محتوى بصري للسوشيال ميديا جاهز للنشر.", "s16t": "تصميمات رقمية متنوعة", "s16d": "أي تصميم رقمي تحتاجه حسب فكرتك وهدفك.", "reviewsTitle": "آراء العملاء", "reviewsIntro": "رأيك يهمني ❤️ اكتب تعليقك، وبعد المراجعة والموافقة هيظهر للناس كلها.", "ratingLegend": "تقييمك من 1 إلى 5 نجوم", "star1": "نجمة واحدة", "star2": "نجمتان", "star3": "3 نجوم", "star4": "4 نجوم", "star5": "5 نجوم", "reviewSubmit": "نشر رأيي", "revLoading": "جاري تحميل الآراء...", "contactTitle": "عندك فكرة؟ خلينا نعملها مميزة.", "contactIntro": "اختار الطريقة اللي تريحك وتواصل معايا مباشرة.", "cEmail": "البريد الإلكتروني", "cFb": "صفحتي على فيسبوك", "waBtn": "تواصل معي", "lbCta": "💬 اطلب تصميمك الآن", "logoAria": "Hesham Hane - الرئيسية", "navAria": "التنقل الرئيسي", "phName": "اسمك", "phReview": "اكتب رأيك في الشغل أو تجربتك...", "starsAria": "تقييم النجوم", "waAria": "تواصل معي على واتساب", "lbAria": "عرض المشروع", "lbClose": "إغلاق", "lbTools": "أدوات الصورة", "lbZoomOut": "تصغير", "lbZoomReset": "الحجم الطبيعي", "lbZoomIn": "تكبير", "docTitle": "هشام هاني — مصمم جرافيك", "viewWork": "شوف المشروع ↗", "worksEmpty": "لسه مفيش أعمال منشورة.", "worksErr": "تعذر تحميل الأعمال حاليًا. هنعيد المحاولة تلقائيًا.", "revEmpty": "لسه مفيش آراء — كن أول واحد يكتب رأيه ❤️", "revErr": "تعذر تحميل الآراء حاليًا. هنعيد المحاولة تلقائيًا.", "revInvalid": "اكتب اسمك ورأي لا يقل عن 3 حروف.", "revSending": "جاري الإرسال...", "revDup": "الاسم ده مستخدم قبل كده — مسموح بتعليق واحد لكل اسم ❤️", "revError": "حصل خطأ أثناء النشر، حاول تاني.", "revOk": "<strong>❤️ شكرًا ليك على تعليقك!</strong><span>تم استلام تعليقك بنجاح، وهو الآن <b>قيد المراجعة</b>، وسيتم نشره بعد الموافقة عليه.</span><span class=\"review-warning\">⚠️ يُرجى تجنّب الكلمات المسيئة أو الألفاظ غير اللائقة، حفاظًا على احترام جميع الزوار وسمعة الموقع.</span><span>💛 شكرًا لمساهمتك في تطوير الموقع!</span>", "starsOf5": "{n} من 5 نجوم", "lbDefaultDesc": "تصميم إبداعي من أعمال Hesham Hane.", "lbDefaultTitle": "مشروع", "lbDefaultCat": "تصميم", "lbWaMsg": "السلام عليكم، أنا مهتم بتصميم مشابه لمشروع: ", "switchLabel": "EN", "catSocial": "سوشيال ميديا", "catAdvertising": "إعلانات", "catPrint": "مطبوعات", "catBranding": "هوية بصرية", "langAria": "Switch to English", "meteorText": "صلِّ على النبي ❤️", "meteorBtn": "Click", "quoteText": "عِشْ ما شئتَ فإنك ميت", "quoteClose": "إغلاق", "quoteAria": "رسالة", "avatarAlt": "هشام هاني", "welcomeAria": "ترحيب", "welcomeSkip": "تخطي"}, en: {"navHome": "Home", "navAbout": "About", "navWork": "Work", "navServices": "Services", "navReviews": "Reviews", "navContact": "Contact", "homeTag": "I turn ideas into impactful visual designs.", "homeBtnWork": "View my work →", "homeBtnContact": "Contact me ✉", "aboutTitle": "I don't just make designs…<br><em>I build myself with every design.</em>", "aboutP1": "I'm <strong>Hesham Hane</strong>, a <strong>final-year high school</strong> student, building my path in design and freelancing at the same time. It started with curiosity about graphics; over time that curiosity became a passion, and the passion a real journey that grows day by day.", "aboutP2": "To me, design isn't just colors and pictures; it's a way to turn a simple idea into a form that makes people <strong>see, understand, and feel</strong>. That's why in every project I try to balance a strong look with a clear idea, and learn from every experience instead of repeating the same step.", "aboutP3": "I work on <strong>logos, visual identity, ads, social media, Business Cards, menus and print</strong>, along with other digital and print designs. My goal is to keep improving and reach work I can be proud of.", "st1": "Always learning", "st1s": "Every project is a new chance", "st2": "Detail-focused", "st2s": "Idea before clutter", "st3": "Building my future", "st3s": "Step by step", "aboutQuote": "“A small start doesn't mean a small dream… what matters is that you keep going.”", "aboutBtnWork": "Explore my work →", "aboutBtnTalk": "Let's talk ✉", "workTitle": "Some of my work.", "workIntro": "Designs made to make a difference, not to fill space.", "worksLoading": "Loading my work...", "servicesTitle": "My services", "servicesIntro": "Every idea has its right shape — and I turn it into a design worthy of it.", "s01t": "Graphic design", "s01d": "Varied graphic designs tailored to your needs and idea.", "s02t": "Logo & visual identity", "s02d": "A complete logo and identity that represents the brand professionally.", "s03t": "Business cards", "s03d": "Personal and business cards, elegant and clear.", "s04t": "Advertising", "s04d": "Eye-catching ad designs for campaigns, offers and products.", "s05t": "Social media ads", "s05d": "Consistent posts, stories and campaigns for social media.", "s06t": "Print design", "s06d": "Print-ready designs with professional quality and layout.", "s07t": "Flyers", "s07d": "Attractive, clear promotional flyers and offers.", "s08t": "Brochures", "s08d": "Well-organized, professional informational and marketing brochures.", "s09t": "Restaurant menus", "s09d": "Organized, visually appetizing menus for restaurants and cafés.", "s10t": "Invitations & events", "s10d": "Elegant invitations for weddings, occasions and events.", "s11t": "Stickers & labels", "s11d": "Sticker and label designs for products and businesses.", "s12t": "Posters & banners", "s12d": "Large, clear designs for advertising and print.", "s13t": "Packaging design", "s13d": "Packaging that makes the product stand out professionally.", "s14t": "Designs for shops & companies", "s14d": "Designs that help your business look professional and distinctive.", "s15t": "Posts & stories", "s15d": "Ready-to-publish visual content for social media.", "s16t": "Various digital designs", "s16d": "Any digital design you need, based on your idea and goal.", "reviewsTitle": "Client reviews", "reviewsIntro": "Your opinion matters to me ❤️ Write your review; after approval it will appear for everyone.", "ratingLegend": "Your rating from 1 to 5 stars", "star1": "1 star", "star2": "2 stars", "star3": "3 stars", "star4": "4 stars", "star5": "5 stars", "reviewSubmit": "Post my review", "revLoading": "Loading reviews...", "contactTitle": "Got an idea? Let's make it stand out.", "contactIntro": "Choose the way that suits you and reach me directly.", "cEmail": "Email", "cFb": "My Facebook page", "waBtn": "Contact me", "lbCta": "💬 Order your design now", "logoAria": "Hesham Hane - Home", "navAria": "Main navigation", "phName": "Your name", "phReview": "Write your opinion about the work or your experience...", "starsAria": "Star rating", "waAria": "Contact me on WhatsApp", "lbAria": "Project view", "lbClose": "Close", "lbTools": "Image tools", "lbZoomOut": "Zoom out", "lbZoomReset": "Actual size", "lbZoomIn": "Zoom in", "docTitle": "Hesham Hane — Graphic Designer", "viewWork": "View project ↗", "worksEmpty": "No published work yet.", "worksErr": "Couldn't load the work right now. Retrying automatically.", "revEmpty": "No reviews yet — be the first to write one ❤️", "revErr": "Couldn't load reviews right now. Retrying automatically.", "revInvalid": "Enter your name and a review of at least 3 characters.", "revSending": "Sending...", "revDup": "This name has already been used — one review per name ❤️", "revError": "Something went wrong while posting, please try again.", "revOk": "<strong>❤️ Thank you for your review!</strong><span>Your review was received successfully and is now <b>under review</b>; it will be published once approved.</span><span class=\"review-warning\">⚠️ Please avoid offensive or inappropriate language, out of respect for all visitors and the site.</span><span>💛 Thanks for helping improve the site!</span>", "starsOf5": "{n} out of 5 stars", "lbDefaultDesc": "A creative design from Hesham Hane's work.", "lbDefaultTitle": "Project", "lbDefaultCat": "Design", "lbWaMsg": "Hello, I'm interested in a design similar to the project: ", "switchLabel": "ع", "catSocial": "Social media", "catAdvertising": "Advertising", "catPrint": "Print", "catBranding": "Branding", "langAria": "التبديل إلى العربية", "meteorText": "Send blessings upon the Prophet ❤️", "meteorBtn": "Click", "quoteText": "Live as you wish, for you shall surely die", "quoteClose": "Close", "quoteAria": "Message", "avatarAlt": "Hesham Hane", "welcomeAria": "Welcome", "welcomeSkip": "Skip"} };
 let lang = 'ar';
@@ -1146,11 +1192,13 @@ form.addEventListener('submit', async e => {
   try {
     const r = await sbFetch(`/rest/v1/${REVIEWS_TABLE}`, {
       method: 'POST',
-      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' },
       body: JSON.stringify({ name, review, rating, status: 'pending' })
     });
     if (r.status === 409) { setStatus('revDup'); return; }
     if (!r.ok) throw new Error('publish HTTP ' + r.status);
+    const createdReviews = await r.json();
+    if (Array.isArray(createdReviews) && createdReviews[0] && createdReviews[0].id != null) await notifyTelegram('review', createdReviews[0].id);
     form.reset();
     setStatus('revOk'); // pending: NOT shown publicly until approved
   } catch (err) { setStatus('revError'); }
@@ -1692,10 +1740,12 @@ if (form) {
       var row = { customer_name: d.customer_name, service: d.service, details: d.details, whatsapp: d.whatsapp, attachments: [], status: 'new' };
       return fetch(SUPABASE_URL + '/rest/v1/' + ORDERS_TABLE, {
         method: 'POST',
-        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' },
         body: JSON.stringify(row)
       }).then(function (r) {
         if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t); });
+        return r.json().then(function (createdRows) { if (Array.isArray(createdRows) && createdRows[0] && createdRows[0].id != null) return notifyTelegram('order', createdRows[0].id).then(function () { return createdRows; }); return createdRows; });
+      }).then(function () {
         lastSent = Date.now();
         form.reset(); fillServices();
         setStatus('ok', T('ok'));
