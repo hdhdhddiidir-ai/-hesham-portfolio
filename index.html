@@ -2338,6 +2338,14 @@ ready(function(){
 .hhx-project-description-text{color:#f0f0f0;font-size:clamp(16px,2.8vw,20px);line-height:2.15;white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:plaintext}
 .hhx-project-description-text:empty:before{content:'لا يوجد وصف إضافي لهذا المشروع حاليًا.';color:#999}
 @media(prefers-reduced-motion:reduce){.hhx-project-description-overlay,.hhx-project-description-panel{animation:none!important}}
+
+/* Keep the project-description modal synced with the visitor's selected site palette. */
+.hhx-project-description-trigger{border-color:var(--hho-acc,#f5d76e)!important;color:var(--hho-acc,#f5d76e)!important;background:color-mix(in srgb,var(--hho-acc,#f5d76e) 7%,transparent)!important}
+.hhx-project-description-trigger:hover{background:color-mix(in srgb,var(--hho-acc,#f5d76e) 14%,transparent)!important;border-color:var(--hho-acc2,var(--hho-acc,#f5d76e))!important}
+.hhx-project-description-panel{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 65%,transparent)!important;background:var(--hho-bg,#0a0a0af2)!important;color:var(--hho-fg,#fff)!important;box-shadow:0 24px 90px #000b,0 0 35px color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent)!important}
+.hhx-project-description-kicker,.hhx-project-description-heading{color:var(--hho-acc,#f5d76e)!important}
+.hhx-project-description-text{color:var(--hho-fg,#f0f0f0)!important}
+.hhx-project-description-close{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 28%,transparent)!important;color:var(--hho-fg,#fff)!important}
 </style>
 <script id="hhx-project-description-modal">
 (function(){
