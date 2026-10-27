@@ -417,9 +417,90 @@ async function handleOrderAttachmentUpload(req: Request): Promise<Response> {
   }
 }
 
+
+async function handleSubmissionNotification(req: Request): Promise<Response> {
+  const cors = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "apikey, authorization, content-type",
+    "Cache-Control": "no-store",
+    "Content-Type": "application/json",
+  };
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: cors });
+  if (!T || !K) return new Response(JSON.stringify({ error: "Notification service is not configured" }), { status: 500, headers: cors });
+
+  try {
+    const input = await req.json();
+    const type = String(input?.type || "");
+    const id = Number(input?.id);
+    if (!Number.isSafeInteger(id) || id < 1 || !["order", "review"].includes(type)) {
+      return new Response(JSON.stringify({ error: "Invalid submission" }), { status: 400, headers: cors });
+    }
+
+    const table = type === "order" ? "customer_orders" : "customer_reviews";
+    const fields = type === "order"
+      ? "id,customer_name,service,details,whatsapp,created_at"
+      : "id,name,review,rating,status,created_at";
+    const fetched = await db(table + "?id=eq." + id + "&select=" + fields + "&limit=1");
+    const rows = await fetched.json();
+    if (!fetched.ok || !Array.isArray(rows) || !rows[0]) {
+      return new Response(JSON.stringify({ error: "Submission not found" }), { status: 404, headers: cors });
+    }
+    const item = rows[0];
+    const created = Date.parse(item.created_at || "");
+    if (!Number.isFinite(created) || Date.now() - created > 10 * 60 * 1000 || created > Date.now() + 60 * 1000) {
+      return new Response(JSON.stringify({ error: "Submission is outside the notification window" }), { status: 403, headers: cors });
+    }
+
+    // Reuse the existing sessions table as a one-time delivery guard for each new row.
+    const guardId = -6000000000 - id - (type === "review" ? 1000000000 : 0);
+    const guard = await db("bot_sessions", {
+      method: "POST",
+      headers: { ...H, Prefer: "resolution=ignore-duplicates,return=representation" },
+      body: JSON.stringify({ chat_id: guardId, state: "notification_sent", payload: { type, id }, updated_at: new Date().toISOString() }),
+    });
+    const guardRows = await guard.json().catch(() => []);
+    if (!guard.ok) throw new Error("Could not reserve notification: " + JSON.stringify(guardRows));
+    if (!Array.isArray(guardRows) || guardRows.length === 0) {
+      return new Response(JSON.stringify({ ok: true, duplicate: true }), { status: 200, headers: cors });
+    }
+
+    const createdAt = new Date(item.created_at).toLocaleString("ar-EG", { timeZone: "Africa/Cairo" });
+    let message = "";
+    if (type === "order") {
+      message = "🛎️ طلب تصميم جديد وصل للموقع!\n\n" +
+        "🆔 رقم الطلب: #" + item.id + "\n" +
+        "👤 الاسم: " + String(item.customer_name || "—").slice(0, 100) + "\n" +
+        "🎨 الخدمة: " + String(item.service || "—").slice(0, 120) + "\n" +
+        "📱 واتساب: " + String(item.whatsapp || "—").slice(0, 30) + "\n" +
+        "📝 التفاصيل: " + String(item.details || "—").slice(0, 1800) + "\n\n" +
+        "🕒 الوقت: " + createdAt;
+    } else {
+      message = "💬 تعليق جديد محتاج مراجعة!\n\n" +
+        "🆔 رقم التعليق: #" + item.id + "\n" +
+        "👤 الاسم: " + String(item.name || "—").slice(0, 100) + "\n" +
+        "⭐ التقييم: " + String(item.rating ?? "—") + "/5\n" +
+        "📝 التعليق: " + String(item.review || "—").slice(0, 2500) + "\n" +
+        "📌 الحالة: " + String(item.status || "pending") + "\n\n" +
+        "🕒 الوقت: " + createdAt;
+    }
+    const sent = await tg("sendMessage", { chat_id: A, text: message });
+    if (!sent?.ok) {
+      await db("bot_sessions?chat_id=eq." + guardId, { method: "DELETE" });
+      throw new Error("Telegram notification failed");
+    }
+    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: cors });
+  } catch (error) {
+    console.error("Submission notification failed:", error);
+    return new Response(JSON.stringify({ error: "Notification failed" }), { status: 500, headers: cors });
+  }
+}
+
 Deno.serve(async (req) => {
   const requestUrl = new URL(req.url);
   if (requestUrl.searchParams.get("action") === "upload-order-attachment") return handleOrderAttachmentUpload(req);
+  if (requestUrl.searchParams.get("action") === "notify-submission") return handleSubmissionNotification(req);
   if (req.method === "GET") {
     const requestUrl = new URL(req.url);
     if (requestUrl.searchParams.get("maintenance-status") === "1") {
