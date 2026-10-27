@@ -38,6 +38,24 @@ footer{padding:25px 4%;border-top:1px solid #ffffff10;color:#777;display:flex;ju
 @media(max-width:800px){.links{display:none}.hero{min-height:760px}.hero img{opacity:.32}.grid,.about{grid-template-columns:1fr}.services{grid-template-columns:1fr 1fr}.service{border-bottom:1px solid #d4af3725}.card.big{height:360px}}
 @media(max-width:500px){.contact-links{grid-template-columns:1fr}.services{grid-template-columns:1fr}.service{border-left:0}.hero h1{font-size:48px}.hero p{font-size:14px}.contact{padding:45px 18px}.about{gap:38px}.hbox{height:300px}.bigH{font-size:150px}.about-process{grid-template-columns:1fr 1fr}.about-process .process:last-child{grid-column:1/-1}.about-lead{font-size:15px}.about-title{font-size:38px!important}}
 
+/* Predictable navigation and section rhythm */
+html { scroll-padding-top: 96px; }
+.page-section { scroll-margin-top: 96px; }
+.top-nav { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.top-links a { white-space: nowrap; }
+.top-links a:focus-visible, .portfolio-filter:focus-visible, .btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+@media (max-width: 800px) {
+  html { scroll-padding-top: 142px; }
+  .page-section { scroll-margin-top: 142px; }
+}
+@media (max-width: 500px) {
+  html { scroll-padding-top: 170px; }
+  .page-section { scroll-margin-top: 170px; }
+}
+
 /* Premium side-panel navigation */
 body.page-mode{overflow-x:hidden;padding-right:0}
 .page-section{display:none!important;min-height:100vh}
@@ -950,16 +968,34 @@ function setPage(ev) {
     if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   }
 }
-/* active section follows scrolling */
+/* Stable scroll spy: activate the section crossing a fixed reading line.
+   This avoids tall sections winning just because they occupy more pixels. */
 (function () {
-  const ratios = {};
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { ratios[e.target.id] = e.isIntersecting ? e.intersectionRect.height : 0; });
-    let best = currentPage, max = -1;
-    PAGES.forEach(id => { if ((ratios[id] || 0) > max) { max = ratios[id] || 0; best = id; } });
-    if (max > 0 && best !== currentPage) { currentPage = best; markNav(best); syncPollers(); }
-  }, { threshold: [0, .1, .25, .5, .75, 1], rootMargin: '-80px 0px 0px 0px' });
-  PAGES.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+  let frame = 0;
+  function updateActiveSection() {
+    frame = 0;
+    const marker = Math.min(window.innerHeight * 0.32, 250);
+    let candidate = PAGES[0];
+    for (const id of PAGES) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= marker && rect.bottom > marker) { candidate = id; break; }
+      if (rect.top <= marker) candidate = id;
+    }
+    if (candidate !== currentPage) {
+      currentPage = candidate;
+      markNav(candidate);
+      syncPollers();
+    }
+  }
+  function scheduleUpdate() {
+    if (!frame) frame = requestAnimationFrame(updateActiveSection);
+  }
+  addEventListener('scroll', scheduleUpdate, { passive: true });
+  addEventListener('resize', scheduleUpdate);
+  addEventListener('load', scheduleUpdate, { once: true });
+  scheduleUpdate();
 })();
 document.addEventListener('click', e => {
   const a = e.target.closest && e.target.closest('a[href^="#"]');
