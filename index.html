@@ -2503,5 +2503,71 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @media(prefers-reduced-motion:reduce){#home .home-modern-ring,#home .hx-stage:before,#home .hx-stage:after,.about-visual .hbox:before,.about-visual .hbox:after{animation:none!important}}
 </style>
 
+
+<!-- Cosmic reference layout: persistent icon rail + full-site visual system -->
+<nav class="hhx-cosmic-rail" aria-label="تنقل سريع">
+  <a class="hhx-rail-brand" href="#home" aria-label="الرئيسية">H</a>
+  <a href="#home" data-section="home" aria-label="الرئيسية" title="الرئيسية"><span>⌂</span></a>
+  <a href="#about" data-section="about" aria-label="من أنا" title="من أنا"><span>◈</span></a>
+  <a href="#work" data-section="work" aria-label="المشاريع" title="المشاريع"><span>▣</span></a>
+  <a href="#services" data-section="services" aria-label="الخدمات" title="الخدمات"><span>✧</span></a>
+  <a href="#reviews" data-section="reviews" aria-label="التقييمات" title="التقييمات"><span>☆</span></a>
+  <a href="#orders" data-section="orders" aria-label="طلب تصميم" title="طلب تصميم"><span>✎</span></a>
+  <a href="#contact" data-section="contact" aria-label="تواصل معي" title="تواصل معي"><span>⌁</span></a>
+  <i aria-hidden="true"></i>
+</nav>
+<style id="hhx-full-cosmic-reference">
+:root{--cosmic-gold:#f5d76e;--cosmic-blue:#168bd8;--cosmic-glass:rgba(5,12,22,.78);--cosmic-edge:rgba(112,183,229,.34)}
+html{scroll-padding-top:96px;scroll-behavior:smooth}
+body{background-color:#02040a;background-image:radial-gradient(ellipse at 50% 12%,rgba(15,65,105,.18),transparent 42%),radial-gradient(ellipse at 88% 55%,rgba(245,215,110,.055),transparent 34%)}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(115deg,transparent 0 48%,rgba(30,105,165,.025) 49%,transparent 51%),radial-gradient(circle at 15% 28%,#fff8 0 1px,transparent 1.7px),radial-gradient(circle at 80% 72%,#9bd9ff77 0 1px,transparent 1.7px);background-size:auto,190px 170px,230px 210px}
+.top-nav{background:linear-gradient(180deg,rgba(2,6,13,.96),rgba(3,7,14,.82));border-bottom:1px solid rgba(245,215,110,.22);box-shadow:0 8px 32px #0007,0 1px 0 rgba(84,169,227,.12);backdrop-filter:blur(18px)}
+.top-nav-inner{max-width:1480px;min-height:76px;gap:clamp(12px,2vw,30px)}
+.top-logo{color:#f5d76e;text-shadow:0 0 18px #f5d76e55}
+.top-links{gap:clamp(10px,1.65vw,26px)}
+.top-links a{position:relative;padding:11px 0;color:#d7deeb;transition:color .25s,text-shadow .25s}
+.top-links a:after{content:"";position:absolute;bottom:2px;left:0;right:0;height:1px;transform:scaleX(0);background:linear-gradient(90deg,transparent,#f5d76e,transparent);transition:transform .25s}
+.top-links a:hover,.top-links a:focus-visible{color:#ffe89a;text-shadow:0 0 16px #f5d76e55}
+.top-links a:hover:after,.top-links a:focus-visible:after{transform:scaleX(1)}
+.page-section{position:relative;isolation:isolate}
+.page-section:not(#home){overflow:clip}
+.page-section:not(#home):before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:0;background:radial-gradient(ellipse at 0% 15%,rgba(22,139,216,.075),transparent 34%),radial-gradient(ellipse at 100% 90%,rgba(245,215,110,.055),transparent 38%)}
+.page-section:not(#home):after{content:"";position:absolute;z-index:-1;pointer-events:none;top:0;left:7%;right:7%;height:1px;background:linear-gradient(90deg,transparent,rgba(94,178,235,.3),rgba(245,215,110,.42),transparent)}
+.section{padding-top:clamp(76px,9vw,124px);padding-bottom:clamp(76px,9vw,124px)}
+.section h2,.section-title,.services-intro h2{letter-spacing:.02em;text-shadow:0 0 28px rgba(22,139,216,.15)}
+.section h2:after,.section-title:after{filter:drop-shadow(0 0 8px #f5d76e66)}
+.work-card,.service-item,.review-card,.contact-card,.order-card,.about-visual .hbox,.review-form,.contact-form,.order-form{border:1px solid rgba(111,177,220,.3);background:linear-gradient(145deg,rgba(12,24,39,.94),rgba(4,7,13,.96) 70%);box-shadow:inset 0 1px rgba(255,255,255,.035),0 18px 44px rgba(0,0,0,.28)}
+.work-card,.service-item,.review-card,.contact-card{border-radius:18px}
+.service-item{position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.service-item:before,.review-card:before,.contact-card:before{content:"";position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(22,139,216,.12),transparent 60%);opacity:.85}
+.service-item:hover{transform:translateY(-5px);border-color:rgba(245,215,110,.6);box-shadow:0 22px 48px #0008,0 0 24px #168bd81c}
+.service-icon{filter:drop-shadow(0 0 12px rgba(245,215,110,.28))}
+.review-card,.contact-card{position:relative;overflow:hidden}
+button,.btn,.button,.order-submit,.review-submit{transition:transform .22s,box-shadow .22s,border-color .22s}
+button:hover,.btn:hover,.button:hover,.order-submit:hover,.review-submit:hover{box-shadow:0 0 22px rgba(245,215,110,.2)}
+input,textarea,select{background:rgba(2,8,16,.78)!important;border-color:rgba(107,172,216,.34)!important}
+input:focus,textarea:focus,select:focus{border-color:#f5d76e!important;box-shadow:0 0 0 3px rgba(245,215,110,.1),0 0 18px rgba(22,139,216,.13)!important}
+footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180deg,rgba(4,8,15,.55),rgba(2,4,9,.96))}
+.hhx-cosmic-rail{position:fixed;z-index:1000;left:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;padding:10px 7px;border:1px solid rgba(110,178,224,.25);border-radius:30px;background:linear-gradient(180deg,rgba(4,12,22,.9),rgba(2,5,11,.86));box-shadow:0 14px 40px #0009,0 0 24px rgba(22,139,216,.09);backdrop-filter:blur(16px)}
+.hhx-cosmic-rail a{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:#c4d0e1;text-decoration:none;border:1px solid transparent;font-size:18px;transition:color .2s,background .2s,border-color .2s,box-shadow .2s,transform .2s}
+.hhx-cosmic-rail a:hover,.hhx-cosmic-rail a.is-active{color:#ffe89a;border-color:rgba(245,215,110,.58);background:linear-gradient(145deg,rgba(245,215,110,.18),rgba(22,139,216,.12));box-shadow:0 0 18px rgba(245,215,110,.13);transform:scale(1.06)}
+.hhx-cosmic-rail .hhx-rail-brand{font-family:Georgia,serif;font-size:23px;font-weight:700;color:#f5d76e;border:1px solid rgba(245,215,110,.68);box-shadow:inset 0 0 14px rgba(245,215,110,.12),0 0 18px rgba(245,215,110,.14);margin-bottom:7px}
+.hhx-cosmic-rail i{width:18px;height:1px;background:linear-gradient(90deg,transparent,#f5d76e,transparent);margin:3px 0}
+.hhx-portal-launcher{z-index:999}
+@media(min-width:1500px){.top-nav-inner{max-width:1580px}.page-section:not(#home){padding-left:clamp(70px,8vw,130px);padding-right:clamp(70px,8vw,130px)}}
+@media(max-width:760px){.hhx-cosmic-rail{left:9px;top:auto;bottom:12px;transform:none;flex-direction:row;gap:3px;padding:5px 7px;border-radius:24px;max-width:calc(100vw - 18px);overflow-x:auto}.hhx-cosmic-rail a{width:30px;height:30px;min-width:30px;font-size:15px}.hhx-cosmic-rail .hhx-rail-brand{font-size:20px;margin:0 4px 0 0}.hhx-cosmic-rail i{display:none}.top-nav-inner{min-height:64px}.top-links{gap:10px}.top-links a{font-size:12px}.section{padding-top:68px;padding-bottom:68px}}
+@media(max-width:430px){.top-links{gap:7px}.top-links a{font-size:10px}.hhx-cosmic-rail{left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 14px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+</style>
+<script>
+(function(){
+ var rail=document.querySelector('.hhx-cosmic-rail');if(!rail)return;
+ var links=[].slice.call(rail.querySelectorAll('[data-section]'));
+ function mark(){var marker=Math.min(window.innerHeight*.42,300),active='home';links.forEach(function(a){var el=document.getElementById(a.dataset.section);if(el&&el.getBoundingClientRect().top<=marker)active=el.id;});links.forEach(function(a){var yes=a.dataset.section===active;a.classList.toggle('is-active',yes);if(yes)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});}
+ links.forEach(function(a){a.addEventListener('click',function(e){var target=document.getElementById(a.dataset.section);if(target){e.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});history.replaceState(null,'','#'+a.dataset.section);}});});
+ window.addEventListener('scroll',mark,{passive:true});window.addEventListener('resize',mark);mark();
+})();
+</script>
+
 </body>
 </html>
