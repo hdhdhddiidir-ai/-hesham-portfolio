@@ -2388,5 +2388,86 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<style id="hhx-cosmic-portal-navigation">
+:root{--hhx-nav-accent:var(--hho-acc,var(--gold,#f5d76e))}
+.hhx-portal-launcher{position:fixed;z-index:10020;left:22px;bottom:22px;display:flex;align-items:center;gap:10px;padding:9px 15px 9px 10px;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 62%,transparent);border-radius:999px;background:linear-gradient(135deg,#111e,#050505ed);color:#fff;font:700 12px Cairo,sans-serif;box-shadow:0 10px 35px #000a,0 0 28px color-mix(in srgb,var(--hhx-nav-accent) 12%,transparent);backdrop-filter:blur(16px);cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s}
+.hhx-portal-launcher:hover{transform:translateY(-4px);box-shadow:0 14px 42px #000b,0 0 32px color-mix(in srgb,var(--hhx-nav-accent) 26%,transparent)}
+.hhx-portal-orb{position:relative;display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--hhx-nav-accent);border-radius:50%;color:var(--hhx-nav-accent);font:800 21px Montserrat,sans-serif;text-shadow:0 0 12px var(--hhx-nav-accent);box-shadow:inset 0 0 16px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),0 0 16px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent)}
+.hhx-portal-orb:before,.hhx-portal-orb:after{content:"";position:absolute;inset:-5px;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 55%,transparent);border-radius:50%;transform:rotate(-28deg) scaleX(1.45);animation:hhxPortalOrbit 7s linear infinite}
+.hhx-portal-orb:after{inset:-8px;transform:rotate(52deg) scaleX(1.3);border-color:color-mix(in srgb,var(--hhx-nav-accent) 25%,transparent);animation-duration:11s;animation-direction:reverse}
+.hhx-portal-overlay{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% 45%,#10233caa,#020307f5 70%);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s}
+.hhx-portal-overlay.is-open{opacity:1;visibility:visible}
+.hhx-portal-shell{position:relative;width:min(760px,96vw);max-height:min(88vh,820px);overflow:auto;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 50%,transparent);border-radius:28px;padding:clamp(22px,4vw,42px);background:linear-gradient(145deg,#0b1420f5,#040609f7 72%);box-shadow:0 35px 120px #000e,0 0 55px color-mix(in srgb,var(--hhx-nav-accent) 12%,transparent),inset 0 0 55px #58a9ff08;transform:translateY(18px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.hhx-portal-overlay.is-open .hhx-portal-shell{transform:translateY(0) scale(1)}
+.hhx-portal-shell:before{content:"";pointer-events:none;position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 80% 0%,color-mix(in srgb,var(--hhx-nav-accent) 10%,transparent),transparent 34%);mask-image:linear-gradient(#000,transparent 80%)}
+.hhx-portal-close{position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:50%;border:1px solid #ffffff25;background:#ffffff08;color:#fff;font-size:23px;cursor:pointer}
+.hhx-portal-heading{position:relative;margin:0 45px 6px 0;color:#fff;font-size:clamp(24px,4vw,36px)}
+.hhx-portal-subtitle{position:relative;color:#9eacbd;margin:0 0 26px;font-size:13px;line-height:1.8}
+.hhx-portal-grid{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hhx-portal-destination{position:relative;min-height:94px;display:flex;align-items:center;gap:15px;padding:16px;border:1px solid #ffffff17;border-radius:17px;background:linear-gradient(135deg,#ffffff08,#ffffff02);color:#fff;text-align:right;cursor:pointer;overflow:hidden;transition:transform .25s,border-color .25s,background .25s}
+.hhx-portal-destination:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 50%,color-mix(in srgb,var(--hhx-nav-accent) 13%,transparent),transparent 50%);opacity:0;transition:opacity .25s}
+.hhx-portal-destination:hover,.hhx-portal-destination.is-current{transform:translateY(-3px);border-color:color-mix(in srgb,var(--hhx-nav-accent) 68%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--hhx-nav-accent) 12%,#080b10),#ffffff03);box-shadow:0 12px 30px #0006}
+.hhx-portal-destination:hover:before,.hhx-portal-destination.is-current:before{opacity:1}
+.hhx-portal-destination>*{position:relative}
+.hhx-portal-destination-icon{flex:0 0 43px;width:43px;height:43px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 42%,transparent);border-radius:14px;color:var(--hhx-nav-accent);font-size:20px;background:#05080dc9;box-shadow:inset 0 0 18px color-mix(in srgb,var(--hhx-nav-accent) 9%,transparent)}
+.hhx-portal-destination strong{display:block;font-size:15px}
+.hhx-portal-destination small{display:block;color:#8c9aab;font-size:11px;margin-top:4px}
+.hhx-portal-footer{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:23px;padding-top:17px;border-top:1px solid #ffffff12;color:#7d8a9a;font-size:11px}
+.hhx-portal-progress{display:flex;align-items:center;gap:6px}
+.hhx-portal-progress i{display:block;width:6px;height:6px;border-radius:50%;background:#ffffff2e;transition:width .25s,background .25s}
+.hhx-portal-progress i.is-current{width:22px;border-radius:8px;background:var(--hhx-nav-accent);box-shadow:0 0 12px color-mix(in srgb,var(--hhx-nav-accent) 45%,transparent)}
+/* Subtle dimensional polish that keeps the existing black-and-gold identity. */
+.home-logo,.bigH{filter:drop-shadow(0 7px 0 #7a4a0c) drop-shadow(0 0 28px color-mix(in srgb,var(--hhx-nav-accent) 42%,transparent))}
+.hbox{perspective:900px;background:radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),transparent 40%),#07090d}
+.hbox .bigH{transform:translateZ(35px) skew(-12deg)}
+.work-card{transform-style:preserve-3d;box-shadow:inset 0 0 0 1px #ffffff03,0 14px 35px #0004}
+.work-card:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),0 22px 45px #0008,0 0 26px color-mix(in srgb,var(--hhx-nav-accent) 9%,transparent)}
+.contact-card,.hhx-project-description-panel{backdrop-filter:blur(18px)}
+@keyframes hhxPortalOrbit{to{transform:rotate(332deg) scaleX(1.45)}}
+@media(max-width:600px){.hhx-portal-launcher{left:12px;bottom:12px;padding:7px 11px 7px 8px;font-size:11px}.hhx-portal-orb{width:34px;height:34px}.hhx-portal-grid{grid-template-columns:1fr;gap:9px}.hhx-portal-destination{min-height:75px;padding:12px}.hhx-portal-shell{border-radius:22px}.hhx-portal-subtitle{margin-bottom:18px}.hhx-portal-footer{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.hhx-portal-launcher,.hhx-portal-orb:before,.hhx-portal-orb:after,.hhx-portal-shell,.hhx-portal-destination{animation:none!important;transition:none!important}}
+</style>
+<script id="hhx-cosmic-portal-navigation-script">
+(function(){
+'use strict';
+function init(){
+ if(document.getElementById('hhxCosmicPortalOverlay'))return;
+ var isEnglish=function(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr';};
+ var pages=[
+  {id:'home',ar:'الرئيسية',en:'Home',icon:'✦',descAr:'بوابة البداية',descEn:'Start your journey'},
+  {id:'about',ar:'من أنا',en:'About me',icon:'◈',descAr:'الحكاية وراء التصميم',descEn:'The story behind the work'},
+  {id:'work',ar:'المشاريع',en:'Projects',icon:'✧',descAr:'اكتشف الأعمال المختارة',descEn:'Explore selected work'},
+  {id:'services',ar:'الخدمات',en:'Services',icon:'⌘',descAr:'ما يمكنني تقديمه',descEn:'What I can create'},
+  {id:'reviews',ar:'التقييمات',en:'Reviews',icon:'✺',descAr:'آراء وتجارب الزوار',descEn:'Visitor feedback'},
+  {id:'orders',ar:'طلب تصميم',en:'Order a design',icon:'◇',descAr:'ابدأ فكرتك الجديدة',descEn:'Start your next idea'},
+  {id:'contact',ar:'تواصل معي',en:'Contact',icon:'◎',descAr:'خلينا نتكلم عن فكرتك',descEn:'Let’s talk about your idea'}
+ ];
+ var launch=document.createElement('button');launch.type='button';launch.className='hhx-portal-launcher';launch.setAttribute('aria-haspopup','dialog');launch.setAttribute('aria-expanded','false');
+ launch.innerHTML='<span class="hhx-portal-orb" aria-hidden="true">H</span><span class="hhx-portal-launcher-label">التنقل بين العوالم</span>';
+ var overlay=document.createElement('div');overlay.id='hhxCosmicPortalOverlay';overlay.className='hhx-portal-overlay';overlay.setAttribute('aria-hidden','true');
+ overlay.innerHTML='<section class="hhx-portal-shell" role="dialog" aria-modal="true" aria-labelledby="hhxPortalHeading" dir="auto"><button type="button" class="hhx-portal-close" aria-label="إغلاق القائمة">×</button><h2 class="hhx-portal-heading" id="hhxPortalHeading">اختر وجهتك</h2><p class="hhx-portal-subtitle" id="hhxPortalSubtitle">تنقّل بين أقسام الموقع كأنك تعبر بوابات فضائية — من غير أسهم تقليدية.</p><div class="hhx-portal-grid"></div><div class="hhx-portal-footer"><span class="hhx-portal-hint">اسحب يمينًا أو يسارًا للتنقل بين الأقسام</span><span class="hhx-portal-progress" aria-hidden="true"></span></div></section>';
+ document.body.appendChild(launch);document.body.appendChild(overlay);
+ var grid=overlay.querySelector('.hhx-portal-grid'),close=overlay.querySelector('.hhx-portal-close'),progress=overlay.querySelector('.hhx-portal-progress'),launcherLabel=launch.querySelector('.hhx-portal-launcher-label'),lastFocus=null;
+ pages=pages.filter(function(p){return !!document.getElementById(p.id);});
+ pages.forEach(function(p,i){var b=document.createElement('button');b.type='button';b.className='hhx-portal-destination';b.dataset.page=p.id;b.innerHTML='<span class="hhx-portal-destination-icon" aria-hidden="true">'+p.icon+'</span><span><strong></strong><small></small></span>';b.querySelector('strong').textContent=p.ar;b.querySelector('small').textContent=p.descAr;b.addEventListener('click',function(){goTo(p.id);hide();});grid.appendChild(b);var dot=document.createElement('i');progress.appendChild(dot);});
+ function localized(){var en=isEnglish();overlay.querySelector('#hhxPortalHeading').textContent=en?'Choose your destination':'اختار وجهتك';overlay.querySelector('#hhxPortalSubtitle').textContent=en?'Move through the portfolio like passing through cosmic portals — no old-fashioned arrows.':'تنقّل بين أقسام الموقع كأنك بتعبر بوابات فضائية — من غير أسهم تقليدية.';launcherLabel.textContent=en?'Explore sections':'التنقل بين العوالم';overlay.querySelector('.hhx-portal-hint').textContent=en?'Swipe left or right to move between sections':'اسحب يمين أو شمال للتنقل بين الأقسام';close.setAttribute('aria-label',en?'Close navigation':'إغلاق القائمة');pages.forEach(function(p){var b=grid.querySelector('[data-page="'+p.id+'"]');if(!b)return;b.querySelector('strong').textContent=en?p.en:p.ar;b.querySelector('small').textContent=en?p.descEn:p.descAr;});}
+ function currentIndex(){var id=typeof currentPage!=='undefined'?currentPage:null;if(!id){var marker=Math.min(innerHeight*.32,250);pages.forEach(function(p){var el=document.getElementById(p.id);if(el&&el.getBoundingClientRect().top<=marker)id=p.id;});}var idx=pages.findIndex(function(p){return p.id===id;});return idx<0?0:idx;}
+ function update(){var idx=currentIndex();grid.querySelectorAll('.hhx-portal-destination').forEach(function(b,i){var active=i===idx;b.classList.toggle('is-current',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});Array.from(progress.children).forEach(function(d,i){d.classList.toggle('is-current',i===idx);});}
+ function goTo(id){var el=document.getElementById(id);if(!el)return;if(typeof currentPage!=='undefined')currentPage=id;el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});if(typeof window.syncPollers==='function')window.syncPollers();update();}
+ function show(){lastFocus=document.activeElement;localized();update();overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');launch.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';close.focus();}
+ function hide(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');launch.setAttribute('aria-expanded','false');document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+ launch.addEventListener('click',show);close.addEventListener('click',hide);overlay.addEventListener('click',function(e){if(e.target===overlay)hide();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('is-open'))hide();if(overlay.classList.contains('is-open')&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){var idx=currentIndex()+(e.key==='ArrowLeft'?1:-1);if(idx>=0&&idx<pages.length){goTo(pages[idx].id);}}});
+ var startX=0,startY=0,startTarget=null;
+ document.addEventListener('touchstart',function(e){if(overlay.classList.contains('is-open')||e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY;startTarget=e.target;},{passive:true});
+ document.addEventListener('touchend',function(e){if(overlay.classList.contains('is-open')||!startTarget||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;var target=startTarget.closest&&startTarget.closest('input,textarea,select,button,a,[contenteditable="true"],.lightbox,.hhx-project-description-overlay');startTarget=null;if(target||Math.abs(dx)<85||Math.abs(dx)<Math.abs(dy)*1.35)return;var idx=currentIndex()+(dx<0?1:-1);if(idx>=0&&idx<pages.length)goTo(pages[idx].id);},{passive:true});
+ var lastLang=document.documentElement.lang;new MutationObserver(function(){if(document.documentElement.lang!==lastLang){lastLang=document.documentElement.lang;localized();}}).observe(document.documentElement,{attributes:true,attributeFilter:['lang','dir']});
+ window.addEventListener('scroll',function(){if(!overlay.classList.contains('is-open'))update();},{passive:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
