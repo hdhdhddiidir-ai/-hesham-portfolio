@@ -2063,6 +2063,19 @@ function applyTheme(id, save) {
     var stops=hxGradient.querySelectorAll('stop');
     if(stops.length>=4){stops[0].setAttribute('stop-color',v[1]);stops[1].setAttribute('stop-color',v[0]);stops[2].setAttribute('stop-color',v[0]);stops[3].setAttribute('stop-color',v[0]);}
   }
+  /* Keep the animated H's pen-glow and every signature synced to the selected accent. */
+  var penGradient=document.getElementById('hxPenGlow');
+  if(penGradient){
+    var penStops=penGradient.querySelectorAll('stop');
+    if(penStops.length>=4){
+      penStops[0].setAttribute('stop-color',v[2] || '#ffffff');
+      penStops[1].setAttribute('stop-color',v[1]);
+      penStops[2].setAttribute('stop-color',v[0]);
+      penStops[3].setAttribute('stop-color',v[0]);
+    }
+  }
+  rs.setProperty('--hhx-signature',v[0]);
+  rs.setProperty('--hhx-theme-accent-glow','color-mix(in srgb,'+v[0]+' 55%,transparent)');
   document.querySelectorAll('.hx-core').forEach(function(el){el.style.stroke=v[1];});
   document.querySelectorAll('.hx-fat').forEach(function(el){el.style.stroke=v[0];});
   if (save) { try { localStorage.setItem('hh_theme', th.id); } catch (e) {} }
@@ -3616,5 +3629,37 @@ html body #reviews .review-card p,
 html body .hhx-modal .review-card p { color:var(--hho-fg,#eee)!important; }
 </style>
 
+
+<!-- Final theme-sync pass: accent color applies to signatures, the animated H, and welcome screen. -->
+<style id="hhx-final-theme-sync">
+:root{--hhx-signature:var(--hho-acc,#f5d76e)}
+html body .hhx-section-signature{
+  color:var(--hho-acc,#f5d76e)!important;
+  border-top-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 30%,transparent)!important;
+  text-shadow:0 0 8px color-mix(in srgb,var(--hho-acc,#f5d76e) 30%,transparent)!important;
+}
+html body .hhx-section-signature .signature-dot{
+  background:var(--hho-acc,#f5d76e)!important;
+  box-shadow:0 0 8px var(--hho-acc,#f5d76e),0 0 20px color-mix(in srgb,var(--hho-acc,#f5d76e) 55%,transparent)!important;
+}
+html body .about-signature .signature-name,
+html body .service-signature,
+html body .service-signature>span,
+html body .about-signature .signature-dot,
+html body .service-signature .signature-dot{
+  color:var(--hho-acc,#f5d76e)!important;
+}
+html body .about-signature .signature-dot,
+html body .service-signature .signature-dot{
+  background:var(--hho-acc,#f5d76e)!important;
+  box-shadow:0 0 10px var(--hho-acc,#f5d76e),0 0 28px color-mix(in srgb,var(--hho-acc,#f5d76e) 55%,transparent)!important;
+}
+html body #hhWelcome .hh-wl-logo img{
+  filter:hue-rotate(calc(var(--hhx-theme-hue,43deg) - 43deg)) drop-shadow(0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 60%,transparent))!important;
+}
+html body #hhWelcome .hh-wl-logo::before{
+  background:conic-gradient(from 0deg,transparent 0deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 75%,transparent) 55deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 95%,white) 90deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 25%,transparent) 180deg,transparent 360deg)!important;
+}
+</style>
 </body>
 </html>
