@@ -1943,7 +1943,6 @@ var THEMES = [
   { id: 'teal', name: 'Ocean Teal', sw: 'linear-gradient(135deg,#050505 50%,#54d7d0 50%)', hue: 177, sat: .78 },
   { id: 'copper', name: 'Copper Bronze', sw: 'linear-gradient(135deg,#050505 50%,#d99568 50%)', hue: 23, sat: .72 },
   { id: 'sapphire', name: 'Sapphire Blue', sw: 'linear-gradient(135deg,#050505 50%,#729bff 50%)', hue: 223, sat: .8 },
-  { id: 'light', name: 'Pure Light', sw: 'linear-gradient(135deg,#f7f3ea 50%,#c8962a 50%)', light: true }
 ];
 var origCss = null;
 function snapshot() {
@@ -2466,10 +2465,10 @@ footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180d
 /* Bring the live hero closer to the approved 3D space concept: a larger dimensional H, layered orbital paths, and blue/gold planetary lighting. */
 #home.home-modern{isolation:isolate;background:radial-gradient(ellipse at 50% 43%,#10304a25 0,transparent 32%),radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--hho-acc,#f5d76e) 8%,transparent) 0,transparent 52%),transparent!important}
 #home .home-modern-glow{width:clamp(420px,78vw,900px);background:radial-gradient(ellipse at 50% 48%,#3b91df27 0,#f5d76e1a 28%,#f5d76e08 48%,transparent 70%);filter:blur(2px)}
-#home .home-modern-ring{width:clamp(370px,65vw,730px);border:1px solid #62baff22;border-top-color:#8dcfff99;border-bottom-color:#f5d76e77;box-shadow:0 0 28px #1685c51a,inset 0 0 35px #1685c50b;transform:translate(-50%,-55%) rotateX(64deg) rotate(-18deg);animation:hxRingIn 1.2s ease-out .2s backwards,hhxHeroOrbit 24s linear 1.4s infinite}
+#home .home-modern-ring{width:clamp(330px,56vw,620px);border:1px solid #d8b85a18;border-top-color:#d8b85a55;border-bottom-color:#f5d76e48;box-shadow:0 0 14px #c99b2a0b,inset 0 0 16px #c99b2a06;transform:translate(-50%,-55%) rotateX(64deg) rotate(-18deg);animation:hxRingIn 1.2s ease-out .2s backwards,hhxHeroOrbit 30s linear 1.4s infinite}
 #home .hx-stage{width:clamp(245px,min(34vw,40vh),370px);aspect-ratio:1;isolation:isolate;perspective:900px;filter:drop-shadow(0 0 25px #f5d76e7a) drop-shadow(0 0 70px #168bd833)}
-#home .hx-stage:before,#home .hx-stage:after{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:50%;width:148%;height:62%;border:1px solid #65baff70;border-radius:50%;transform:translate(-50%,-50%) rotate(-24deg) rotateX(62deg);box-shadow:0 0 16px #168bd822,inset 0 0 14px #168bd81a;animation:hhxOrbitDrift 12s ease-in-out infinite}
-#home .hx-stage:after{width:166%;height:76%;border-color:#f5d76e80;transform:translate(-50%,-50%) rotate(28deg) rotateX(66deg);box-shadow:0 0 20px #f5d76e18,inset 0 0 18px #f5d76e0d;animation-duration:16s;animation-direction:reverse}
+#home .hx-stage:before,#home .hx-stage:after{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:50%;width:132%;height:54%;border:1px solid #d9b94b45;border-radius:50%;transform:translate(-50%,-50%) rotate(-24deg) rotateX(62deg);box-shadow:0 0 9px #c99b2a10,inset 0 0 8px #c99b2a08;animation:hhxOrbitDrift 15s ease-in-out infinite}
+#home .hx-stage:after{width:146%;height:66%;border-color:#f5d76e55;transform:translate(-50%,-50%) rotate(28deg) rotateX(66deg);box-shadow:0 0 12px #f5d76e10,inset 0 0 10px #f5d76e08;animation-duration:19s;animation-direction:reverse}
 #home .hx-svg{position:relative;z-index:2;filter:drop-shadow(0 8px 0 #704a0e) drop-shadow(0 0 8px #fff7c6);transform:skewX(-9deg) rotateY(-8deg) rotateX(3deg)}
 #home .hx-fat{stroke-width:34}
 #home .hx-core{stroke:#fffbe6;stroke-width:6;opacity:.82}
