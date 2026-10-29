@@ -770,6 +770,22 @@ html body #home{isolation:isolate}
 
 <main id="home" class="hero page-section home-modern"><div class="home-modern-glow"></div><div class="home-modern-ring"></div><div class="home-modern-inner">
 <div class="hx-stage" aria-hidden="true">
+<svg class="hx-crystal" viewBox="0 0 320 360" focusable="false" aria-hidden="true">
+<defs>
+ <linearGradient id="hxCrystalEdge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff5c8"/><stop offset=".28" stop-color="#65cfff"/><stop offset=".58" stop-color="#8a63ff"/><stop offset="1" stop-color="#f5d76e"/></linearGradient>
+ <linearGradient id="hxCrystalFace" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3dbfff" stop-opacity=".18"/><stop offset=".52" stop-color="#7258ff" stop-opacity=".07"/><stop offset="1" stop-color="#f5d76e" stop-opacity=".2"/></linearGradient>
+ <filter id="hxCrystalGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<polygon points="160,12 274,88 306,180 160,348 14,180 46,88" fill="url(#hxCrystalFace)" stroke="url(#hxCrystalEdge)" stroke-width="2.2" opacity=".82"/>
+<polygon points="160,12 160,180 46,88" fill="#56cfff" opacity=".10"/>
+<polygon points="160,12 274,88 160,180" fill="#8a63ff" opacity=".14"/>
+<polygon points="46,88 160,180 14,180" fill="#f5d76e" opacity=".08"/>
+<polygon points="274,88 306,180 160,180" fill="#5bc8ff" opacity=".09"/>
+<polygon points="14,180 160,180 160,348" fill="#7d5cff" opacity=".08"/>
+<polygon points="306,180 160,180 160,348" fill="#f5d76e" opacity=".12"/>
+<path d="M160 12V348M46 88L274 88M14 180H306M46 88L160 180L274 88M14 180L160 348L306 180" fill="none" stroke="url(#hxCrystalEdge)" stroke-width="1.2" opacity=".65"/>
+<polygon points="160,12 274,88 306,180 160,348 14,180 46,88" fill="none" stroke="#8bdcff" stroke-width="7" opacity=".18" filter="url(#hxCrystalGlow)"/>
+</svg>
 <svg class="hx-svg" viewBox="0 0 200 240" focusable="false">
 <defs>
 <linearGradient id="hxGold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="240"><stop offset="0" stop-color="#fff1a8"/><stop offset=".35" stop-color="#f5d76e"/><stop offset=".7" stop-color="#d9a92f"/><stop offset="1" stop-color="#a87a1c"/></linearGradient>
@@ -2578,5 +2594,14 @@ footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180d
 @media(prefers-reduced-motion:reduce){#home .home-modern-ring,#home .hx-stage:before,#home .hx-stage:after,.about-visual .hbox:before,.about-visual .hbox:after{animation:none!important}}
 </style>
 
-</body>
+<style id="hhx-premium-crystal-hero">
+#home .hx-stage{isolation:isolate;filter:drop-shadow(0 0 20px color-mix(in srgb,var(--hho-acc,#f5d76e) 35%,transparent)) drop-shadow(0 0 58px #168bd833)!important}
+#home .hx-crystal{position:absolute;z-index:0;left:50%;top:50%;width:clamp(280px,112%,450px);height:clamp(315px,125%,480px);transform:translate(-50%,-50%);overflow:visible;pointer-events:none;filter:drop-shadow(0 0 12px #3caeff38);animation:hxCrystalFloat 7s ease-in-out infinite}
+#home .hx-svg{z-index:2;filter:drop-shadow(0 7px 0 #704a0e) drop-shadow(0 0 10px #fff7c6) drop-shadow(0 0 25px color-mix(in srgb,var(--hho-acc,#f5d76e) 30%,transparent))!important}
+#home .hx-stage:before{border-color:#63cfff70;box-shadow:0 0 18px #168bd822,inset 0 0 15px #168bd812}
+#home .hx-stage:after{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 70%,#a5dfff);box-shadow:0 0 18px color-mix(in srgb,var(--hho-acc,#f5d76e) 18%,transparent),inset 0 0 14px #168bd812}
+@keyframes hxCrystalFloat{0%,100%{translate:0 0;filter:drop-shadow(0 0 12px #3caeff38)}50%{translate:0 -6px;filter:drop-shadow(0 0 19px #3caeff5a)}}
+@media(max-width:600px){#home .hx-crystal{width:clamp(280px,116%,390px);height:clamp(320px,130%,430px)}}
+@media(prefers-reduced-motion:reduce){#home .hx-crystal{animation:none!important}}
+</style></body>
 </html>
