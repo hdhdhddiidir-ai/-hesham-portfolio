@@ -2143,7 +2143,13 @@ var STEPS = [
 ];
 var tourOn = false, step = 0;
 var spot = document.getElementById('hhtSpot'), card = document.getElementById('hhtCard');
-function target() { var s = STEPS[step]; if (!s.sel) return null; return document.querySelector(s.sel); }
+function target() {
+  var s = STEPS[step];
+  if (!s) return null;
+  var page = s.page ? document.getElementById(s.page) : null;
+  if (page) return page.querySelector('h1, h2, .kicker, .section-kicker') || page;
+  return s.sel ? document.querySelector(s.sel) : null;
+}
 function placeSpot() {
   var el = target();
   if (!tourOn || !el) { spot.classList.remove('open'); return; }
