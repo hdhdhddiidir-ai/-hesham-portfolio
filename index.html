@@ -2199,7 +2199,9 @@ if (window.HH_setLang) {
 }
 
 var saved = 'gold'; try { saved = localStorage.getItem('hh_theme') || 'gold'; } catch (e) {}
-applyTheme(saved, false);
+if (saved === 'custom') { applyTheme('gold', false); try { applyCustomColor(localStorage.getItem('hh_custom_color') || '#f5d76e', false); } catch(e) {} }
+else applyTheme(saved, false);
+restoreSectionColors();
 buildSettingsMenu();
 applyVisualPrefs(false);
 applyTexts();
