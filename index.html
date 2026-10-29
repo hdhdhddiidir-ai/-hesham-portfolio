@@ -3014,6 +3014,106 @@ body.page-mode .page-section.active-page .service-signature { display:none !impo
   body.page-mode .page-section.active-page > .wrap { padding-inline:10px !important; }
   .hhx-section-signature { margin-top:16px !important; font-size:23px !important; }
 }
+
+/* Standalone-page correction: the sticky header already occupies layout space.
+   Remove the old viewport-sized padding/min-heights that created the blank stage. */
+html body.page-mode #home.page-section.active-page,
+html body.page-mode #about.page-section.active-page,
+html body.page-mode #work.page-section.active-page,
+html body.page-mode #services.page-section.active-page,
+html body.page-mode #reviews.page-section.active-page,
+html body.page-mode #orders.page-section.active-page,
+html body.page-mode #contact.page-section.active-page {
+  box-sizing:border-box !important;
+  display:block !important;
+  position:relative !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 0 1px !important;
+  overflow:visible !important;
+  align-items:initial !important;
+  justify-content:initial !important;
+}
+html body.page-mode #home.page-section.active-page {
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  padding:0 0 1px !important;
+}
+html body.page-mode #home.page-section.active-page .home-modern-inner {
+  box-sizing:border-box !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:0 !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:18px 12px 8px !important;
+}
+html body.page-mode #about.page-section.active-page > .wrap,
+html body.page-mode #work.page-section.active-page > .wrap,
+html body.page-mode #services.page-section.active-page > .wrap,
+html body.page-mode #reviews.page-section.active-page > .wrap,
+html body.page-mode #orders.page-section.active-page > .wrap,
+html body.page-mode #contact.page-section.active-page > .wrap {
+  display:flow-root !important;
+  box-sizing:border-box !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:0 !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:0 12px !important;
+}
+html body.page-mode #about.page-section.active-page .about,
+html body.page-mode #work.page-section.active-page .portfolio-grid,
+html body.page-mode #services.page-section.active-page .services-list,
+html body.page-mode #reviews.page-section.active-page .reviews-layout,
+html body.page-mode #orders.page-section.active-page .orders-layout,
+html body.page-mode #contact.page-section.active-page .contact {
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+}
+html body.page-mode .page-section:not(.active-page) {
+  display:none !important;
+  position:absolute !important;
+  visibility:hidden !important;
+  width:0 !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  height:0 !important;
+  max-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  overflow:hidden !important;
+}
+html body.page-mode .hhx-section-signature {
+  margin:12px 0 0 !important;
+  padding:10px 8px 8px !important;
+}
+@media(max-width:900px) {
+  html body.page-mode #home.page-section.active-page,
+  html body.page-mode #about.page-section.active-page,
+  html body.page-mode #work.page-section.active-page,
+  html body.page-mode #services.page-section.active-page,
+  html body.page-mode #reviews.page-section.active-page,
+  html body.page-mode #orders.page-section.active-page,
+  html body.page-mode #contact.page-section.active-page { padding:0 0 1px !important; }
+  html body.page-mode #home.page-section.active-page .home-modern-inner { padding:14px 10px 6px !important; }
+  html body.page-mode #about.page-section.active-page > .wrap,
+  html body.page-mode #work.page-section.active-page > .wrap,
+  html body.page-mode #services.page-section.active-page > .wrap,
+  html body.page-mode #reviews.page-section.active-page > .wrap,
+  html body.page-mode #orders.page-section.active-page > .wrap,
+  html body.page-mode #contact.page-section.active-page > .wrap { padding-inline:10px !important; }
+}
+
 </style>
 <script id="hhx-section-signatures-and-theme-sync">
 (function(){
