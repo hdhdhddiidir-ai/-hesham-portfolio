@@ -3428,6 +3428,9 @@ html body.page-mode #reviews .hhx-section-signature { margin-top:16px !important
     }
     var i=0;
     var timer=setInterval(function(){
+      if(document.documentElement.classList.contains('hh-reduce-motion')){
+        name.textContent=full;clearInterval(timer);timers.delete(section);return;
+      }
       if(!section.classList.contains('active-page')){ clearInterval(timer); timers.delete(section); return; }
       i++;
       name.textContent=full.slice(0,i);
