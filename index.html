@@ -616,23 +616,11 @@ html.maintenance-active #maintenancePage{display:flex}
   var lang='ar';
   try{if(localStorage.getItem('hh_lang')==='en')lang='en'}catch(e){}
   window.__hhMaintenanceLang=lang;
-  function refreshMaintenance(){
-    fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
-      .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
-      .then(function(d){
-        root.classList.toggle('maintenance-active',d.enabled===true);
-        root.classList.remove('maintenance-checking');
-      })
-      .catch(function(){
-        root.classList.remove('maintenance-checking');
-      });
-  }
   window.setTimeout(function(){root.classList.remove('maintenance-checking')},3000);
-  refreshMaintenance();
-  // Keep already-open visitor tabs in sync with the Telegram maintenance toggle.
-  window.setInterval(function(){
-    if(document.visibilityState!=='hidden')refreshMaintenance();
-  },10000);
+  fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
+    .then(function(d){root.classList.remove('maintenance-checking');if(d.enabled)root.classList.add('maintenance-active')})
+    .catch(function(){root.classList.remove('maintenance-checking')});
 })();
 </script>
 
@@ -799,7 +787,6 @@ html.maintenance-active #maintenancePage{display:flex}
 <button type="button" class="portfolio-filter" data-work-filter="business-design" aria-pressed="false">تصميمات شركات</button>
 <button type="button" class="portfolio-filter" data-work-filter="social-posts" aria-pressed="false">بوستات وستوري</button>
 <button type="button" class="portfolio-filter" data-work-filter="digital-design" aria-pressed="false">تصميمات رقمية</button>
-<button type="button" class="portfolio-filter" data-work-filter="other" aria-pressed="false">تصنيفات أخرى</button>
 </div>
 <p class="portfolio-filter-status" id="portfolioFilterStatus" aria-live="polite"></p>
 </div>
@@ -1228,8 +1215,8 @@ function applyPortfolioFilters() {
 function syncPortfolioFilterLanguage() {
   const english = lang === 'en';
   const labels = english
-    ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', other:'Other categories', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
-    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', other:'تصنيفات أخرى', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
+    ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
+    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
   document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
     button.textContent = labels[button.dataset.workFilter] || labels.all;
   });
@@ -1738,9 +1725,9 @@ html.hh-reduce-motion *,html.hh-reduce-motion *::before,html.hh-reduce-motion *:
 </style>
 
 <div class="hhx-fabs" id="hhxFabs">
-  <button type="button" class="hhx-fab" id="hhxTheme" title="ألوان الموقع" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxSettings" title="إعدادات الشكل والحركة" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxTour" title="جولة تعريفية" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTheme" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxSettings" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTour" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
 </div>
 <div class="hhx-menu" id="hhxMenu" role="menu"></div>
 <div class="hhx-menu hhx-settings-menu" id="hhxSettingsMenu" role="group" aria-label="إعدادات المظهر"></div>
@@ -2202,59 +2189,5 @@ html { scroll-padding-top: 92px !important; }
   *, *::before, *::after { scroll-behavior:auto !important; }
 }
 </style>
-
-<style id="hhx-horizontal-navigation-css">
-/* Simple horizontal section navigator; keep the original starfield and visual effects untouched. */
-#hhx-horizontal-nav{position:fixed;z-index:1200;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;direction:rtl;padding:10px 14px;border:1px solid rgba(245,215,110,.28);border-radius:18px;background:rgba(8,9,14,.86);backdrop-filter:blur(16px);box-shadow:0 10px 34px #0007;color:#f7f4ea;font:inherit;max-width:calc(100vw - 24px)}
-#hhx-horizontal-nav button{font:inherit;cursor:pointer;color:inherit}
-#hhx-horizontal-nav .hhx-nav-arrow{display:grid;place-items:center;width:42px;height:42px;flex:none;border:1px solid #ffffff24;border-radius:13px;background:#ffffff08;font-size:24px;line-height:1;transition:background .2s,border-color .2s,transform .2s}
-#hhx-horizontal-nav .hhx-nav-arrow:hover{background:rgba(245,215,110,.16);border-color:rgba(245,215,110,.6)}
-#hhx-horizontal-nav .hhx-nav-arrow:active{transform:scale(.96)}
-#hhx-horizontal-nav .hhx-nav-center{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:135px}
-#hhx-horizontal-nav .hhx-nav-count{font-size:10px;letter-spacing:.14em;color:#c7b978}
-#hhx-horizontal-nav .hhx-nav-name{font-size:13px;font-weight:750;white-space:nowrap}
-#hhx-horizontal-nav .hhx-nav-track{width:100%;height:2px;background:#ffffff20;border-radius:8px;overflow:hidden}
-#hhx-horizontal-nav .hhx-nav-track span{display:block;width:0;height:100%;background:#f5d76e;transition:width .25s ease}
-@media(max-width:520px){#hhx-horizontal-nav{bottom:12px;gap:9px;padding:8px 10px;border-radius:16px}#hhx-horizontal-nav .hhx-nav-arrow{width:38px;height:38px;border-radius:11px}#hhx-horizontal-nav .hhx-nav-center{min-width:100px}#hhx-horizontal-nav .hhx-nav-name{font-size:12px}}
-@media(prefers-reduced-motion:reduce){#hhx-horizontal-nav *{transition:none!important}}
-</style>
-<script id="hhx-horizontal-navigation">
-(function(){
-'use strict';
-if(document.getElementById('hhx-horizontal-nav'))return;
-var sections=[
-{id:'home',ar:'الرئيسية',en:'Home'},
-{id:'about',ar:'من أنا',en:'About'},
-{id:'work',ar:'أعمالي',en:'Portfolio'},
-{id:'services',ar:'خدماتي',en:'Services'},
-{id:'reviews',ar:'التقييمات',en:'Reviews'},
-{id:'orders',ar:'اطلب تصميم',en:'Order a design'},
-{id:'contact',ar:'تواصل معي',en:'Contact'}
-].filter(function(s){return document.getElementById(s.id)});
-if(!sections.length)return;
-function isEn(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr'||(window.HH_getLang&&window.HH_getLang()==='en')}
-function label(s){return isEn()?s.en:s.ar}
-function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
-var nav=el('nav','');nav.id='hhx-horizontal-nav';nav.setAttribute('aria-label','التنقل بين أقسام الموقع');
-var prev=el('button','hhx-nav-arrow','←');prev.type='button';prev.setAttribute('aria-label','القسم السابق');prev.title='القسم السابق';
-var center=el('div','hhx-nav-center');
-var count=el('div','hhx-nav-count','01 / '+String(sections.length).padStart(2,'0'));
-var name=el('div','hhx-nav-name',label(sections[0]));
-var track=el('div','hhx-nav-track');var fill=el('span','');track.appendChild(fill);
-center.appendChild(count);center.appendChild(name);center.appendChild(track);
-var next=el('button','hhx-nav-arrow','→');next.type='button';next.setAttribute('aria-label','القسم التالي');next.title='القسم التالي';
-nav.appendChild(prev);nav.appendChild(center);nav.appendChild(next);document.body.appendChild(nav);
-var active=0;
-function go(index){active=(index+sections.length)%sections.length;var target=document.getElementById(sections[active].id);if(target)target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});updateUI()}
-function updateUI(){var s=sections[active];count.textContent=String(active+1).padStart(2,'0')+' / '+String(sections.length).padStart(2,'0');name.textContent=label(s);fill.style.width=((active+1)/sections.length*100)+'%';prev.title=isEn()?'Previous: '+s.en:'القسم السابق';next.title=isEn()?'Next: '+s.en:'القسم التالي';prev.setAttribute('aria-label',isEn()?'Previous section':'القسم السابق');next.setAttribute('aria-label',isEn()?'Next section':'القسم التالي');nav.setAttribute('aria-label',isEn()?'Navigate between site sections':'التنقل بين أقسام الموقع')}
-prev.addEventListener('click',function(){go(active-1)});next.addEventListener('click',function(){go(active+1)});
-var scheduled=false;
-function detect(){scheduled=false;var best=active,bestDistance=Infinity;sections.forEach(function(s,i){var node=document.getElementById(s.id);if(!node)return;var r=node.getBoundingClientRect();if(r.top<=window.innerHeight*.55&&Math.abs(r.top-110)<bestDistance){best=i;bestDistance=Math.abs(r.top-110)}});if(best!==active){active=best;updateUI()}}
-window.addEventListener('scroll',function(){if(!scheduled){scheduled=true;requestAnimationFrame(detect)}},{passive:true});
-var lang=document.getElementById('hhLang');if(lang)lang.addEventListener('click',function(){setTimeout(updateUI,100)});
-updateUI();
-})();
-</script>
-
 </body>
 </html>
