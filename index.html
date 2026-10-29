@@ -2918,5 +2918,133 @@ html body.page-mode .page-section:not(.active-page) {
   }
 }
 </style>
+
+<style id="hhx-precise-sections-and-live-theme">
+:root { --hhx-signature: var(--hho-acc, #f5d76e); --hhx-theme-hue: 43deg; }
+html, body { width:100%; max-width:100%; overflow-x:hidden; }
+body.page-mode { margin:0 !important; padding:0 !important; }
+body.page-mode .page-section,
+body.page-mode .page-section.active-page,
+body.page-mode #home.page-section.active-page,
+body.page-mode #about.page-section.active-page,
+body.page-mode #work.page-section.active-page,
+body.page-mode #services.page-section.active-page,
+body.page-mode #reviews.page-section.active-page,
+body.page-mode #orders.page-section.active-page,
+body.page-mode #contact.page-section.active-page {
+  box-sizing:border-box !important;
+  width:100% !important; max-width:100% !important;
+  min-height:0 !important; height:auto !important; max-height:none !important;
+  margin:0 !important; border-radius:0 !important;
+  padding:78px 0 0 !important;
+  overflow:visible !important;
+  flex:none !important;
+  align-items:initial !important; justify-content:initial !important;
+}
+body.page-mode #home.page-section.active-page {
+  display:flex !important; flex-direction:column !important;
+  align-items:stretch !important; justify-content:flex-start !important;
+  padding:78px 0 0 !important;
+}
+body.page-mode #home .home-modern-inner {
+  box-sizing:border-box !important; width:100% !important; max-width:none !important;
+  min-height:0 !important; height:auto !important; max-height:none !important;
+  margin:0 !important; padding:0 14px 18px !important;
+}
+body.page-mode .page-section.active-page > .wrap {
+  display:flow-root !important; box-sizing:border-box !important;
+  width:100% !important; max-width:none !important;
+  min-height:0 !important; height:auto !important; max-height:none !important;
+  margin:0 !important; padding:0 clamp(12px,3vw,32px) !important;
+}
+body.page-mode .page-section.active-page .about,
+body.page-mode .page-section.active-page .portfolio-grid,
+body.page-mode .page-section.active-page .services-list,
+body.page-mode .page-section.active-page .reviews-layout,
+body.page-mode .page-section.active-page .contact,
+body.page-mode .page-section.active-page .orders-layout {
+  min-height:0 !important; height:auto !important; max-height:none !important;
+}
+body.page-mode .page-section:not(.active-page) {
+  display:none !important; visibility:hidden !important; opacity:0 !important;
+  min-height:0 !important; height:0 !important; max-height:0 !important;
+  margin:0 !important; padding:0 !important; overflow:hidden !important;
+}
+body.page-mode .page-section.active-page .about-signature,
+body.page-mode .page-section.active-page .service-signature { display:none !important; }
+.hhx-section-signature {
+  box-sizing:border-box !important; width:100% !important; max-width:none !important;
+  min-height:0 !important; height:auto !important;
+  display:flex !important; flex-direction:row !important; align-items:center !important;
+  justify-content:center !important; gap:12px !important;
+  margin:22px 0 0 !important; padding:12px 12px 10px !important;
+  border-top:1px solid color-mix(in srgb,var(--hhx-signature) 22%,transparent) !important;
+  color:var(--hhx-signature) !important;
+  font:italic 700 25px/1.2 cursive !important;
+  text-align:center !important; background:transparent !important;
+}
+.hhx-section-signature .signature-dot {
+  display:block !important; flex:0 0 10px !important;
+  width:10px !important; height:10px !important; border-radius:50% !important;
+  background:var(--hhx-signature) !important;
+  box-shadow:0 0 8px var(--hhx-signature),0 0 20px color-mix(in srgb,var(--hhx-signature) 55%,transparent) !important;
+  animation:signatureDotPulse 2.2s ease-in-out infinite !important;
+}
+#hhWelcome .hh-wl-logo::before {
+  background:conic-gradient(from 0deg, transparent 0deg, color-mix(in srgb,var(--hhx-signature) 75%,transparent) 55deg, color-mix(in srgb,var(--hhx-signature) 95%,white) 90deg, color-mix(in srgb,var(--hhx-signature) 25%,transparent) 145deg, transparent 210deg, color-mix(in srgb,var(--hhx-signature) 70%,transparent) 285deg, transparent 360deg) !important;
+  filter:drop-shadow(0 0 5px color-mix(in srgb,var(--hhx-signature) 45%,transparent)) !important;
+}
+#hhWelcome .hh-wl-logo::after {
+  border:1px solid color-mix(in srgb,var(--hhx-signature) 32%,transparent) !important;
+  background:radial-gradient(circle,#080808,#030303 72%) !important;
+}
+#hhWelcome .hh-wl-logo img { filter:drop-shadow(0 0 14px color-mix(in srgb,var(--hhx-signature) 65%,transparent)) !important; }
+#hhWelcome .hh-wl-name {
+  background:linear-gradient(90deg,color-mix(in srgb,var(--hhx-signature) 58%,#111),color-mix(in srgb,var(--hhx-signature) 38%,white),var(--hhx-signature),color-mix(in srgb,var(--hhx-signature) 70%,#111)) !important;
+  -webkit-background-clip:text !important; background-clip:text !important;
+  filter:drop-shadow(0 0 14px color-mix(in srgb,var(--hhx-signature) 48%,transparent)) !important;
+}
+#hhWelcome .hh-wl-role { color:var(--hhx-signature) !important; text-shadow:0 0 12px color-mix(in srgb,var(--hhx-signature) 55%,transparent) !important; }
+#hhWelcome .hh-caret { background:var(--hhx-signature) !important; }
+#hhSky { filter:hue-rotate(calc(var(--hhx-theme-hue) - 43deg)) !important; }
+@media(max-width:900px) {
+  body.page-mode .page-section,
+  body.page-mode .page-section.active-page,
+  body.page-mode #home.page-section.active-page { padding-top:74px !important; }
+  body.page-mode .page-section.active-page > .wrap { padding-inline:10px !important; }
+  .hhx-section-signature { margin-top:16px !important; font-size:23px !important; }
+}
+</style>
+<script id="hhx-section-signatures-and-theme-sync">
+(function(){
+  var sections = document.querySelectorAll('body > .page-section');
+  sections.forEach(function(section){
+    if(section.querySelector(':scope > .hhx-section-signature')) return;
+    var sign=document.createElement('div');
+    sign.className='hhx-section-signature';
+    sign.setAttribute('aria-label','Hesham Hane');
+    var name=document.createElement('span'); name.textContent='Hesham Hane';
+    var dot=document.createElement('i'); dot.className='signature-dot'; dot.setAttribute('aria-hidden','true');
+    sign.append(name,dot); section.appendChild(sign);
+  });
+  document.documentElement.style.setProperty('--hhx-signature','var(--hho-acc, #f5d76e)');
+  var themeButton=document.getElementById('hhxTheme');
+  function syncHue(){
+    var c=getComputedStyle(document.documentElement).getPropertyValue('--hho-acc').trim()||'#f5d76e';
+    var m=c.match(/^#([0-9a-f]{6})$/i);
+    if(!m)return;
+    var n=parseInt(m[1],16),r=((n>>16)&255)/255,g=((n>>8)&255)/255,b=(n&255)/255;
+    var max=Math.max(r,g,b),min=Math.min(r,g,b),h=0,d=max-min;
+    if(d){if(max===r)h=60*(((g-b)/d)%6);else if(max===g)h=60*((b-r)/d+2);else h=60*((r-g)/d+4);}
+    if(h<0)h+=360;
+    document.documentElement.style.setProperty('--hhx-theme-hue',h+'deg');
+  }
+  syncHue();
+  if(themeButton) themeButton.addEventListener('click',function(){setTimeout(syncHue,50);});
+  document.addEventListener('click',function(e){if(e.target.closest('.hhx-palette-swatch'))setTimeout(syncHue,50);});
+  var root=document.documentElement;
+  new MutationObserver(syncHue).observe(root,{attributes:true,attributeFilter:['data-hh-theme']});
+})();
+</script>
 </body>
 </html>
