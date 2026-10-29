@@ -2261,60 +2261,6 @@ html { scroll-padding-top: 92px !important; }
 }
 </style>
 
-<style id="hhx-vertical-navigation-css">
-/* Compact premium vertical section control */
-#hhx-vertical-nav{position:fixed;z-index:1200;right:clamp(12px,2vw,26px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;direction:rtl;padding:11px 9px;border:1px solid rgba(245,215,110,.34);border-radius:20px;background:linear-gradient(160deg,rgba(20,20,25,.94),rgba(5,6,10,.88));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 12px 36px #0008,0 0 22px rgba(245,215,110,.08);color:#f7f4ea;font:inherit}
-#hhx-vertical-nav button{font:inherit;cursor:pointer;color:inherit}
-#hhx-vertical-nav .hhx-nav-arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(245,215,110,.22);border-radius:13px;background:rgba(255,255,255,.035);font-size:23px;line-height:1;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s}
-#hhx-vertical-nav .hhx-nav-arrow:hover{background:rgba(245,215,110,.14);border-color:rgba(245,215,110,.7);box-shadow:0 0 15px rgba(245,215,110,.12)}
-#hhx-vertical-nav .hhx-nav-arrow:active{transform:scale(.94)}
-#hhx-vertical-nav .hhx-nav-center{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:105px;min-width:74px;padding:3px 0}
-#hhx-vertical-nav .hhx-nav-count{font-size:10px;letter-spacing:.12em;color:#d9c66f}
-#hhx-vertical-nav .hhx-nav-name{font-size:12px;font-weight:750;text-align:center;line-height:1.5;overflow-wrap:anywhere}
-#hhx-vertical-nav .hhx-nav-track{width:4px;height:38px;background:#ffffff1c;border-radius:8px;overflow:hidden}
-#hhx-vertical-nav .hhx-nav-track span{display:block;width:100%;height:0;background:linear-gradient(180deg,#fff0a4,#d3a936);border-radius:8px;transition:height .25s ease}
-@media(max-width:520px){#hhx-vertical-nav{right:9px;padding:8px 6px;gap:7px;border-radius:16px}#hhx-vertical-nav .hhx-nav-arrow{width:36px;height:36px;border-radius:11px;font-size:21px}#hhx-vertical-nav .hhx-nav-center{min-width:62px;max-width:72px}#hhx-vertical-nav .hhx-nav-name{font-size:11px}#hhx-vertical-nav .hhx-nav-track{height:30px}}
-@media(prefers-reduced-motion:reduce){#hhx-vertical-nav *{transition:none!important}}
-</style>
-<script id="hhx-vertical-navigation">
-(function(){
-'use strict';
-if(document.getElementById('hhx-vertical-nav'))return;
-var sections=[
-{id:'home',ar:'الرئيسية',en:'Home'},
-{id:'about',ar:'من أنا',en:'About'},
-{id:'work',ar:'أعمالي',en:'Portfolio'},
-{id:'services',ar:'خدماتي',en:'Services'},
-{id:'reviews',ar:'التقييمات',en:'Reviews'},
-{id:'orders',ar:'اطلب تصميم',en:'Order a design'},
-{id:'contact',ar:'تواصل معي',en:'Contact'}
-].map(function(s){return {id:s.id,ar:s.ar,en:s.en,node:document.getElementById(s.id)}}).filter(function(s){return !!s.node});
-if(!sections.length)return;
-function isEn(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr'||(window.HH_getLang&&window.HH_getLang()==='en')}
-function label(s){return isEn()?s.en:s.ar}
-function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
-var nav=el('nav','');nav.id='hhx-vertical-nav';nav.setAttribute('aria-label','التنقل بين أقسام الموقع');
-var prev=el('button','hhx-nav-arrow','↑');prev.type='button';prev.setAttribute('aria-label','القسم السابق');prev.title='القسم السابق';
-var center=el('div','hhx-nav-center');
-var count=el('div','hhx-nav-count','01 / '+String(sections.length).padStart(2,'0'));
-var name=el('div','hhx-nav-name',label(sections[0]));
-var track=el('div','hhx-nav-track');var fill=el('span','');track.appendChild(fill);
-center.appendChild(count);center.appendChild(name);center.appendChild(track);
-var next=el('button','hhx-nav-arrow','↓');next.type='button';next.setAttribute('aria-label','القسم التالي');next.title='القسم التالي';
-nav.appendChild(prev);nav.appendChild(center);nav.appendChild(next);document.body.appendChild(nav);
-var active=0,lockUntil=0,scrollTimer=0;
-function updateUI(){var s=sections[active];count.textContent=String(active+1).padStart(2,'0')+' / '+String(sections.length).padStart(2,'0');name.textContent=label(s);fill.style.height=((active+1)/sections.length*100)+'%';prev.title=isEn()?'Previous section':'القسم السابق';next.title=isEn()?'Next section':'القسم التالي';prev.setAttribute('aria-label',isEn()?'Previous section':'القسم السابق');next.setAttribute('aria-label',isEn()?'Next section':'القسم التالي');nav.setAttribute('aria-label',isEn()?'Navigate between site sections':'التنقل بين أقسام الموقع')}
-function go(index){active=Math.max(0,Math.min(sections.length-1,index));lockUntil=Date.now()+900;updateUI();sections[active].node.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});window.clearTimeout(scrollTimer);scrollTimer=window.setTimeout(detect,950)}
-function detect(){if(Date.now()<lockUntil)return;var anchor=Math.min(window.innerHeight*.42,260),best=0,bestDistance=Infinity;sections.forEach(function(s,i){var r=s.node.getBoundingClientRect();var distance=Math.abs((r.top+Math.min(r.height,window.innerHeight)*.22)-anchor);if(r.bottom>70&&r.top<window.innerHeight-40&&distance<bestDistance){best=i;bestDistance=distance}});if(best!==active){active=best;updateUI()}}
-prev.addEventListener('click',function(){go(active-1)});next.addEventListener('click',function(){go(active+1)});
-var scheduled=false;window.addEventListener('scroll',function(){if(!scheduled){scheduled=true;requestAnimationFrame(function(){scheduled=false;detect()})}},{passive:true});
-window.addEventListener('resize',detect,{passive:true});
-var lang=document.getElementById('hhLang');if(lang)lang.addEventListener('click',function(){setTimeout(updateUI,100)});
-updateUI();
-})();
-</script>
-
-
 <style id="hhx-premium-modals-and-inline-arrows">
 /* Keep section arrows inside the existing header bar; no floating widget. */
 #hhx-vertical-nav{position:static!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:5px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;margin-inline:8px}
@@ -2599,5 +2545,44 @@ footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180d
  #home .hx-svg{filter:drop-shadow(0 2px 0 #5b3c0b) drop-shadow(0 5px 0 #3b2908) drop-shadow(0 0 8px #fff0a0a0)!important}
 }
 @media(prefers-reduced-motion:reduce){#home .hx-stage:before,#home .hx-stage:after{animation:none!important}}
-</style></body>
+</style>
+<style id="hhx-fixed-top-navigation">
+/* Navigation-only update: fixed top bar, smooth natural scrolling, no side controls */
+html { scroll-behavior: smooth !important; scroll-padding-top: 94px !important; }
+.top-nav {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  width: 100% !important; z-index: 1200 !important;
+}
+.page-section, #home.page-section, #about.page-section, #work.page-section,
+#services.page-section, #reviews.page-section, #orders.page-section, #contact.page-section {
+  scroll-margin-top: 94px !important;
+}
+.top-nav-inner { min-width: 0; }
+.top-links { min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.top-links::-webkit-scrollbar { display: none; }
+.top-links a { flex: 0 0 auto; }
+#hhx-vertical-nav, .side-panel { display: none !important; }
+@media (max-width: 900px) {
+  html { scroll-padding-top: 78px !important; }
+  .top-nav { height: 72px !important; }
+  .top-nav-inner { height: 72px !important; }
+  .top-links { gap: 3px !important; }
+  .top-links a { padding: 9px 10px !important; font-size: 11px !important; }
+  .page-section, #home.page-section, #about.page-section, #work.page-section,
+  #services.page-section, #reviews.page-section, #orders.page-section, #contact.page-section {
+    scroll-margin-top: 78px !important;
+  }
+}
+@media (max-width: 520px) {
+  .top-nav-inner { padding-inline: 9px !important; gap: 7px !important; }
+  .top-logo { flex: 0 0 auto; }
+  .top-links { justify-content: flex-start !important; }
+  .top-links a { padding: 8px 9px !important; font-size: 10px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+}
+</style>
+</body>
 </html>
