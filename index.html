@@ -983,70 +983,54 @@ window.HH_t = t;
 window.HH_setLang = function (l) { lang = l === 'en' ? 'en' : 'ar'; try { localStorage.setItem('hh_lang', lang); } catch (e) {} applyLang(); };
 window.HH_getLang = function () { return lang; };
 
-/* ---------- Page navigation (each section is its own page) ---------- */
+/* ---------- Independent section pages: show exactly one section at a time ---------- */
 let currentPage = 'home';
-let firstPageLoad = true;
 
 function markNav(key) {
   document.querySelectorAll('.top-links a').forEach(a => {
     const active = a.getAttribute('href') === '#' + key;
     a.classList.toggle('active-nav', active);
-    if (active) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
 }
-function setPage(ev) {
+function showPage(key, updateHistory) {
+  if (!PAGES.includes(key) || !document.getElementById(key)) key = 'home';
   document.body.classList.add('page-mode', 'hh-scroll');
-  document.querySelectorAll('.page-section').forEach(s => s.classList.add('active-page'));
-  const key = (location.hash || '').slice(1);
-  if (firstPageLoad) {
-    firstPageLoad = false;
-    if (key && PAGES.includes(key)) history.replaceState(null, '', location.pathname + location.search);
-    markNav(currentPage); syncPollers(); return;
-  }
-  if (PAGES.includes(key)) {
-    const el = document.getElementById(key);
-    if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-  }
+  document.querySelectorAll('.page-section').forEach(section => {
+    const active = section.id === key;
+    section.classList.toggle('active-page', active);
+    section.setAttribute('aria-hidden', active ? 'false' : 'true');
+    if ('inert' in section) section.inert = !active;
+  });
+  currentPage = key;
+  markNav(key);
+  if (updateHistory) history.pushState({ page: key }, '', '#' + key);
+  window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  syncPollers();
 }
-/* Stable scroll spy: activate the section crossing a fixed reading line.
-   This avoids tall sections winning just because they occupy more pixels. */
-(function () {
-  let frame = 0;
-  function updateActiveSection() {
-    frame = 0;
-    const marker = Math.min(window.innerHeight * 0.32, 250);
-    let candidate = PAGES[0];
-    for (const id of PAGES) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      if (rect.top <= marker && rect.bottom > marker) { candidate = id; break; }
-      if (rect.top <= marker) candidate = id;
-    }
-    if (candidate !== currentPage) {
-      currentPage = candidate;
-      markNav(candidate);
-      syncPollers();
-    }
-  }
-  function scheduleUpdate() {
-    if (!frame) frame = requestAnimationFrame(updateActiveSection);
-  }
-  addEventListener('scroll', scheduleUpdate, { passive: true });
-  addEventListener('resize', scheduleUpdate);
-  addEventListener('load', scheduleUpdate, { once: true });
-  scheduleUpdate();
-})();
+function setPage() {
+  const key = (location.hash || '').slice(1);
+  showPage(PAGES.includes(key) ? key : 'home', false);
+}
 document.addEventListener('click', e => {
   const a = e.target.closest && e.target.closest('a[href^="#"]');
   if (!a) return;
   const key = a.getAttribute('href').slice(1);
   if (!PAGES.includes(key)) return;
-  e.preventDefault();  const el = document.getElementById(key);
-  if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-  currentPage = key; markNav(key); syncPollers();
+  e.preventDefault();
+  if (key === currentPage) {
+    window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    return;
+  }
+  showPage(key, true);
 });
 window.addEventListener('hashchange', setPage);
+window.addEventListener('popstate', setPage);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setPage, { once: true });
+} else {
+  setPage();
+}
 
 /* ---------- Network helper: timeout + no cache ---------- */
 async function sbFetch(path, opts) {
@@ -2547,8 +2531,13 @@ footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180d
 @media(prefers-reduced-motion:reduce){#home .hx-stage:before,#home .hx-stage:after{animation:none!important}}
 </style>
 <style id="hhx-fixed-top-navigation">
-/* Navigation-only update: fixed top bar, smooth natural scrolling, no side controls */
+/* Independent section pages: fixed top bar, one visible section, smooth page transitions */
 html { scroll-behavior: smooth !important; scroll-padding-top: 94px !important; }
+body.page-mode { overflow-x: hidden; }
+body.page-mode .page-section { display: none !important; min-height: 100vh; }
+body.page-mode .page-section.active-page { display: block !important; animation: hhSectionEnter .24s ease-out both; }
+@keyframes hhSectionEnter { from { opacity: .55; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { body.page-mode .page-section.active-page { animation: none !important; } }
 .top-nav {
   position: fixed !important;
   top: 0 !important; left: 0 !important; right: 0 !important;
