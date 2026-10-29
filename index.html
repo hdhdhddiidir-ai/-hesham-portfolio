@@ -729,15 +729,12 @@ html body #home{isolation:isolate}
 .hhx-palette-name{font:10px Cairo,sans-serif;text-align:center;overflow-wrap:anywhere}
 .hhx-palette-check{display:none;position:absolute;top:4px;right:6px;color:var(--hho-acc);font-size:11px}
 .hhx-palette-swatch[aria-pressed=true] .hhx-palette-check{display:block}
-.hhx-palette-custom{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding-top:12px;border-top:1px solid #ffffff12}
-.hhx-palette-custom>div{min-width:0}
-.hhx-color-wheel{grid-column:2;grid-row:1/3;position:relative;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ff4545,#ffcc33,#5bea69,#31d9e7,#5267ff,#c64cff,#ff4545);box-shadow:0 0 14px #ffffff12;cursor:pointer}
-.hhx-color-wheel:before{content:"";position:absolute;inset:5px;border-radius:50%;background:#111;border:2px solid #ffffff70}
-.hhx-color-wheel input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
-.hhx-color-wheel span{z-index:1;color:white;font-size:21px;pointer-events:none}
-.hhx-palette-apply{grid-column:1/-1;width:100%;padding:10px 14px;border:1px solid color-mix(in srgb,var(--hho-acc) 55%,transparent);border-radius:12px;background:linear-gradient(110deg,color-mix(in srgb,var(--hho-acc) 24%,#171717),#171717);color:#fff;font:700 12px Cairo,sans-serif;cursor:pointer}
-.hhx-palette-apply:hover{box-shadow:0 0 18px color-mix(in srgb,var(--hho-acc) 20%,transparent)}
 @media(max-width:600px){.hhx-menu.hhx-palette-modal{width:min(330px,calc(100vw - 70px));padding:12px!important}.hhx-palette-grid{gap:6px}.hhx-palette-dot{width:28px;height:28px}}
+</style><style id="hhx-theme-header-logo-fix">
+:root{--hhx-header-accent:var(--hho-acc,#f5d76e)}
+.top-logo{color:var(--hhx-header-accent)!important;text-shadow:0 0 18px color-mix(in srgb,var(--hhx-header-accent) 32%,transparent)!important}
+.top-logo span{color:#eee!important}
+.top-nav-inner .top-logo:not(span){transition:color .25s,filter .25s}
 </style></head>
 <body class="hh-welcome-on">
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
@@ -1985,7 +1982,17 @@ var THEMES = [
   { id: 'ice', name: 'Ice Blue', sw: 'linear-gradient(135deg,#050505 50%,#a5e4ff 50%)', hue: 198, sat: .55 },
   { id: 'lime', name: 'Lime', sw: 'linear-gradient(135deg,#050505 50%,#b7e45a 50%)', hue: 78, sat: .72 },
   { id: 'crimson', name: 'Crimson', sw: 'linear-gradient(135deg,#050505 50%,#ff5d73 50%)', hue: 350, sat: .85 },
-  { id: 'indigo', name: 'Indigo', sw: 'linear-gradient(135deg,#050505 50%,#7885ff 50%)', hue: 235, sat: .75 },
+  { id: 'indigo', name: 'Indigo', sw: 'linear-gradient(135deg,#050505 50%,#7885ff 50%)', hue: 235, sat: .75 },,
+  { id: 'ruby', name: 'Ruby Red', sw: 'linear-gradient(135deg,#050505 50%,#ef476f 50%)', hue: 345, sat: .85 },
+  { id: 'orange', name: 'Sunset Orange', sw: 'linear-gradient(135deg,#050505 50%,#ff914d 50%)', hue: 24, sat: .9 },
+  { id: 'sky', name: 'Sky Blue', sw: 'linear-gradient(135deg,#050505 50%,#70c9ff 50%)', hue: 202, sat: .8 },
+  { id: 'violet', name: 'Violet', sw: 'linear-gradient(135deg,#050505 50%,#9667ff 50%)', hue: 258, sat: .9 },
+  { id: 'champagne', name: 'Champagne', sw: 'linear-gradient(135deg,#050505 50%,#e8d5a3 50%)', hue: 43, sat: .45 },
+  { id: 'silver', name: 'Silver', sw: 'linear-gradient(135deg,#050505 50%,#c4ccd6 50%)', hue: 212, sat: .2 },
+  { id: 'fuchsia', name: 'Fuchsia', sw: 'linear-gradient(135deg,#050505 50%,#ef65d5 50%)', hue: 310, sat: .8 },
+  { id: 'forest', name: 'Forest Green', sw: 'linear-gradient(135deg,#050505 50%,#3eaa72 50%)', hue: 145, sat: .7 },
+  { id: 'lemon', name: 'Lemon', sw: 'linear-gradient(135deg,#050505 50%,#d9ed52 50%)', hue: 67, sat: .8 },
+  { id: 'iceviolet', name: 'Ice Violet', sw: 'linear-gradient(135deg,#050505 50%,#b8b9ff 50%)', hue: 240, sat: .45 }
 ];
 var origCss = null;
 function snapshot() {
@@ -2043,7 +2050,17 @@ var VARS = {
   ice:    ['#a5e4ff', '#d9f4ff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#a5e4ff40', '#081923'],
   lime:   ['#b7e45a', '#e6ffad', '#0a0a0af2', '#ffffff', '#aaaaaa', '#b7e45a40', '#17200a'],
   crimson:['#ff5d73', '#ffc0ca', '#0a0a0af2', '#ffffff', '#aaaaaa', '#ff5d7340', '#240a10'],
-  indigo: ['#7885ff', '#c7ccff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#7885ff40', '#0d1026']
+  indigo: ['#7885ff', '#c7ccff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#7885ff40', '#0d1026'],
+  ruby: ['#ef476f','#ffc0cf','#0a0a0af2','#ffffff','#aaaaaa','#ef476f40','#220912'],
+  orange: ['#ff914d','#ffd0ac','#0a0a0af2','#ffffff','#aaaaaa','#ff914d40','#241207'],
+  sky: ['#70c9ff','#ccecff','#0a0a0af2','#ffffff','#aaaaaa','#70c9ff40','#081724'],
+  violet: ['#9667ff','#d6c3ff','#0a0a0af2','#ffffff','#aaaaaa','#9667ff40','#130b25'],
+  champagne: ['#e8d5a3','#fff3d0','#0a0a0af2','#ffffff','#aaaaaa','#e8d5a340','#211d12'],
+  silver: ['#c4ccd6','#f1f4f8','#0a0a0af2','#ffffff','#aaaaaa','#c4ccd640','#14171b'],
+  fuchsia: ['#ef65d5','#ffd0f5','#0a0a0af2','#ffffff','#aaaaaa','#ef65d540','#230d20'],
+  forest: ['#3eaa72','#b5edce','#0a0a0af2','#ffffff','#aaaaaa','#3eaa7240','#081b12'],
+  lemon: ['#d9ed52','#f2ffad','#0a0a0af2','#ffffff','#aaaaaa','#d9ed5240','#1b2009'],
+  iceviolet: ['#b8b9ff','#e4e4ff','#0a0a0af2','#ffffff','#aaaaaa','#b8b9ff40','#101025']
 };
 var currentTheme = 'gold';
 function applyTheme(id, save) {
@@ -2054,6 +2071,15 @@ function applyTheme(id, save) {
   ['--hho-acc', '--hho-acc2', '--hho-bg', '--hho-fg', '--hho-mut', '--hho-line', '--hho-on'].forEach(function (k, i) { rs.setProperty(k, v[i]); });
   document.documentElement.setAttribute('data-hh-theme', th.id);
   currentTheme = th.id;
+  var headerLogo=document.querySelector('.top-logo');
+  if(headerLogo){headerLogo.style.color=v[0];headerLogo.style.textShadow='0 0 18px '+v[0]+'55';}
+  var hxGradient=document.getElementById('hxGold');
+  if(hxGradient){
+    var stops=hxGradient.querySelectorAll('stop');
+    if(stops.length>=4){stops[0].setAttribute('stop-color',v[1]);stops[1].setAttribute('stop-color',v[0]);stops[2].setAttribute('stop-color',v[0]);stops[3].setAttribute('stop-color',v[0]);}
+  }
+  document.querySelectorAll('.hx-core').forEach(function(el){el.style.stroke=v[1];});
+  document.querySelectorAll('.hx-fat').forEach(function(el){el.style.stroke=v[0];});
   if (save) { try { localStorage.setItem('hh_theme', th.id); } catch (e) {} }
   buildMenu();
 }
@@ -2095,7 +2121,7 @@ function buildMenu() {
   menu.innerHTML = '';
   menu.classList.add('hhx-palette-modal');
   var head=document.createElement('div');head.className='hhx-palette-head';
-  head.innerHTML='<span class="hhx-palette-mark">✦</span><div><b>اختار ألوان موقعك</b><small>اختار ستايل يناسبك أو اصنع لونك الخاص</small></div><button type="button" class="hhx-palette-close" aria-label="إغلاق">×</button>';
+  head.innerHTML='<span class="hhx-palette-mark">✦</span><div><b>اختار ألوان موقعك</b><small>اختار اللون اللي يغيّر هوية الموقع بالكامل</small></div><button type="button" class="hhx-palette-close" aria-label="إغلاق">×</button>';
   menu.appendChild(head);
   head.querySelector('button').addEventListener('click',closeMenu);
   var grid=document.createElement('div');grid.className='hhx-palette-grid';
@@ -2107,12 +2133,7 @@ function buildMenu() {
     grid.appendChild(o);
   });
   menu.appendChild(grid);
-  var custom=document.createElement('div');custom.className='hhx-palette-custom';
-  custom.innerHTML='<div><b>لونك الخاص</b><small>اختار أي درجة من عجلة الألوان</small></div><label class="hhx-color-wheel" title="اختيار لون مخصص"><input id="hhxCustomColor" type="color" value="#f5d76e" aria-label="اختيار لون مخصص"><span>＋</span></label><button type="button" id="hhxApplyCustom" class="hhx-palette-apply">تطبيق اللون</button>';
-  menu.appendChild(custom);
-  var input=custom.querySelector('#hhxCustomColor');
-  try{input.value=localStorage.getItem('hh_custom_color')||'#f5d76e';}catch(e){}
-  custom.querySelector('#hhxApplyCustom').addEventListener('click',function(){applyCustomColor(input.value,true);});
+
 }
 function closeMenu() { menu.classList.remove('open'); themeBtn.setAttribute('aria-expanded', 'false'); }
 themeBtn.addEventListener('click', function (e) {
