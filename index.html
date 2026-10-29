@@ -3212,16 +3212,43 @@ html body.page-mode #reviews .reviews-list {
   overflow:visible !important;
 }
 html body.page-mode #reviews .reviews-list .review-card { min-width:0 !important; }
-#hhxReviewsToggle {
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  margin:0 0 18px; padding:10px 18px; border:1px solid color-mix(in srgb,var(--hhx-signature) 55%,transparent);
-  border-radius:999px; color:var(--hhx-signature); background:color-mix(in srgb,var(--hhx-signature) 7%,#080808);
-  font:700 14px Cairo,sans-serif; cursor:pointer; transition:background .2s ease,box-shadow .2s ease;
+/* Keep review cards visible normally; section height follows its real content. */
+html body.page-mode #reviews.page-section.active-page {
+  display:block !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
 }
-#hhxReviewsToggle:hover { background:color-mix(in srgb,var(--hhx-signature) 13%,#080808); box-shadow:0 0 18px color-mix(in srgb,var(--hhx-signature) 15%,transparent); }
-html body.page-mode #reviews .reviews-layout.reviews-collapsed #reviewsList { display:none !important; }
-html body.page-mode #reviews .reviews-layout.reviews-collapsed { grid-template-columns:minmax(0,1fr) !important; }
-html body.page-mode #reviews .reviews-layout.reviews-collapsed #reviewForm { max-width:720px; }
+html body.page-mode #reviews.page-section.active-page > .wrap {
+  margin:0 auto !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+html body.page-mode #reviews .reviews-layout { align-items:start !important; }
+html body.page-mode #reviews .reviews-list {
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)) !important;
+  align-content:start !important;
+  align-items:start !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+html body.page-mode #reviews .reviews-list .review-card { min-width:0 !important; }
+html body.page-mode #reviews .hhx-section-signature { margin-top:12px !important; padding-bottom:8px !important; }
+html body.page-mode #home.page-section.active-page {
+  min-height:0 !important;
+  height:auto !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+}
+html body.page-mode #home.page-section.active-page .home-modern-inner {
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+html body.page-mode #home.page-section.active-page .hhx-section-signature { margin-top:8px !important; padding-bottom:4px !important; }
 @media(max-width:700px) {
   html body.page-mode #reviews .reviews-list { grid-template-columns:1fr !important; }
 }
@@ -3270,28 +3297,6 @@ html body.page-mode #reviews .reviews-layout.reviews-collapsed #reviewForm { max
       if(i>=full.length){clearInterval(timer);timers.delete(section);}
     },85);
     timers.set(section,timer);
-  }
-  var reviews=document.getElementById('reviews');
-  if(reviews){
-    var layout=reviews.querySelector('.reviews-layout');
-    var list=reviews.querySelector('#reviewsList');
-    if(layout && list){
-      var toggle=document.createElement('button');
-      toggle.type='button';
-      toggle.id='hhxReviewsToggle';
-      toggle.setAttribute('aria-controls','reviewsList');
-      toggle.setAttribute('aria-expanded','false');
-      toggle.textContent='إظهار التقييمات';
-      layout.classList.add('reviews-collapsed');
-      var intro=reviews.querySelector('.services-intro');
-      if(intro) intro.insertAdjacentElement('afterend',toggle);
-      else layout.insertAdjacentElement('beforebegin',toggle);
-      toggle.addEventListener('click',function(){
-        var hidden=layout.classList.toggle('reviews-collapsed');
-        toggle.textContent=hidden?'إظهار التقييمات':'إخفاء التقييمات';
-        toggle.setAttribute('aria-expanded',hidden?'false':'true');
-      });
-    }
   }
   var sections=document.querySelectorAll(selectors);
   sections.forEach(function(section){
