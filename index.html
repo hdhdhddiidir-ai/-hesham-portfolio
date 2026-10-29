@@ -1013,14 +1013,14 @@ function showPage(key, updateHistory) {
       /* Re-trigger the entrance animation every time a section is opened. */
       void entering.offsetWidth;
       entering.classList.add('hh-section-entering');
-      window.setTimeout(function(){ entering.classList.remove('hh-section-entering'); }, 760);
+      window.setTimeout(function(){ entering.classList.remove('hh-section-entering'); }, 1320);
     }
     var fx = document.getElementById('hhPageTransitionFx');
     if (fx) {
       fx.classList.remove('hh-play');
       void fx.offsetWidth;
       fx.classList.add('hh-play');
-      window.setTimeout(function(){ fx.classList.remove('hh-play'); }, 620);
+      window.setTimeout(function(){ fx.classList.remove('hh-play'); }, 1180);
     }
   }
   if (updateHistory) history.pushState({ page: key }, '', '#' + key);
@@ -3861,31 +3861,60 @@ html.hh-reduce-glow body .hht-card {
 
 <!-- Cinematic but lightweight section transitions; respects the global Reduce Motion preference. -->
 <style id="hhx-cinematic-section-transitions">
+/* A slower, luxurious transition: layered light, subtle star field, and a composed section reveal. */
 #hhPageTransitionFx{
-  position:fixed;inset:0;z-index:11990;pointer-events:none;opacity:0;
-  transform:translateX(-115%);
-  background:linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 5%,transparent) 35%,color-mix(in srgb,var(--hho-acc,#f5d76e) 13%,transparent) 49%,color-mix(in srgb,#69c9ff 8%,transparent) 56%,transparent 76%);
-  mix-blend-mode:screen;
+  position:fixed;inset:0;z-index:11990;pointer-events:none;opacity:0;overflow:hidden;
+  transform:translateX(-110%);
+  background:
+    radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent),transparent 58%),
+    linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 3%,transparent) 25%,color-mix(in srgb,var(--hho-acc,#f5d76e) 16%,transparent) 47%,color-mix(in srgb,#b9e7ff 10%,transparent) 53%,color-mix(in srgb,var(--hho-acc,#f5d76e) 4%,transparent) 65%,transparent 82%);
+  mix-blend-mode:screen;will-change:transform,opacity;
 }
-#hhPageTransitionFx.hh-play{animation:hhxPageLightSweep .58s cubic-bezier(.2,.7,.15,1) both}
+#hhPageTransitionFx:before{
+  content:"";position:absolute;inset:-20%;
+  background-image:radial-gradient(1px 1px at 12% 22%,#fff9 50%,transparent 100%),radial-gradient(2px 2px at 28% 72%,color-mix(in srgb,var(--hho-acc,#f5d76e) 90%,white) 50%,transparent 100%),radial-gradient(1px 1px at 44% 38%,#fff9 50%,transparent 100%),radial-gradient(1px 1px at 68% 64%,#fff8 50%,transparent 100%),radial-gradient(2px 2px at 82% 26%,#fff9 50%,transparent 100%),radial-gradient(1px 1px at 91% 81%,#fff8 50%,transparent 100%);
+  background-size:100% 100%;opacity:0;transform:scale(.94);
+}
+#hhPageTransitionFx:after{
+  content:"";position:absolute;left:0;right:0;top:50%;height:1px;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--hho-acc,#f5d76e) 70%,white),#ffffffd9,color-mix(in srgb,var(--hho-acc,#f5d76e) 65%,transparent),transparent);
+  box-shadow:0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 42%,transparent);
+  opacity:0;transform:scaleX(.15);
+}
+#hhPageTransitionFx.hh-play{animation:hhxPageLightSweep 1.12s cubic-bezier(.72,0,.22,1) both}
+#hhPageTransitionFx.hh-play:before{animation:hhxTransitionStars 1.12s ease-out both}
+#hhPageTransitionFx.hh-play:after{animation:hhxTransitionLine 1.12s cubic-bezier(.2,.75,.2,1) both}
 html body.page-mode .page-section.hh-section-entering{
-  animation:hhxSectionArrival .68s cubic-bezier(.2,.75,.2,1) both!important;
-  transform-origin:50% 35%;
-  will-change:opacity,transform,filter;
+  animation:hhxSectionArrival 1.08s cubic-bezier(.18,.72,.18,1) both!important;
+  transform-origin:50% 35%;will-change:opacity,transform,filter;
 }
 @keyframes hhxPageLightSweep{
-  0%{opacity:0;transform:translateX(-115%)}
-  16%{opacity:1}
-  78%{opacity:.65}
-  100%{opacity:0;transform:translateX(115%)}
+  0%{opacity:0;transform:translateX(-110%)}
+  12%{opacity:.92}
+  45%{opacity:1}
+  72%{opacity:.8}
+  100%{opacity:0;transform:translateX(110%)}
+}
+@keyframes hhxTransitionStars{
+  0%{opacity:0;transform:scale(.94) translateX(-2%)}
+  28%{opacity:.9}
+  72%{opacity:.65}
+  100%{opacity:0;transform:scale(1.04) translateX(2%)}
+}
+@keyframes hhxTransitionLine{
+  0%,12%{opacity:0;transform:scaleX(.15)}
+  38%{opacity:.9;transform:scaleX(1)}
+  70%{opacity:.55;transform:scaleX(.82)}
+  100%{opacity:0;transform:scaleX(.25)}
 }
 @keyframes hhxSectionArrival{
-  0%{opacity:.35;transform:translate3d(0,18px,0) scale(.992);filter:blur(5px)}
-  65%{opacity:1;filter:blur(0)}
+  0%{opacity:.15;transform:translate3d(0,28px,0) scale(.985);filter:blur(8px)}
+  38%{opacity:.72;filter:blur(2px)}
+  72%{opacity:1;filter:blur(0)}
   100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
 }
 @media(max-width:600px){
-  html body.page-mode .page-section.hh-section-entering{animation-duration:.52s!important}
+  html body.page-mode .page-section.hh-section-entering{animation-duration:.9s!important}
 }
 html.hh-reduce-motion #hhPageTransitionFx{display:none!important;animation:none!important}
 html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
