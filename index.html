@@ -3490,6 +3490,7 @@ html body.page-mode #reviews .hhx-section-signature { margin-bottom:0!important;
       var welcome = document.getElementById('hhWelcome');
       if (welcome) welcome.style.display = 'none';
       document.body.classList.remove('hh-welcome-on');
+      if (typeof startMeteors === 'function') startMeteors();
     } else {
       sessionStorage.setItem('hhx_welcome_seen','1');
     }
