@@ -995,17 +995,36 @@ function markNav(key) {
 }
 function showPage(key, updateHistory) {
   if (!PAGES.includes(key) || !document.getElementById(key)) key = 'home';
+  var changed = key !== currentPage;
+  var reduceMotion = document.documentElement.classList.contains('hh-reduce-motion') || matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.body.classList.add('page-mode', 'hh-scroll');
   document.querySelectorAll('.page-section').forEach(section => {
     const active = section.id === key;
     section.classList.toggle('active-page', active);
+    section.classList.remove('hh-section-entering');
     section.setAttribute('aria-hidden', active ? 'false' : 'true');
     if ('inert' in section) section.inert = !active;
   });
   currentPage = key;
   markNav(key);
+  if (changed && !reduceMotion) {
+    var entering = document.getElementById(key);
+    if (entering) {
+      /* Re-trigger the entrance animation every time a section is opened. */
+      void entering.offsetWidth;
+      entering.classList.add('hh-section-entering');
+      window.setTimeout(function(){ entering.classList.remove('hh-section-entering'); }, 760);
+    }
+    var fx = document.getElementById('hhPageTransitionFx');
+    if (fx) {
+      fx.classList.remove('hh-play');
+      void fx.offsetWidth;
+      fx.classList.add('hh-play');
+      window.setTimeout(function(){ fx.classList.remove('hh-play'); }, 620);
+    }
+  }
   if (updateHistory) history.pushState({ page: key }, '', '#' + key);
-  window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   syncPollers();
 }
 function setPage() {
@@ -3839,5 +3858,52 @@ html.hh-reduce-glow body .hht-card {
   box-shadow:none!important;text-shadow:none!important;filter:none!important;-webkit-filter:none!important;
 }
 </style>
+
+<!-- Cinematic but lightweight section transitions; respects the global Reduce Motion preference. -->
+<style id="hhx-cinematic-section-transitions">
+#hhPageTransitionFx{
+  position:fixed;inset:0;z-index:11990;pointer-events:none;opacity:0;
+  transform:translateX(-115%);
+  background:linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 5%,transparent) 35%,color-mix(in srgb,var(--hho-acc,#f5d76e) 13%,transparent) 49%,color-mix(in srgb,#69c9ff 8%,transparent) 56%,transparent 76%);
+  mix-blend-mode:screen;
+}
+#hhPageTransitionFx.hh-play{animation:hhxPageLightSweep .58s cubic-bezier(.2,.7,.15,1) both}
+html body.page-mode .page-section.hh-section-entering{
+  animation:hhxSectionArrival .68s cubic-bezier(.2,.75,.2,1) both!important;
+  transform-origin:50% 35%;
+  will-change:opacity,transform,filter;
+}
+@keyframes hhxPageLightSweep{
+  0%{opacity:0;transform:translateX(-115%)}
+  16%{opacity:1}
+  78%{opacity:.65}
+  100%{opacity:0;transform:translateX(115%)}
+}
+@keyframes hhxSectionArrival{
+  0%{opacity:.35;transform:translate3d(0,18px,0) scale(.992);filter:blur(5px)}
+  65%{opacity:1;filter:blur(0)}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@media(max-width:600px){
+  html body.page-mode .page-section.hh-section-entering{animation-duration:.52s!important}
+}
+html.hh-reduce-motion #hhPageTransitionFx{display:none!important;animation:none!important}
+html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
+@media(prefers-reduced-motion:reduce){
+  #hhPageTransitionFx{display:none!important;animation:none!important}
+  html body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
+}
+</style>
+<script id="hhx-cinematic-section-transitions-script">
+(function(){
+  function initSectionFx(){
+    if(!document.getElementById('hhPageTransitionFx')){
+      var fx=document.createElement('div');fx.id='hhPageTransitionFx';fx.setAttribute('aria-hidden','true');document.body.appendChild(fx);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSectionFx,{once:true});else initSectionFx();
+})();
+</script>
+
 </body>
 </html>
