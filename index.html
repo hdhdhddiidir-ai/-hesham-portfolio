@@ -1730,9 +1730,9 @@ html.hh-reduce-motion *,html.hh-reduce-motion *::before,html.hh-reduce-motion *:
 </style>
 
 <div class="hhx-fabs" id="hhxFabs">
-  <button type="button" class="hhx-fab" id="hhxTheme" title="ألوان الموقع" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxSettings" title="إعدادات الشكل والحركة" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxTour" title="جولة تعريفية" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTheme" title="ألوان الموقع" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg><span>ألوان الموقع</span></button>
+  <button type="button" class="hhx-fab" id="hhxSettings" title="إعدادات الشكل والحركة" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5 7 7M17 17l1.5 1.5M18.5 5.5 17 7M7 17l-1.5 1.5"/><circle cx="12" cy="12" r="8.1" stroke-dasharray="1 3.1"/></svg><span>الإعدادات</span></button>
+  <button type="button" class="hhx-fab" id="hhxTour" title="جولة تعريفية" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg><span>الجولة التعريفية</span></button>
 </div>
 <div class="hhx-menu" id="hhxMenu" role="menu"></div>
 <div class="hhx-menu hhx-settings-menu" id="hhxSettingsMenu" role="group" aria-label="إعدادات المظهر"></div>
@@ -3337,6 +3337,43 @@ html body.page-mode #reviews .hhx-section-signature .signature-dot { display:non
   html body.page-mode #reviews .hhx-section-signature::before { font-size:11px; letter-spacing:1.5px; }
 }
 
+
+/* Home-page visual controls: a calm, in-flow tool dock instead of obstructive floating buttons. */
+html body.page-mode #home .hhx-fabs {
+  position:relative !important; inset:auto !important; z-index:5 !important;
+  display:flex !important; flex-direction:row !important; align-items:stretch !important;
+  justify-content:center !important; flex-wrap:wrap !important; gap:14px !important;
+  width:min(100%,560px) !important; margin:24px auto 4px !important; padding:0 10px !important;
+  opacity:1 !important; pointer-events:auto !important; transition:none !important;
+}
+html body.page-mode #home .hhx-fab {
+  width:clamp(96px,17vw,142px) !important; min-height:94px !important; height:auto !important;
+  flex:1 1 105px !important; border-radius:18px !important; padding:13px 8px 11px !important;
+  display:flex !important; flex-direction:column !important; align-items:center !important;
+  justify-content:center !important; gap:9px !important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--hho-bg) 90%,#fff 10%),var(--hho-bg)) !important;
+  border-color:color-mix(in srgb,var(--hho-acc) 44%,transparent) !important;
+  box-shadow:0 8px 22px #0005,inset 0 1px 0 #ffffff12,0 0 14px color-mix(in srgb,var(--hho-acc) 13%,transparent) !important;
+}
+html body.page-mode #home .hhx-fab:hover,html body.page-mode #home .hhx-fab:focus-visible {
+  transform:translateY(-3px) !important; border-color:var(--hho-acc) !important;
+  box-shadow:0 12px 26px #0006,0 0 20px color-mix(in srgb,var(--hho-acc) 23%,transparent) !important;
+}
+html body.page-mode #home .hhx-fab svg { width:30px !important;height:30px !important;flex:none !important; }
+html body.page-mode #home .hhx-fab span { display:block !important;color:var(--hho-fg) !important;font:700 12px/1.5 Cairo,Montserrat,sans-serif !important;white-space:nowrap !important; }
+html body.page-mode:not(:has(#home.active-page)) #hhxFabs { display:none !important; }
+html body.page-mode #home.active-page #hhxFabs { display:flex !important; }
+html body.page-mode #home .hhx-section-signature { margin-top:12px !important; }
+html body.page-mode #reviews.page-section.active-page { display:block !important;min-height:0 !important;height:auto !important;max-height:none !important;margin:0 !important;padding:0 0 12px !important;overflow:visible !important; }
+html body.page-mode #reviews.page-section.active-page > .wrap { padding-top:0 !important;padding-bottom:0 !important; }
+html body.page-mode #reviews .hhx-section-signature { margin-top:16px !important; }
+@media(max-width:600px) {
+ html body.page-mode #home .hhx-fabs { gap:9px !important;margin-top:18px !important; }
+ html body.page-mode #home .hhx-fab { min-height:84px !important;flex-basis:88px !important;border-radius:15px !important; }
+ html body.page-mode #home .hhx-fab svg { width:27px !important;height:27px !important; }
+ html body.page-mode #home .hhx-fab span { font-size:11px !important; }
+}
+
 </style>
 <script id="hhx-signature-typewriter-per-page">
 (function(){
@@ -3371,6 +3408,9 @@ html body.page-mode #reviews .hhx-section-signature .signature-dot { display:non
     }).observe(section,{attributes:true,attributeFilter:['class']});
   });
 })();
+</script>
+<script id="hhx-move-visual-controls-to-home">
+(function(){var dock=document.getElementById("hhxFabs");var home=document.querySelector("#home .home-modern-inner");if(dock&&home){dock.setAttribute("aria-label","أدوات الموقع");var wa=home.querySelector(".hx-wa");if(wa)wa.insertAdjacentElement("afterend",dock);else home.appendChild(dock);}})();
 </script>
 
 </body>
