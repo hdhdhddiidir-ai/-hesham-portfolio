@@ -2721,5 +2721,111 @@ html body.page-mode #contact.page-section.active-page {
   }
 }
 </style>
+
+<style id="hhx-final-section-spacing-and-welcome-polish">
+/* Keep the welcome as a real full-screen intro over the original star field. */
+body.hh-welcome-on #hhWelcome {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  background: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+}
+body.hh-welcome-on > #hhSky {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+body.hh-welcome-on > header,
+body.hh-welcome-on > main,
+body.hh-welcome-on > section,
+body.hh-welcome-on > footer,
+body.hh-welcome-on > .floating-wa {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+/* Refine the logo rings: thin, clean gold orbit; no opaque black disc. */
+#hhWelcome .hh-wl-logo {
+  isolation: isolate !important;
+  filter: drop-shadow(0 0 18px #f5d76e25) !important;
+}
+#hhWelcome .hh-wl-logo::before {
+  inset: -8px !important;
+  border-radius: 50% !important;
+  background: conic-gradient(from 0deg, #f5d76e00 0deg, #f5d76eaa 55deg, #fff1b8 90deg, #f5d76e35 145deg, #f5d76e00 210deg, #f5d76e88 285deg, #f5d76e00 360deg) !important;
+  filter: drop-shadow(0 0 5px #f5d76e40) !important;
+}
+#hhWelcome .hh-wl-logo::after {
+  inset: -3px !important;
+  border: 1px solid #f5d76e55 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: 0 0 12px #f5d76e12, inset 0 0 12px #f5d76e0b !important;
+}
+/* Every navigation destination sizes to its content, not the viewport. */
+html body.page-mode .page-section,
+html body.page-mode .page-section.active-page,
+html body.page-mode #home.page-section.active-page,
+html body.page-mode #about.page-section.active-page,
+html body.page-mode #work.page-section.active-page,
+html body.page-mode #services.page-section.active-page,
+html body.page-mode #reviews.page-section.active-page,
+html body.page-mode #orders.page-section.active-page,
+html body.page-mode #contact.page-section.active-page {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-block: 0 !important;
+  box-sizing: border-box !important;
+}
+html body.page-mode #home.page-section.active-page {
+  align-items: flex-start !important;
+  padding: 94px 18px 24px !important;
+}
+html body.page-mode #home .home-modern-inner,
+html body.page-mode #home .home-modern-inner > * {
+  min-height: 0 !important;
+  height: auto !important;
+}
+html body.page-mode .page-section.active-page > .wrap {
+  min-height: 0 !important;
+  height: auto !important;
+  margin-block: 0 !important;
+  padding-bottom: 0 !important;
+}
+html body.page-mode #about.page-section.active-page,
+html body.page-mode #work.page-section.active-page,
+html body.page-mode #services.page-section.active-page,
+html body.page-mode #reviews.page-section.active-page,
+html body.page-mode #orders.page-section.active-page,
+html body.page-mode #contact.page-section.active-page {
+  display: block !important;
+  padding: 94px 0 28px !important;
+}
+html body.page-mode .page-section:not(.active-page) {
+  display: none !important;
+  visibility: hidden !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+@media (max-width: 900px) {
+  html body.page-mode #home.page-section.active-page {
+    padding: 80px 12px 22px !important;
+  }
+  html body.page-mode #about.page-section.active-page,
+  html body.page-mode #work.page-section.active-page,
+  html body.page-mode #services.page-section.active-page,
+  html body.page-mode #reviews.page-section.active-page,
+  html body.page-mode #orders.page-section.active-page,
+  html body.page-mode #contact.page-section.active-page {
+    padding: 80px 0 22px !important;
+  }
+}
+</style>
 </body>
 </html>
