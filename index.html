@@ -2572,6 +2572,25 @@ body.page-mode .page-section.active-page { display: block !important; animation:
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto !important; }
 }
+
+/* Final fix: enforce independent pages after every older stylesheet rule. */
+html body.page-mode .page-section:not(.active-page) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+html body.page-mode .page-section.active-page {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+/* Remove the previous section-to-section arrow controls completely. */
+#hhx-vertical-nav,
+#hhx-vertical-nav .hhx-nav-arrow,
+.hhx-nav-arrow {
+  display: none !important;
+}
 </style>
 </body>
 </html>
