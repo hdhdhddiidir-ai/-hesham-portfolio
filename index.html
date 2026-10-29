@@ -719,6 +719,30 @@ html body #home{isolation:isolate}
 #hhxColorSection{max-width:145px;min-width:0;background:#111;color:#fff;border:1px solid var(--hho-line);border-radius:8px;padding:7px;font:12px Cairo,sans-serif}
 .hhx-custom-apply{justify-content:center;border-color:var(--hho-line);background:color-mix(in srgb,var(--hho-acc) 12%,transparent)}
 @media(max-width:600px){.hhx-wheel-wrap{gap:8px}#hhxColorSection{max-width:130px}}
+</style><style id="hhx-elegant-color-palette">
+.hhx-menu.hhx-palette-modal{width:min(360px,calc(100vw - 76px));max-height:min(76vh,620px);overflow:auto;padding:15px!important;gap:12px!important;border:1px solid color-mix(in srgb,var(--hho-acc) 32%,#ffffff12);border-radius:20px;background:radial-gradient(ellipse at top right,color-mix(in srgb,var(--hho-acc) 13%,transparent),transparent 58%),#101012f5;backdrop-filter:blur(22px);box-shadow:0 18px 55px #0009,0 0 28px color-mix(in srgb,var(--hho-acc) 10%,transparent)}
+.hhx-palette-head{display:flex;align-items:center;gap:10px;padding:2px 0 12px;border-bottom:1px solid #ffffff12}
+.hhx-palette-head>div{display:grid;gap:3px;flex:1}
+.hhx-palette-head b,.hhx-palette-custom b{font:700 14px Cairo,sans-serif;color:#fff}
+.hhx-palette-head small,.hhx-palette-custom small{display:block;font:11px/1.6 Cairo,sans-serif;color:#aaa}
+.hhx-palette-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;color:var(--hho-acc);background:color-mix(in srgb,var(--hho-acc) 13%,transparent);font-size:22px}
+.hhx-palette-close{border:1px solid #ffffff18;background:#ffffff08;color:#fff;border-radius:10px;width:30px;height:30px;font-size:21px;cursor:pointer}
+.hhx-palette-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hhx-palette-swatch{position:relative;display:grid;justify-items:center;gap:6px;min-width:0;padding:9px 3px 7px;border:1px solid #ffffff10;border-radius:13px;background:#ffffff05;color:#ddd;cursor:pointer}
+.hhx-palette-swatch:hover,.hhx-palette-swatch[aria-pressed=true]{border-color:var(--hho-acc);background:color-mix(in srgb,var(--hho-acc) 10%,transparent)}
+.hhx-palette-dot{width:31px;height:31px;border-radius:50%;background:var(--swatch);border:3px solid #ffffff25;box-shadow:0 0 13px color-mix(in srgb,var(--swatch) 40%,transparent)}
+.hhx-palette-name{font:10px Cairo,sans-serif;text-align:center;overflow-wrap:anywhere}
+.hhx-palette-check{display:none;position:absolute;top:4px;right:6px;color:var(--hho-acc);font-size:11px}
+.hhx-palette-swatch[aria-pressed=true] .hhx-palette-check{display:block}
+.hhx-palette-custom{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding-top:12px;border-top:1px solid #ffffff12}
+.hhx-palette-custom>div{min-width:0}
+.hhx-color-wheel{grid-column:2;grid-row:1/3;position:relative;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ff4545,#ffcc33,#5bea69,#31d9e7,#5267ff,#c64cff,#ff4545);box-shadow:0 0 14px #ffffff12;cursor:pointer}
+.hhx-color-wheel:before{content:"";position:absolute;inset:5px;border-radius:50%;background:#111;border:2px solid #ffffff70}
+.hhx-color-wheel input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.hhx-color-wheel span{z-index:1;color:white;font-size:21px;pointer-events:none}
+.hhx-palette-apply{grid-column:1/-1;width:100%;padding:10px 14px;border:1px solid color-mix(in srgb,var(--hho-acc) 55%,transparent);border-radius:12px;background:linear-gradient(110deg,color-mix(in srgb,var(--hho-acc) 24%,#171717),#171717);color:#fff;font:700 12px Cairo,sans-serif;cursor:pointer}
+.hhx-palette-apply:hover{box-shadow:0 0 18px color-mix(in srgb,var(--hho-acc) 20%,transparent)}
+@media(max-width:600px){.hhx-menu.hhx-palette-modal{width:min(330px,calc(100vw - 70px));padding:12px!important}.hhx-palette-grid{gap:6px}.hhx-palette-dot{width:28px;height:28px}}
 </style></head>
 <body class="hh-welcome-on">
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
@@ -2074,49 +2098,26 @@ function closeSettingsMenu(){settingsMenu.classList.remove('open');settingsBtn.s
 function buildMenu() {
   if (!menu) return;
   menu.innerHTML = '';
-  var t = document.createElement('b'); t.textContent = T('themeTitle'); menu.appendChild(t);
-  var wheelWrap = document.createElement('div'); wheelWrap.className = 'hhx-wheel-wrap';
-  wheelWrap.innerHTML = '<label class="hhx-wheel-label">اختار لونك بنفسك <input id="hhxCustomColor" type="color" value="#f5d76e" aria-label="اختيار لون مخصص"></label><label class="hhx-wheel-label">طبّق اللون على <select id="hhxColorSection"><option value="all">الموقع كله</option><option value="home">الرئيسية</option><option value="about">من أنا</option><option value="work">أعمالي</option><option value="services">خدماتي</option><option value="reviews">التقييمات</option><option value="orders">اطلب تصميم</option><option value="contact">تواصل معي</option></select></label><button type="button" class="hhx-opt hhx-custom-apply" id="hhxApplyCustom">تطبيق اللون المختار</button>';
-  menu.appendChild(wheelWrap);
-  var colorInput = wheelWrap.querySelector('#hhxCustomColor'), sectionSelect = wheelWrap.querySelector('#hhxColorSection');
-  try { colorInput.value = localStorage.getItem('hh_custom_color') || '#f5d76e'; sectionSelect.value = localStorage.getItem('hh_custom_section') || 'all'; } catch(e) {}
-  wheelWrap.querySelector('#hhxApplyCustom').addEventListener('click', function(){
-    var color = colorInput.value, section = sectionSelect.value;
-    if(section === 'all') { applyCustomColor(color, true); }
-    else { applySectionColor(section, color, true); }
-    closeMenu();
+  menu.classList.add('hhx-palette-modal');
+  var head=document.createElement('div');head.className='hhx-palette-head';
+  head.innerHTML='<span class="hhx-palette-mark">✦</span><div><b>اختار ألوان موقعك</b><small>اختار ستايل يناسبك أو اصنع لونك الخاص</small></div><button type="button" class="hhx-palette-close" aria-label="إغلاق">×</button>';
+  menu.appendChild(head);
+  head.querySelector('button').addEventListener('click',closeMenu);
+  var grid=document.createElement('div');grid.className='hhx-palette-grid';
+  THEMES.forEach(function(th){
+    var o=document.createElement('button');o.type='button';o.className='hhx-palette-swatch';o.title=th.name;o.setAttribute('aria-label',th.name);o.setAttribute('aria-pressed',th.id===currentTheme?'true':'false');
+    var c=th.sw.match(/#[0-9a-fA-F]{6}/g);var col=c&&c.length?c[c.length-1]:'#f5d76e';
+    o.innerHTML='<span class="hhx-palette-dot" style="--swatch:'+col+'"></span><span class="hhx-palette-name">'+th.name+'</span><span class="hhx-palette-check">✓</span>';
+    o.addEventListener('click',function(){applyTheme(th.id,true);});
+    grid.appendChild(o);
   });
-  THEMES.forEach(function (th) {
-    var o = document.createElement('button'); o.type = 'button'; o.className = 'hhx-opt'; o.setAttribute('role', 'menuitemradio');
-    o.setAttribute('aria-checked', th.id === currentTheme ? 'true' : 'false');
-    o.innerHTML = '<span class="hhx-sw" style="background:' + th.sw + '"></span><span dir="ltr">' + th.name + '</span>';
-    o.addEventListener('click', function () { applyTheme(th.id, true); closeMenu(); themeBtn.focus(); });
-    menu.appendChild(o);
-  });
-}
-function applyCustomColor(color, save) {
-  document.documentElement.style.setProperty('--hho-acc', color);
-  document.documentElement.style.setProperty('--hho-acc2', color);
-  document.documentElement.style.setProperty('--hho-line', color + '66');
-  document.documentElement.style.setProperty('--hh-custom-accent', color);
-  document.querySelectorAll('.top-links a.active-nav,.hhx-fab').forEach(function(el){el.style.borderColor=color;});
-  if(save){try{localStorage.setItem('hh_custom_color',color);localStorage.setItem('hh_theme','custom');localStorage.setItem('hh_custom_section','all');}catch(e){}}
-}
-function applySectionColor(section, color, save) {
-  var el = document.getElementById(section);
-  if(!el) return;
-  el.style.setProperty('--hho-acc', color);
-  el.style.setProperty('--hho-acc2', color);
-  el.style.setProperty('--hho-line', color + '66');
-  el.style.setProperty('--hh-section-accent', color);
-  el.querySelectorAll('h2,.kicker,.section-number,.section-title').forEach(function(node){node.style.color=color;});
-  el.querySelectorAll('a,button,.card,.service-card,.work-card').forEach(function(node){node.style.setProperty('border-color',color+'66');});
-  if(save){try{localStorage.setItem('hh_section_color_'+section,color);localStorage.setItem('hh_custom_color',color);localStorage.setItem('hh_custom_section',section);}catch(e){}}
-}
-function restoreSectionColors(){
-  ['home','about','work','services','reviews','orders','contact'].forEach(function(section){
-    try { var color=localStorage.getItem('hh_section_color_'+section); if(color) applySectionColor(section,color,false); } catch(e){}
-  });
+  menu.appendChild(grid);
+  var custom=document.createElement('div');custom.className='hhx-palette-custom';
+  custom.innerHTML='<div><b>لونك الخاص</b><small>اختار أي درجة من عجلة الألوان</small></div><label class="hhx-color-wheel" title="اختيار لون مخصص"><input id="hhxCustomColor" type="color" value="#f5d76e" aria-label="اختيار لون مخصص"><span>＋</span></label><button type="button" id="hhxApplyCustom" class="hhx-palette-apply">تطبيق اللون</button>';
+  menu.appendChild(custom);
+  var input=custom.querySelector('#hhxCustomColor');
+  try{input.value=localStorage.getItem('hh_custom_color')||'#f5d76e';}catch(e){}
+  custom.querySelector('#hhxApplyCustom').addEventListener('click',function(){applyCustomColor(input.value,true);});
 }
 function closeMenu() { menu.classList.remove('open'); themeBtn.setAttribute('aria-expanded', 'false'); }
 themeBtn.addEventListener('click', function (e) {
@@ -2201,7 +2202,6 @@ if (window.HH_setLang) {
 var saved = 'gold'; try { saved = localStorage.getItem('hh_theme') || 'gold'; } catch (e) {}
 if (saved === 'custom') { applyTheme('gold', false); try { applyCustomColor(localStorage.getItem('hh_custom_color') || '#f5d76e', false); } catch(e) {} }
 else applyTheme(saved, false);
-restoreSectionColors();
 buildSettingsMenu();
 applyVisualPrefs(false);
 applyTexts();
