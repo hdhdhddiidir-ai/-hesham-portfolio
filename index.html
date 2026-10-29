@@ -1617,6 +1617,10 @@ function launchMeteor() {
   var tail = m.querySelector('.hh-meteor-tail');
   tail.style.transform = 'translateY(-50%) rotate(' + Math.atan2(y1 - y0, x1 - x0) * 57.3 + 'deg)';
   function frame(t) {
+    if (document.documentElement.classList.contains('hh-reduce-motion') ||
+        document.documentElement.classList.contains('hh-no-meteors')) {
+      m.remove(); flying = false; return;
+    }
     if (start === null) start = t;
     var k = Math.min(1, (t - start) / dur);
     var x = x0 + (x1 - x0) * k, y = y0 + (y1 - y0) * k;
@@ -2086,17 +2090,24 @@ var visualPrefs = { meteors: false, glow: false, motion: false, sky: false };
 try { var storedPrefs = JSON.parse(localStorage.getItem('hh_visual_settings') || '{}'); Object.keys(visualPrefs).forEach(function(k){ if (typeof storedPrefs[k] === 'boolean') visualPrefs[k] = storedPrefs[k]; }); } catch(e) {}
 function applyVisualPrefs(save) {
   var root = document.documentElement;
-  root.classList.toggle('hh-no-meteors', visualPrefs.meteors);
-  root.classList.toggle('hh-reduce-glow', visualPrefs.glow);
-  root.classList.toggle('hh-reduce-motion', visualPrefs.motion);
-  root.classList.toggle('hh-no-sky', visualPrefs.sky);
-  if (visualPrefs.meteors) {
-    var layer = document.getElementById('hhMeteorLayer');
-    if (layer) layer.querySelectorAll('.hh-meteor,.hh-spark').forEach(function(el){el.remove();});
+  var stopMotion = !!visualPrefs.motion;
+  root.classList.toggle('hh-no-meteors', !!visualPrefs.meteors || stopMotion);
+  root.classList.toggle('hh-reduce-glow', !!visualPrefs.glow);
+  root.classList.toggle('hh-reduce-motion', stopMotion);
+  root.classList.toggle('hh-no-sky', !!visualPrefs.sky);
+  /* Motion reduction is global: also stop the JavaScript-driven meteor loop. */
+  if (visualPrefs.meteors || stopMotion) {
     if (window.HH_stopMeteors) window.HH_stopMeteors();
-  } else if (!document.body.classList.contains('hh-welcome-on') && window.HH_startMeteors) window.HH_startMeteors();
-  settingsMenu.querySelectorAll('input[data-pref]').forEach(function(input){input.checked=!!visualPrefs[input.dataset.pref];});
-  if (save) { try { localStorage.setItem('hh_visual_settings', JSON.stringify(visualPrefs)); } catch(e) {} }
+  } else if (!document.body.classList.contains('hh-welcome-on') && window.HH_startMeteors) {
+    window.HH_startMeteors();
+  }
+  /* Complete any in-progress signature typing when motion is disabled. */
+  if (stopMotion) {
+    document.querySelectorAll('body > .page-section > .hhx-section-signature > span:first-child').forEach(function(el){el.textContent='Hesham Hane';});
+    document.querySelectorAll('#hhMeteorLayer .hh-meteor,#hhMeteorLayer .hh-spark').forEach(function(el){el.remove();});
+  }
+  if (settingsMenu) settingsMenu.querySelectorAll('input[data-pref]').forEach(function(input){input.checked=!!visualPrefs[input.dataset.pref];});
+  if (save) { try { localStorage.setItem('hh_visual_settings', JSON.stringify(visualPrefs)); } catch (e) {} }
 }
 function buildSettingsMenu() {
   if (!settingsMenu) return;
@@ -3411,7 +3422,8 @@ html body.page-mode #reviews .hhx-section-signature { margin-top:16px !important
     if(timers.has(section)){ clearInterval(timers.get(section)); timers.delete(section); }
     var full = 'Hesham Hane';
     name.textContent = '';
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    if((window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ||
+       document.documentElement.classList.contains('hh-reduce-motion')){
       name.textContent = full; return;
     }
     var i=0;
@@ -3786,6 +3798,42 @@ html body.page-mode #reviews .hhx-section-signature > span:first-child{
   -webkit-background-clip:text!important;background-clip:text!important;
   -webkit-text-fill-color:transparent!important;
   text-shadow:0 1px 0 color-mix(in srgb,var(--hho-acc,#f5d76e) 18%,black),0 0 12px color-mix(in srgb,var(--hho-acc,#f5d76e) 25%,transparent)!important;
+}
+</style>
+
+<style id="hhx-global-effects-controls">
+/* These preferences are global across every page/section and override later component styles. */
+html.hh-reduce-motion,
+html.hh-reduce-motion body { scroll-behavior:auto!important; }
+html.hh-reduce-motion body *,
+html.hh-reduce-motion body *::before,
+html.hh-reduce-motion body *::after {
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+  caret-color:transparent!important;
+}
+html.hh-reduce-motion body .hhx-section-signature > span:first-child { animation:none!important; }
+html.hh-reduce-motion #hhMeteorLayer,
+html.hh-reduce-motion #hhMeteorLayer *,
+html.hh-reduce-motion #hhWelcome .hh-wl-logo::before { animation:none!important;transition:none!important; }
+html.hh-reduce-glow body *,
+html.hh-reduce-glow body *::before,
+html.hh-reduce-glow body *::after {
+  box-shadow:none!important;
+  text-shadow:none!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+}
+html.hh-reduce-glow body .hhx-section-signature,
+html.hh-reduce-glow body .hhx-section-signature > span:first-child,
+html.hh-reduce-glow body .signature-dot,
+html.hh-reduce-glow body .hhx-fab,
+html.hh-reduce-glow body .hhx-modal-panel,
+html.hh-reduce-glow body .hhx-modal-close,
+html.hh-reduce-glow body .hht-spot,
+html.hh-reduce-glow body .hht-card {
+  box-shadow:none!important;text-shadow:none!important;filter:none!important;-webkit-filter:none!important;
 }
 </style>
 </body>
