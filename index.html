@@ -754,7 +754,7 @@ html body #home{isolation:isolate}
 </div>
 <header class="top-nav" id="topNav">
 <div class="top-nav-inner">
-<a href="#home" class="top-logo" data-i18n-aria="logoAria" aria-label="Hesham Hane - الرئيسية">H<span>HESHAM HANE DESIGNER</span></a>
+<a href="#home" class="top-logo hh-name-only" data-i18n-aria="logoAria" aria-label="Hesham Hane - الرئيسية"><span>HESHAM HANE DESIGNER</span></a>
 <nav class="top-links" data-i18n-aria="navAria" aria-label="التنقل الرئيسي">
 <a href="#home" data-i18n="navHome">الرئيسية</a>
 <a href="#about" data-i18n="navAbout">من أنا</a>
@@ -4029,6 +4029,84 @@ html body #topNav .top-links a.active-nav{box-shadow:inset 0 -2px 0 var(--hho-ac
 }
 html.hh-reduce-motion body #topNav .top-links a,
 html.hh-reduce-motion body #topNav .top-links a:before{transition:none!important}
+</style>
+
+
+<style id="hhx-name-only-and-refined-transitions">
+/* Remove the standalone H from the navigation brand and give the name calm, balanced spacing. */
+html body #topNav .top-nav-inner{
+  grid-template-columns:minmax(190px,1fr) minmax(0,auto) minmax(44px,1fr)!important;
+  column-gap:clamp(18px,2.5vw,36px)!important;
+}
+html body #topNav .top-logo.hh-name-only{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  min-width:0!important;gap:0!important;
+  font:700 clamp(11px,.9vw,13px)/1.5 Montserrat,Cairo,sans-serif!important;
+  letter-spacing:clamp(1.8px,.22vw,3.2px)!important;
+  white-space:nowrap!important;color:#f4f1e8!important;
+  transition:color .25s ease,letter-spacing .25s ease!important;
+}
+html body #topNav .top-logo.hh-name-only span{
+  display:inline-block!important;margin:0!important;padding:5px 0!important;
+  color:inherit!important;letter-spacing:inherit!important;
+}
+html body #topNav .top-logo.hh-name-only:hover{color:var(--hho-acc,#f5d76e)!important}
+@media(max-width:1050px){
+ html body #topNav .top-nav-inner{grid-template-columns:minmax(150px,1fr) minmax(0,auto) minmax(20px,.5fr)!important}
+ html body #topNav .top-logo.hh-name-only{font-size:10px!important;letter-spacing:1.5px!important}
+}
+@media(max-width:760px){
+ html body #topNav .top-nav-inner{grid-template-columns:1fr!important}
+ html body #topNav .top-logo.hh-name-only{justify-content:center!important;width:100%!important;font-size:11px!important;letter-spacing:2px!important}
+}
+/* Refined luxury transition: restrained light curtain, fine glint, soft-focus arrival — no flashy burst. */
+#hhPageTransitionFx{
+  background:
+    radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--hho-acc,#f5d76e) 7%,transparent),transparent 62%),
+    linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 2%,transparent) 30%,color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent) 48%,color-mix(in srgb,#eaf3ff 6%,transparent) 52%,color-mix(in srgb,var(--hho-acc,#f5d76e) 3%,transparent) 67%,transparent 82%)!important;
+  mix-blend-mode:screen!important;
+}
+#hhPageTransitionFx.hh-play{animation:hhxRefinedCurtain .88s cubic-bezier(.76,0,.18,1) both!important}
+#hhPageTransitionFx.hh-play:before{animation:hhxRefinedDust .88s ease-out both!important}
+#hhPageTransitionFx.hh-play:after{animation:hhxRefinedGlint .88s cubic-bezier(.2,.75,.2,1) both!important}
+html body.page-mode .page-section.hh-section-entering{
+  animation:hhxRefinedArrival .78s cubic-bezier(.2,.75,.22,1) both!important;
+  transform-origin:50% 32%;will-change:opacity,transform,filter;
+}
+@keyframes hhxRefinedCurtain{
+  0%{opacity:0;transform:translateX(-108%)}
+  16%{opacity:.5}
+  48%{opacity:.78}
+  78%{opacity:.38}
+  100%{opacity:0;transform:translateX(108%)}
+}
+@keyframes hhxRefinedDust{
+  0%{opacity:0;transform:scale(.985) translateX(-1%)}
+  30%{opacity:.45}
+  70%{opacity:.24}
+  100%{opacity:0;transform:scale(1.02) translateX(1%)}
+}
+@keyframes hhxRefinedGlint{
+  0%,16%{opacity:0;transform:scaleX(.12)}
+  42%{opacity:.6;transform:scaleX(.82)}
+  68%{opacity:.24;transform:scaleX(.55)}
+  100%{opacity:0;transform:scaleX(.18)}
+}
+@keyframes hhxRefinedArrival{
+  0%{opacity:.25;transform:translate3d(0,15px,0) scale(.993);filter:blur(3px)}
+  48%{opacity:.86;filter:blur(.7px)}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@media(max-width:600px){
+ html body.page-mode .page-section.hh-section-entering{animation-duration:.68s!important}
+}
+html.hh-reduce-motion body #topNav .top-logo.hh-name-only,
+html.hh-reduce-motion #hhPageTransitionFx,
+html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){
+ #hhPageTransitionFx{display:none!important}
+ html body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
+}
 </style>
 
 </body>
