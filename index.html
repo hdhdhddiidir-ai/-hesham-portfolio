@@ -703,7 +703,23 @@ html.maintenance-active #maintenancePage{display:flex}
 .top-logo{ text-shadow:none!important }
 .hhx-portal-launcher,#hhxCosmicPortalOverlay,.hhx-cosmic-rail,#hhx-vertical-nav{display:none!important}
 </style>
-</head>
+<style id="hhx-color-wheel-and-home-fix">
+/* Keep the star field visible through the entire home section; remove the opaque black slab. */
+html body #home.page-section,html body #home.page-section.active-page,
+html body #home.home-modern,html body #home.home-modern::before,html body #home.home-modern::after,
+html body #home .home-modern-inner,html body #home .home-modern-inner::before,html body #home .home-modern-inner::after {
+  background:transparent!important;background-color:transparent!important;background-image:none!important;
+}
+html body #home{isolation:isolate}
+#hhSky{z-index:0!important}
+#home .home-modern-glow,#home .home-modern-ring{pointer-events:none!important}
+.hhx-wheel-wrap{display:grid;gap:9px;padding:9px 7px 12px;border-bottom:1px solid var(--hho-line);margin-bottom:5px}
+.hhx-wheel-label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--hho-fg);font:600 12px Cairo,sans-serif}
+#hhxCustomColor{width:54px;height:38px;padding:3px;border:1px solid var(--hho-line);border-radius:50%;background:transparent;cursor:pointer}
+#hhxColorSection{max-width:145px;min-width:0;background:#111;color:#fff;border:1px solid var(--hho-line);border-radius:8px;padding:7px;font:12px Cairo,sans-serif}
+.hhx-custom-apply{justify-content:center;border-color:var(--hho-line);background:color-mix(in srgb,var(--hho-acc) 12%,transparent)}
+@media(max-width:600px){.hhx-wheel-wrap{gap:8px}#hhxColorSection{max-width:130px}}
+</style></head>
 <body class="hh-welcome-on">
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
 <script>(function(){var l=window.__hhMaintenanceLang||'ar';document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-maint-ar]').forEach(function(e){e.textContent=e.getAttribute('data-maint-'+l)||e.getAttribute('data-maint-ar')})})();</script>
@@ -1943,6 +1959,14 @@ var THEMES = [
   { id: 'teal', name: 'Ocean Teal', sw: 'linear-gradient(135deg,#050505 50%,#54d7d0 50%)', hue: 177, sat: .78 },
   { id: 'copper', name: 'Copper Bronze', sw: 'linear-gradient(135deg,#050505 50%,#d99568 50%)', hue: 23, sat: .72 },
   { id: 'sapphire', name: 'Sapphire Blue', sw: 'linear-gradient(135deg,#050505 50%,#729bff 50%)', hue: 223, sat: .8 },
+  { id: 'mint', name: 'Mint', sw: 'linear-gradient(135deg,#050505 50%,#9de7b3 50%)', hue: 137, sat: .55 },
+  { id: 'coral', name: 'Coral', sw: 'linear-gradient(135deg,#050505 50%,#ff8066 50%)', hue: 10, sat: .8 },
+  { id: 'lavender', name: 'Lavender', sw: 'linear-gradient(135deg,#050505 50%,#c4a7ff 50%)', hue: 260, sat: .55 },
+  { id: 'amber', name: 'Amber', sw: 'linear-gradient(135deg,#050505 50%,#ffb547 50%)', hue: 38, sat: .9 },
+  { id: 'ice', name: 'Ice Blue', sw: 'linear-gradient(135deg,#050505 50%,#a5e4ff 50%)', hue: 198, sat: .55 },
+  { id: 'lime', name: 'Lime', sw: 'linear-gradient(135deg,#050505 50%,#b7e45a 50%)', hue: 78, sat: .72 },
+  { id: 'crimson', name: 'Crimson', sw: 'linear-gradient(135deg,#050505 50%,#ff5d73 50%)', hue: 350, sat: .85 },
+  { id: 'indigo', name: 'Indigo', sw: 'linear-gradient(135deg,#050505 50%,#7885ff 50%)', hue: 235, sat: .75 },
 ];
 var origCss = null;
 function snapshot() {
@@ -1993,7 +2017,14 @@ var VARS = {
   teal:   ['#54d7d0', '#b9f3ef', '#0a0a0af2', '#ffffff', '#aaaaaa', '#54d7d040', '#08201f'],
   copper: ['#d99568', '#f2c7aa', '#0a0a0af2', '#ffffff', '#aaaaaa', '#d9956840', '#21130b'],
   sapphire:['#729bff', '#c9d8ff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#729bff40', '#0b1226'],
-  light:  ['#a8781c', '#c8962a', '#fbf8f1f5', '#1d1810', '#5a5348', '#a8781c55', '#ffffff']
+  mint:   ['#9de7b3', '#d9ffe3', '#0a0a0af2', '#ffffff', '#aaaaaa', '#9de7b340', '#0b1b12'],
+  coral:  ['#ff8066', '#ffc0b2', '#0a0a0af2', '#ffffff', '#aaaaaa', '#ff806640', '#210e0a'],
+  lavender:['#c4a7ff', '#e9dcff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#c4a7ff40', '#160d24'],
+  amber:  ['#ffb547', '#ffe0a3', '#0a0a0af2', '#ffffff', '#aaaaaa', '#ffb54740', '#241707'],
+  ice:    ['#a5e4ff', '#d9f4ff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#a5e4ff40', '#081923'],
+  lime:   ['#b7e45a', '#e6ffad', '#0a0a0af2', '#ffffff', '#aaaaaa', '#b7e45a40', '#17200a'],
+  crimson:['#ff5d73', '#ffc0ca', '#0a0a0af2', '#ffffff', '#aaaaaa', '#ff5d7340', '#240a10'],
+  indigo: ['#7885ff', '#c7ccff', '#0a0a0af2', '#ffffff', '#aaaaaa', '#7885ff40', '#0d1026']
 };
 var currentTheme = 'gold';
 function applyTheme(id, save) {
@@ -2044,12 +2075,47 @@ function buildMenu() {
   if (!menu) return;
   menu.innerHTML = '';
   var t = document.createElement('b'); t.textContent = T('themeTitle'); menu.appendChild(t);
+  var wheelWrap = document.createElement('div'); wheelWrap.className = 'hhx-wheel-wrap';
+  wheelWrap.innerHTML = '<label class="hhx-wheel-label">اختار لونك بنفسك <input id="hhxCustomColor" type="color" value="#f5d76e" aria-label="اختيار لون مخصص"></label><label class="hhx-wheel-label">طبّق اللون على <select id="hhxColorSection"><option value="all">الموقع كله</option><option value="home">الرئيسية</option><option value="about">من أنا</option><option value="work">أعمالي</option><option value="services">خدماتي</option><option value="reviews">التقييمات</option><option value="orders">اطلب تصميم</option><option value="contact">تواصل معي</option></select></label><button type="button" class="hhx-opt hhx-custom-apply" id="hhxApplyCustom">تطبيق اللون المختار</button>';
+  menu.appendChild(wheelWrap);
+  var colorInput = wheelWrap.querySelector('#hhxCustomColor'), sectionSelect = wheelWrap.querySelector('#hhxColorSection');
+  try { colorInput.value = localStorage.getItem('hh_custom_color') || '#f5d76e'; sectionSelect.value = localStorage.getItem('hh_custom_section') || 'all'; } catch(e) {}
+  wheelWrap.querySelector('#hhxApplyCustom').addEventListener('click', function(){
+    var color = colorInput.value, section = sectionSelect.value;
+    if(section === 'all') { applyCustomColor(color, true); }
+    else { applySectionColor(section, color, true); }
+    closeMenu();
+  });
   THEMES.forEach(function (th) {
     var o = document.createElement('button'); o.type = 'button'; o.className = 'hhx-opt'; o.setAttribute('role', 'menuitemradio');
     o.setAttribute('aria-checked', th.id === currentTheme ? 'true' : 'false');
     o.innerHTML = '<span class="hhx-sw" style="background:' + th.sw + '"></span><span dir="ltr">' + th.name + '</span>';
     o.addEventListener('click', function () { applyTheme(th.id, true); closeMenu(); themeBtn.focus(); });
     menu.appendChild(o);
+  });
+}
+function applyCustomColor(color, save) {
+  document.documentElement.style.setProperty('--hho-acc', color);
+  document.documentElement.style.setProperty('--hho-acc2', color);
+  document.documentElement.style.setProperty('--hho-line', color + '66');
+  document.documentElement.style.setProperty('--hh-custom-accent', color);
+  document.querySelectorAll('.top-links a.active-nav,.hhx-fab').forEach(function(el){el.style.borderColor=color;});
+  if(save){try{localStorage.setItem('hh_custom_color',color);localStorage.setItem('hh_theme','custom');localStorage.setItem('hh_custom_section','all');}catch(e){}}
+}
+function applySectionColor(section, color, save) {
+  var el = document.getElementById(section);
+  if(!el) return;
+  el.style.setProperty('--hho-acc', color);
+  el.style.setProperty('--hho-acc2', color);
+  el.style.setProperty('--hho-line', color + '66');
+  el.style.setProperty('--hh-section-accent', color);
+  el.querySelectorAll('h2,.kicker,.section-number,.section-title').forEach(function(node){node.style.color=color;});
+  el.querySelectorAll('a,button,.card,.service-card,.work-card').forEach(function(node){node.style.setProperty('border-color',color+'66');});
+  if(save){try{localStorage.setItem('hh_section_color_'+section,color);localStorage.setItem('hh_custom_color',color);localStorage.setItem('hh_custom_section',section);}catch(e){}}
+}
+function restoreSectionColors(){
+  ['home','about','work','services','reviews','orders','contact'].forEach(function(section){
+    try { var color=localStorage.getItem('hh_section_color_'+section); if(color) applySectionColor(section,color,false); } catch(e){}
   });
 }
 function closeMenu() { menu.classList.remove('open'); themeBtn.setAttribute('aria-expanded', 'false'); }
