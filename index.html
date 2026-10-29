@@ -3164,16 +3164,16 @@ html body.page-mode #contact.page-section.active-page {
   overflow:visible !important;
   border-radius:0 !important;
 }
-html body.page-mode #home.page-section.active-page { padding-top:82px !important; }
+html body.page-mode #home.page-section.active-page { padding-top:0 !important; }
 html body.page-mode #about.page-section.active-page > .wrap { max-width:1120px !important; padding:0 24px !important; }
 html body.page-mode #work.page-section.active-page > .wrap { max-width:1280px !important; padding:0 24px !important; }
 html body.page-mode #services.page-section.active-page > .wrap { max-width:1160px !important; padding:0 24px !important; }
-html body.page-mode #reviews.page-section.active-page > .wrap { max-width:940px !important; padding:0 24px !important; }
+html body.page-mode #reviews.page-section.active-page > .wrap { max-width:1120px !important; padding:0 24px !important; margin:0 auto !important; }
 html body.page-mode #orders.page-section.active-page > .wrap { max-width:880px !important; padding:0 24px !important; }
 html body.page-mode #contact.page-section.active-page > .wrap { max-width:1040px !important; padding:0 24px !important; }
 html body.page-mode #home.page-section.active-page .home-modern-inner {
   min-height:0 !important; height:auto !important; max-height:none !important;
-  padding:12px 16px 8px !important; margin:0 auto !important;
+  padding:0 16px 8px !important; margin:0 auto !important;
 }
 html body.page-mode #about.page-section.active-page .about,
 html body.page-mode #work.page-section.active-page .portfolio-grid,
@@ -3201,6 +3201,31 @@ html body.page-mode .floating-wa { display:none !important; }
   white-space:pre;
 }
 .hhx-section-signature .signature-dot { width:8px !important; height:8px !important; flex-basis:8px !important; }
+/* Review cards flow into balanced columns without forcing a tall single stack. */
+html body.page-mode #reviews .reviews-layout { align-items:start !important; }
+html body.page-mode #reviews .reviews-list {
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)) !important;
+  align-content:start !important;
+  align-items:start !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+html body.page-mode #reviews .reviews-list .review-card { min-width:0 !important; }
+#hhxReviewsToggle {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  margin:0 0 18px; padding:10px 18px; border:1px solid color-mix(in srgb,var(--hhx-signature) 55%,transparent);
+  border-radius:999px; color:var(--hhx-signature); background:color-mix(in srgb,var(--hhx-signature) 7%,#080808);
+  font:700 14px Cairo,sans-serif; cursor:pointer; transition:background .2s ease,box-shadow .2s ease;
+}
+#hhxReviewsToggle:hover { background:color-mix(in srgb,var(--hhx-signature) 13%,#080808); box-shadow:0 0 18px color-mix(in srgb,var(--hhx-signature) 15%,transparent); }
+html body.page-mode #reviews .reviews-layout.reviews-collapsed #reviewsList { display:none !important; }
+html body.page-mode #reviews .reviews-layout.reviews-collapsed { grid-template-columns:minmax(0,1fr) !important; }
+html body.page-mode #reviews .reviews-layout.reviews-collapsed #reviewForm { max-width:720px; }
+@media(max-width:700px) {
+  html body.page-mode #reviews .reviews-list { grid-template-columns:1fr !important; }
+}
+
 @media(max-width:900px) {
   html body.page-mode #home.page-section.active-page,
   html body.page-mode #about.page-section.active-page,
@@ -3244,6 +3269,28 @@ html body.page-mode .floating-wa { display:none !important; }
       if(i>=full.length){clearInterval(timer);timers.delete(section);}
     },85);
     timers.set(section,timer);
+  }
+  var reviews=document.getElementById('reviews');
+  if(reviews){
+    var layout=reviews.querySelector('.reviews-layout');
+    var list=reviews.querySelector('#reviewsList');
+    if(layout && list){
+      var toggle=document.createElement('button');
+      toggle.type='button';
+      toggle.id='hhxReviewsToggle';
+      toggle.setAttribute('aria-controls','reviewsList');
+      toggle.setAttribute('aria-expanded','false');
+      toggle.textContent='إظهار التقييمات';
+      layout.classList.add('reviews-collapsed');
+      var intro=reviews.querySelector('.services-intro');
+      if(intro) intro.insertAdjacentElement('afterend',toggle);
+      else layout.insertAdjacentElement('beforebegin',toggle);
+      toggle.addEventListener('click',function(){
+        var hidden=layout.classList.toggle('reviews-collapsed');
+        toggle.textContent=hidden?'إظهار التقييمات':'إخفاء التقييمات';
+        toggle.setAttribute('aria-expanded',hidden?'false':'true');
+      });
+    }
   }
   var sections=document.querySelectorAll(selectors);
   sections.forEach(function(section){
