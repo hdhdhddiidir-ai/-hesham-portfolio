@@ -2591,6 +2591,60 @@ html body.page-mode .page-section.active-page {
 .hhx-nav-arrow {
   display: none !important;
 }
-</style>
+
+/* Welcome screen must fully cover the site until Skip or the intro timeout. */
+body.hh-welcome-on #hhWelcome {
+  background: #050505 !important;
+  background-image: radial-gradient(ellipse at 50% 40%, #171207 0%, #080808 48%, #030303 100%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+body.hh-welcome-on > #hhSky,
+body.hh-welcome-on > #hhMeteorLayer {
+  visibility: hidden !important;
+}
+
+/* Each section takes only the space its own content needs. */
+html body.page-mode .page-section,
+html body.page-mode .page-section.active-page,
+html body.page-mode #home.page-section,
+html body.page-mode #about.page-section,
+html body.page-mode #work.page-section,
+html body.page-mode #services.page-section,
+html body.page-mode #reviews.page-section,
+html body.page-mode #orders.page-section,
+html body.page-mode #contact.page-section {
+  min-height: 0 !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  padding-top: 94px !important;
+  padding-bottom: 30px !important;
+  margin-bottom: 0 !important;
+  scroll-margin-top: 0 !important;
+}
+html body.page-mode #home.page-section.active-page {
+  min-height: 0 !important;
+  padding-top: 94px !important;
+  padding-bottom: 24px !important;
+}
+html body.page-mode .page-section:not(.active-page) {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+@media (max-width: 900px) {
+  html body.page-mode .page-section.active-page,
+  html body.page-mode #home.page-section.active-page {
+    padding-top: 82px !important;
+    padding-bottom: 24px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.hh-welcome-on #hhWelcome { transition: none !important; }
+}</style>
 </body>
 </html>
