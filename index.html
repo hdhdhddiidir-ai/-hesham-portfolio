@@ -2827,5 +2827,96 @@ html body.page-mode .page-section:not(.active-page) {
   }
 }
 </style>
+
+<style id="hhx-content-height-final-override">
+/* During the intro, show only the welcome logo and the star canvas—not the home hero's orbit graphics. */
+body.hh-welcome-on #home,
+body.hh-welcome-on #home .home-modern-ring,
+body.hh-welcome-on #home .home-modern-glow,
+body.hh-welcome-on #home .hx-stage,
+body.hh-welcome-on #home .hx-stage::before,
+body.hh-welcome-on #home .hx-stage::after {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+body.hh-welcome-on #hhWelcome,
+body.hh-welcome-on #hhWelcome * {
+  visibility: visible !important;
+}
+/* Independent sections must end immediately after their own content. */
+html body.page-mode #about.page-section.active-page,
+html body.page-mode #work.page-section.active-page,
+html body.page-mode #services.page-section.active-page,
+html body.page-mode #reviews.page-section.active-page,
+html body.page-mode #orders.page-section.active-page,
+html body.page-mode #contact.page-section.active-page {
+  display: block !important;
+  position: relative !important;
+  min-height: 0 !important;
+  height: max-content !important;
+  max-height: none !important;
+  padding: 88px 0 24px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  align-items: initial !important;
+  justify-content: initial !important;
+  flex: none !important;
+}
+html body.page-mode #about.page-section.active-page > .wrap,
+html body.page-mode #work.page-section.active-page > .wrap,
+html body.page-mode #services.page-section.active-page > .wrap,
+html body.page-mode #reviews.page-section.active-page > .wrap,
+html body.page-mode #orders.page-section.active-page > .wrap,
+html body.page-mode #contact.page-section.active-page > .wrap {
+  display: flow-root !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+html body.page-mode #home.page-section.active-page {
+  display: flex !important;
+  position: relative !important;
+  min-height: 0 !important;
+  height: max-content !important;
+  max-height: none !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding: 88px 18px 24px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+html body.page-mode #home .home-modern-inner {
+  display: flex !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-block: 0 !important;
+}
+html body.page-mode .page-section:not(.active-page) {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+@media (max-width: 900px) {
+  html body.page-mode #about.page-section.active-page,
+  html body.page-mode #work.page-section.active-page,
+  html body.page-mode #services.page-section.active-page,
+  html body.page-mode #reviews.page-section.active-page,
+  html body.page-mode #orders.page-section.active-page,
+  html body.page-mode #contact.page-section.active-page {
+    padding-top: 76px !important;
+    padding-bottom: 20px !important;
+  }
+  html body.page-mode #home.page-section.active-page {
+    padding: 76px 12px 20px !important;
+  }
+}
+</style>
 </body>
 </html>
