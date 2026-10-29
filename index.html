@@ -3770,5 +3770,23 @@ html body .hhx-settings-menu .hhx-opt:focus-visible{
 }
 @media(prefers-reduced-motion:reduce){html body .hhx-settings-menu.open{animation:none!important}html body .hhx-settings-menu .hhx-setting,html body .hhx-settings-menu .hhx-setting input,html body .hhx-settings-menu .hhx-setting input:before{transition:none!important}}
 </style>
+
+<style id="hhx-signature-live-theme-gradient">
+/* The engraved signature's metallic gradient must tint with the active palette, not stay gold. */
+html body.page-mode #home .hhx-section-signature > span:first-child,
+html body.page-mode #reviews .hhx-section-signature > span:first-child{
+  background:linear-gradient(
+    180deg,
+    color-mix(in srgb,var(--hho-acc,#f5d76e) 42%,white) 0%,
+    color-mix(in srgb,var(--hho-acc,#f5d76e) 82%,white) 28%,
+    var(--hho-acc,#f5d76e) 48%,
+    color-mix(in srgb,var(--hho-acc,#f5d76e) 58%,black) 74%,
+    color-mix(in srgb,var(--hho-acc,#f5d76e) 88%,white) 100%
+  )!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:0 1px 0 color-mix(in srgb,var(--hho-acc,#f5d76e) 18%,black),0 0 12px color-mix(in srgb,var(--hho-acc,#f5d76e) 25%,transparent)!important;
+}
+</style>
 </body>
 </html>
