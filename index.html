@@ -3934,5 +3934,102 @@ html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation
 })();
 </script>
 
+
+<style id="hhx-luxury-centered-icon-navigation">
+/* Centered, balanced navigation with matching minimalist line icons. */
+html body #topNav .top-nav-inner{
+  display:grid!important;
+  grid-template-columns:minmax(150px,1fr) minmax(0,auto) minmax(44px,1fr)!important;
+  align-items:center!important;
+  gap:clamp(12px,2vw,28px)!important;
+}
+html body #topNav .top-links{
+  justify-self:center!important;
+  align-self:center!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:clamp(3px,.45vw,8px)!important;
+  min-width:0!important;flex:0 1 auto!important;
+}
+html body #topNav .top-links a{
+  position:relative!important;isolation:isolate;
+  display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
+  gap:7px!important;
+  min-height:42px!important;padding:9px clamp(9px,1vw,15px)!important;
+  border:1px solid transparent!important;border-radius:13px!important;
+  color:rgba(245,245,245,.78)!important;
+  font-size:clamp(11px,.86vw,13px)!important;font-weight:700!important;line-height:1.35!important;
+  white-space:nowrap!important;text-decoration:none!important;
+  transition:color .24s ease,border-color .24s ease,background .24s ease,transform .24s ease!important;
+}
+html body #topNav .top-links a:before{
+  content:"";display:inline-block;flex:0 0 17px;width:17px;height:17px;
+  background:currentColor;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-size:contain;mask-size:contain;
+  opacity:.9;transition:transform .24s ease,opacity .24s ease!important;
+}
+html body #topNav .top-links a:nth-child(1):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 10 9-7 9 7'/%3E%3Cpath d='M5 9v12h14V9M9 21v-7h6v7'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 10 9-7 9 7'/%3E%3Cpath d='M5 9v12h14V9M9 21v-7h6v7'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(2):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21v-2a8 8 0 0 1 16 0v2'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21v-2a8 8 0 0 1 16 0v2'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(3):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4zM8 8h8M8 12h8M8 16h5'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4zM8 8h8M8 12h8M8 16h5'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(4):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7' width='18' height='13' rx='2'/%3E%3Cpath d='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7' width='18' height='13' rx='2'/%3E%3Cpath d='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(5):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(6):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:nth-child(7):before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m4 7 8 6 8-6'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m4 7 8 6 8-6'/%3E%3C/svg%3E");
+}
+html body #topNav .top-links a:hover,
+html body #topNav .top-links a.active-nav{
+  color:var(--hho-acc,#f5d76e)!important;
+  border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 27%,transparent)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent),#ffffff04)!important;
+}
+html body #topNav .top-links a:hover{transform:translateY(-1px)!important}
+html body #topNav .top-links a:hover:before,
+html body #topNav .top-links a.active-nav:before{opacity:1;transform:translateY(-1px) scale(1.06)}
+html body #topNav .top-links a.active-nav{box-shadow:inset 0 -2px 0 var(--hho-acc,#f5d76e)!important}
+@media(max-width:1050px){
+ html body #topNav .top-nav-inner{grid-template-columns:auto minmax(0,1fr) auto!important;gap:8px!important;padding:0 12px!important}
+ html body #topNav .top-links{gap:2px!important}
+ html body #topNav .top-links a{gap:5px!important;padding:8px 7px!important;font-size:11px!important}
+ html body #topNav .top-links a:before{width:15px;height:15px;flex-basis:15px}
+}
+@media(max-width:760px){
+ html body #topNav.top-nav{height:auto!important;min-height:76px!important}
+ html body #topNav .top-nav-inner{height:auto!important;min-height:76px!important;display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:7px!important;padding:10px 10px 9px!important}
+ html body #topNav .top-logo{justify-content:center!important;width:100%!important;min-height:28px!important}
+ html body #topNav .hh-nav-end{display:none!important}
+ html body #topNav .top-links{width:100%!important;max-width:100%!important;overflow-x:auto!important;justify-content:center!important;flex-wrap:wrap!important;gap:5px!important;padding:2px 0 3px!important;scrollbar-width:none!important}
+ html body #topNav .top-links::-webkit-scrollbar{display:none!important}
+ html body #topNav .top-links a{min-height:36px!important;padding:7px 9px!important;font-size:11px!important}
+}
+@media(max-width:430px){
+ html body #topNav .top-links{gap:4px!important}
+ html body #topNav .top-links a{gap:5px!important;padding:7px 8px!important;font-size:10.5px!important}
+ html body #topNav .top-links a:before{width:14px;height:14px;flex-basis:14px}
+}
+html.hh-reduce-motion body #topNav .top-links a,
+html.hh-reduce-motion body #topNav .top-links a:before{transition:none!important}
+</style>
+
 </body>
 </html>
