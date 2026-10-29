@@ -616,11 +616,23 @@ html.maintenance-active #maintenancePage{display:flex}
   var lang='ar';
   try{if(localStorage.getItem('hh_lang')==='en')lang='en'}catch(e){}
   window.__hhMaintenanceLang=lang;
+  function refreshMaintenance(){
+    fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
+      .then(function(d){
+        root.classList.toggle('maintenance-active',d.enabled===true);
+        root.classList.remove('maintenance-checking');
+      })
+      .catch(function(){
+        root.classList.remove('maintenance-checking');
+      });
+  }
   window.setTimeout(function(){root.classList.remove('maintenance-checking')},3000);
-  fetch('https://cdyrtfixvghjjptkuzxg.supabase.co/functions/v1/telegram-bot?maintenance-status=1',{cache:'no-store'})
-    .then(function(r){if(!r.ok)throw new Error('status');return r.json()})
-    .then(function(d){root.classList.remove('maintenance-checking');if(d.enabled)root.classList.add('maintenance-active')})
-    .catch(function(){root.classList.remove('maintenance-checking')});
+  refreshMaintenance();
+  // Keep already-open visitor tabs in sync with the Telegram maintenance toggle.
+  window.setInterval(function(){
+    if(document.visibilityState!=='hidden')refreshMaintenance();
+  },10000);
 })();
 </script>
 
@@ -708,7 +720,7 @@ html.maintenance-active #maintenancePage{display:flex}
 <a href="#orders" id="hhoNav">اطلب تصميم</a>
 <a href="#contact" data-i18n="navContact">تواصل معي</a>
 </nav>
-<div class="hh-nav-end"><button type="button" class="hh-lang" id="hhLang" data-i18n="switchLabel" data-i18n-aria="langAria" aria-label="Switch to English">EN</button></div>
+<div class="hh-nav-end"></div>
 </div>
 </header>
 
@@ -787,6 +799,7 @@ html.maintenance-active #maintenancePage{display:flex}
 <button type="button" class="portfolio-filter" data-work-filter="business-design" aria-pressed="false">تصميمات شركات</button>
 <button type="button" class="portfolio-filter" data-work-filter="social-posts" aria-pressed="false">بوستات وستوري</button>
 <button type="button" class="portfolio-filter" data-work-filter="digital-design" aria-pressed="false">تصميمات رقمية</button>
+<button type="button" class="portfolio-filter" data-work-filter="other" aria-pressed="false">تصنيفات أخرى</button>
 </div>
 <p class="portfolio-filter-status" id="portfolioFilterStatus" aria-live="polite"></p>
 </div>
@@ -907,36 +920,7 @@ function t(key, vars) {
   return s;
 }
 
-/* Translate live project descriptions for English visitors and cache results locally. */
-const workTranslationCache = new Map();
-async function translateWorkDescription(value) {
-  const original = String(value || '').trim();
-  if (!original || lang !== 'en' || !/[\u0600-\u06FF]/.test(original)) return original;
-  if (workTranslationCache.has(original)) return workTranslationCache.get(original);
-  try {
-    const stored = localStorage.getItem('hh_work_en:' + original);
-    if (stored) { workTranslationCache.set(original, stored); return stored; }
-  } catch (e) {}
-  const task = (async function () {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=' + encodeURIComponent(original);
-    const response = await fetch(url, { method: 'GET', mode: 'cors' });
-    if (!response.ok) throw new Error('Translation request failed');
-    const data = await response.json();
-    const translated = Array.isArray(data[0]) ? data[0].map(part => part[0] || '').join('').trim() : '';
-    if (!translated) throw new Error('Empty translation');
-    try { localStorage.setItem('hh_work_en:' + original, translated); } catch (e) {}
-    return translated;
-  })();
-  workTranslationCache.set(original, task);
-  try {
-    const result = await task;
-    workTranslationCache.set(original, result);
-    return result;
-  } catch (e) {
-    workTranslationCache.delete(original);
-    return original;
-  }
-}
+/* Project descriptions stay in their original language; no automatic translation requests. */
 function applyLang() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -1013,8 +997,7 @@ document.addEventListener('click', e => {
   if (!a) return;
   const key = a.getAttribute('href').slice(1);
   if (!PAGES.includes(key)) return;
-  e.preventDefault();
-  const el = document.getElementById(key);
+  e.preventDefault();  const el = document.getElementById(key);
   if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   currentPage = key; markNav(key); syncPollers();
 });
@@ -1139,15 +1122,8 @@ function buildWorkCard(w, i) {
   const h3 = document.createElement('h3'); h3.dir = 'auto'; h3.textContent = w.title || '';
   meta.append(small, h3);
   if (w.description) {
-    const p = document.createElement('p'); p.className = 'live-description'; p.dir = 'auto'; p.textContent = lang === 'en' ? 'Translating description…' : w.description;
+    const p = document.createElement('p'); p.className = 'live-description'; p.dir = 'auto'; p.textContent = w.description;
     meta.appendChild(p);
-    const originalDescription = w.description;
-    translateWorkDescription(originalDescription).then(translated => {
-      if (p.isConnected && lang === 'en' && p.closest('.work-card')?.dataset.workId === String(w.id)) {
-        p.textContent = translated;
-        p.dir = 'auto';
-      }
-    });
   }
   const btn = document.createElement('button');
   btn.className = 'view-work'; btn.type = 'button'; btn.textContent = t('viewWork');
@@ -1215,8 +1191,8 @@ function applyPortfolioFilters() {
 function syncPortfolioFilterLanguage() {
   const english = lang === 'en';
   const labels = english
-    ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
-    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
+    ? { all:'All', 'logo-identity':'Logo & visual identity', 'business-card':'Business cards', advertising:'Advertising', 'restaurant-menu':'Restaurant menus', invitations:'Invitations', 'social-ads':'Social media ads', 'graphic-design':'Graphic design', 'print-design':'Print design', flyer:'Flyers', brochure:'Brochures', 'stickers-labels':'Stickers & labels', 'posters-banners':'Posters & banners', packaging:'Packaging', 'business-design':'Business & company', 'social-posts':'Social posts & stories', 'digital-design':'Digital designs', other:'Other categories', search:'Search projects', placeholder:'Project name or design type...', aria:'Search by project name or description' }
+    : { all:'الكل', 'logo-identity':'لوجو وهوية بصرية', 'business-card':'كروت شخصية', advertising:'إعلانات', 'restaurant-menu':'منيو مطاعم', invitations:'دعوات', 'social-ads':'إعلانات سوشيال', 'graphic-design':'تصميم جرافيك', 'print-design':'تصميم مطبوعات', flyer:'فلاير', brochure:'بروشور', 'stickers-labels':'استيكرات وليبلز', 'posters-banners':'بوسترات وبانرات', packaging:'تصميم عبوات', 'business-design':'تصميمات شركات', 'social-posts':'بوستات وستوري', 'digital-design':'تصميمات رقمية', other:'تصنيفات أخرى', search:'ابحث في المشاريع', placeholder:'اسم المشروع أو نوع التصميم...', aria:'ابحث باسم المشروع أو وصفه' };
   document.querySelectorAll('#portfolioFilterList .portfolio-filter').forEach(button => {
     button.textContent = labels[button.dataset.workFilter] || labels.all;
   });
@@ -1725,9 +1701,9 @@ html.hh-reduce-motion *,html.hh-reduce-motion *::before,html.hh-reduce-motion *:
 </style>
 
 <div class="hhx-fabs" id="hhxFabs">
-  <button type="button" class="hhx-fab" id="hhxTheme" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxSettings" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
-  <button type="button" class="hhx-fab" id="hhxTour" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTheme" title="ألوان الموقع" aria-haspopup="true" aria-expanded="false" aria-label="ألوان الموقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxSettings" title="إعدادات الشكل والحركة" aria-haspopup="true" aria-expanded="false" aria-label="إعدادات المظهر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.7-1l-1.7.6-1.4-2.4L7.3 15a7.8 7.8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a7.8 7.8 0 0 1 0 2z"/></svg></button>
+  <button type="button" class="hhx-fab" id="hhxTour" title="جولة تعريفية" aria-label="جولة تعريفية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M10 16.5h4M2 12v3M22 12v3"/></svg></button>
 </div>
 <div class="hhx-menu" id="hhxMenu" role="menu"></div>
 <div class="hhx-menu hhx-settings-menu" id="hhxSettingsMenu" role="group" aria-label="إعدادات المظهر"></div>
@@ -2020,8 +1996,7 @@ function applyTheme(id, save) {
   if (save) { try { localStorage.setItem('hh_theme', th.id); } catch (e) {} }
   buildMenu();
 }
-var menu = document.getElementById('hhxMenu'), themeBtn = document.getElementById('hhxTheme');
-var settingsMenu = document.getElementById('hhxSettingsMenu'), settingsBtn = document.getElementById('hhxSettings');
+var menu = document.getElementById('hhxMenu'), themeBtn = document.getElementById('hhxTheme');var settingsMenu = document.getElementById('hhxSettingsMenu'), settingsBtn = document.getElementById('hhxSettings');
 var visualPrefs = { meteors: false, glow: false, motion: false, sky: false };
 try { var storedPrefs = JSON.parse(localStorage.getItem('hh_visual_settings') || '{}'); Object.keys(visualPrefs).forEach(function(k){ if (typeof storedPrefs[k] === 'boolean') visualPrefs[k] = storedPrefs[k]; }); } catch(e) {}
 function applyVisualPrefs(save) {
@@ -2189,5 +2164,408 @@ html { scroll-padding-top: 92px !important; }
   *, *::before, *::after { scroll-behavior:auto !important; }
 }
 </style>
+
+<style id="hhx-vertical-navigation-css">
+/* Compact premium vertical section control */
+#hhx-vertical-nav{position:fixed;z-index:1200;right:clamp(12px,2vw,26px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;direction:rtl;padding:11px 9px;border:1px solid rgba(245,215,110,.34);border-radius:20px;background:linear-gradient(160deg,rgba(20,20,25,.94),rgba(5,6,10,.88));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 12px 36px #0008,0 0 22px rgba(245,215,110,.08);color:#f7f4ea;font:inherit}
+#hhx-vertical-nav button{font:inherit;cursor:pointer;color:inherit}
+#hhx-vertical-nav .hhx-nav-arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(245,215,110,.22);border-radius:13px;background:rgba(255,255,255,.035);font-size:23px;line-height:1;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s}
+#hhx-vertical-nav .hhx-nav-arrow:hover{background:rgba(245,215,110,.14);border-color:rgba(245,215,110,.7);box-shadow:0 0 15px rgba(245,215,110,.12)}
+#hhx-vertical-nav .hhx-nav-arrow:active{transform:scale(.94)}
+#hhx-vertical-nav .hhx-nav-center{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:105px;min-width:74px;padding:3px 0}
+#hhx-vertical-nav .hhx-nav-count{font-size:10px;letter-spacing:.12em;color:#d9c66f}
+#hhx-vertical-nav .hhx-nav-name{font-size:12px;font-weight:750;text-align:center;line-height:1.5;overflow-wrap:anywhere}
+#hhx-vertical-nav .hhx-nav-track{width:4px;height:38px;background:#ffffff1c;border-radius:8px;overflow:hidden}
+#hhx-vertical-nav .hhx-nav-track span{display:block;width:100%;height:0;background:linear-gradient(180deg,#fff0a4,#d3a936);border-radius:8px;transition:height .25s ease}
+@media(max-width:520px){#hhx-vertical-nav{right:9px;padding:8px 6px;gap:7px;border-radius:16px}#hhx-vertical-nav .hhx-nav-arrow{width:36px;height:36px;border-radius:11px;font-size:21px}#hhx-vertical-nav .hhx-nav-center{min-width:62px;max-width:72px}#hhx-vertical-nav .hhx-nav-name{font-size:11px}#hhx-vertical-nav .hhx-nav-track{height:30px}}
+@media(prefers-reduced-motion:reduce){#hhx-vertical-nav *{transition:none!important}}
+</style>
+<script id="hhx-vertical-navigation">
+(function(){
+'use strict';
+if(document.getElementById('hhx-vertical-nav'))return;
+var sections=[
+{id:'home',ar:'الرئيسية',en:'Home'},
+{id:'about',ar:'من أنا',en:'About'},
+{id:'work',ar:'أعمالي',en:'Portfolio'},
+{id:'services',ar:'خدماتي',en:'Services'},
+{id:'reviews',ar:'التقييمات',en:'Reviews'},
+{id:'orders',ar:'اطلب تصميم',en:'Order a design'},
+{id:'contact',ar:'تواصل معي',en:'Contact'}
+].map(function(s){return {id:s.id,ar:s.ar,en:s.en,node:document.getElementById(s.id)}}).filter(function(s){return !!s.node});
+if(!sections.length)return;
+function isEn(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr'||(window.HH_getLang&&window.HH_getLang()==='en')}
+function label(s){return isEn()?s.en:s.ar}
+function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
+var nav=el('nav','');nav.id='hhx-vertical-nav';nav.setAttribute('aria-label','التنقل بين أقسام الموقع');
+var prev=el('button','hhx-nav-arrow','↑');prev.type='button';prev.setAttribute('aria-label','القسم السابق');prev.title='القسم السابق';
+var center=el('div','hhx-nav-center');
+var count=el('div','hhx-nav-count','01 / '+String(sections.length).padStart(2,'0'));
+var name=el('div','hhx-nav-name',label(sections[0]));
+var track=el('div','hhx-nav-track');var fill=el('span','');track.appendChild(fill);
+center.appendChild(count);center.appendChild(name);center.appendChild(track);
+var next=el('button','hhx-nav-arrow','↓');next.type='button';next.setAttribute('aria-label','القسم التالي');next.title='القسم التالي';
+nav.appendChild(prev);nav.appendChild(center);nav.appendChild(next);document.body.appendChild(nav);
+var active=0,lockUntil=0,scrollTimer=0;
+function updateUI(){var s=sections[active];count.textContent=String(active+1).padStart(2,'0')+' / '+String(sections.length).padStart(2,'0');name.textContent=label(s);fill.style.height=((active+1)/sections.length*100)+'%';prev.title=isEn()?'Previous section':'القسم السابق';next.title=isEn()?'Next section':'القسم التالي';prev.setAttribute('aria-label',isEn()?'Previous section':'القسم السابق');next.setAttribute('aria-label',isEn()?'Next section':'القسم التالي');nav.setAttribute('aria-label',isEn()?'Navigate between site sections':'التنقل بين أقسام الموقع')}
+function go(index){active=Math.max(0,Math.min(sections.length-1,index));lockUntil=Date.now()+900;updateUI();sections[active].node.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});window.clearTimeout(scrollTimer);scrollTimer=window.setTimeout(detect,950)}
+function detect(){if(Date.now()<lockUntil)return;var anchor=Math.min(window.innerHeight*.42,260),best=0,bestDistance=Infinity;sections.forEach(function(s,i){var r=s.node.getBoundingClientRect();var distance=Math.abs((r.top+Math.min(r.height,window.innerHeight)*.22)-anchor);if(r.bottom>70&&r.top<window.innerHeight-40&&distance<bestDistance){best=i;bestDistance=distance}});if(best!==active){active=best;updateUI()}}
+prev.addEventListener('click',function(){go(active-1)});next.addEventListener('click',function(){go(active+1)});
+var scheduled=false;window.addEventListener('scroll',function(){if(!scheduled){scheduled=true;requestAnimationFrame(function(){scheduled=false;detect()})}},{passive:true});
+window.addEventListener('resize',detect,{passive:true});
+var lang=document.getElementById('hhLang');if(lang)lang.addEventListener('click',function(){setTimeout(updateUI,100)});
+updateUI();
+})();
+</script>
+
+
+<style id="hhx-premium-modals-and-inline-arrows">
+/* Keep section arrows inside the existing header bar; no floating widget. */
+#hhx-vertical-nav{position:static!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:5px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;margin-inline:8px}
+#hhx-vertical-nav .hhx-nav-center{display:none!important}
+#hhx-vertical-nav .hhx-nav-arrow{width:34px!important;height:34px!important;border-radius:10px!important;border:1px solid #f5d76e55!important;background:#f5d76e0b!important;color:var(--gold)!important;font-size:20px!important}
+#hhx-vertical-nav .hhx-nav-arrow:hover{background:#f5d76e20!important;box-shadow:0 0 16px #f5d76e20!important}
+.hh-nav-end{display:flex;align-items:center;gap:7px}
+#reviewsList{display:none!important}\n#reviews .reviews-layout{display:block!important;max-width:760px}\n#reviews .review-form{width:100%}
+#reviewStatus,#hhoStatus{display:none!important}
+#hhx-review-open{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin:6px 0 22px;padding:12px 20px;border:1px solid #f5d76e70;border-radius:12px;background:linear-gradient(135deg,#f5d76e18,#f5d76e04);color:#f5d76e;font:700 14px Cairo,sans-serif;cursor:pointer;transition:.25s}
+#hhx-review-open:hover{background:#f5d76e20;box-shadow:0 0 25px #f5d76e15;transform:translateY(-2px)}
+.hhx-modal{position:fixed;inset:0;z-index:5000;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+.hhx-modal.open{display:grid;animation:hhxFadeIn .22s ease both}
+.hhx-modal-panel{position:relative;width:min(760px,96vw);max-height:min(86vh,900px);overflow:auto;border:1px solid #f5d76e55;border-radius:24px;padding:clamp(22px,4vw,38px);background:radial-gradient(circle at 50% 0,#f5d76e13,transparent 45%),linear-gradient(145deg,#111,#050505 75%);box-shadow:0 25px 100px #000c,0 0 55px #f5d76e0c;animation:hhxModalRise .32s cubic-bezier(.2,.8,.2,1) both}
+.hhx-modal-close{position:sticky;float:left;top:0;z-index:2;width:38px;height:38px;border:1px solid #ffffff25;border-radius:12px;background:#111;color:#eee;font-size:24px;cursor:pointer}
+.hhx-modal-title{margin:0 48px 9px 0;color:#f5d76e;font-size:clamp(24px,4vw,34px);font-weight:800}
+.hhx-modal-subtitle{margin:0 0 24px;color:#aaa;font-size:14px;line-height:1.9}
+.hhx-modal #reviewsList{display:grid!important;max-height:55vh;overflow:auto;gap:14px;padding:3px}
+.hhx-modal .review-card{padding:22px;border-color:#f5d76e35;background:linear-gradient(140deg,#f5d76e0c,#ffffff03 65%);box-shadow:inset 0 0 24px #f5d76e04,0 8px 28px #0005;border-radius:18px}
+.hhx-modal .review-card p{font-size:16px;line-height:2.1;color:#eee;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-modal .review-head strong{font-size:15px}
+.hhx-modal .review-stars{font-size:17px;text-shadow:0 0 12px #f5d76e35}
+.hhx-success-mark{width:76px;height:76px;margin:8px auto 22px;border:2px solid #f5d76e;border-radius:50%;display:grid;place-items:center;color:#f5d76e;font-size:42px;box-shadow:0 0 28px #f5d76e25;animation:hhxCheckPop .55s cubic-bezier(.2,.8,.2,1) both}
+.hhx-success-mark svg{width:42px;height:42px;stroke:currentColor;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:50;stroke-dashoffset:50;animation:hhxDrawCheck .55s .2s ease forwards}
+.hhx-modal-message{text-align:center;font-size:clamp(17px,3vw,21px);line-height:2;color:#eee;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-modal-message strong{color:#f5d76e}
+.hhx-modal .hhx-modal-panel--notice{width:min(520px,96vw);text-align:center}
+.hhx-description-button{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:9px 14px;border:1px solid #f5d76e66;border-radius:10px;background:#f5d76e0b;color:#f5d76e;font:700 13px Cairo,sans-serif;cursor:pointer;transition:.25s}
+.hhx-description-button:hover{background:#f5d76e1b;box-shadow:0 0 18px #f5d76e18}
+.hhx-description-copy{font-size:clamp(17px,2.6vw,21px);line-height:2.15;color:#f0f0f0;white-space:pre-wrap;overflow-wrap:anywhere}
+.hhx-description-copy:empty:before{content:'لا يوجد وصف إضافي لهذا المشروع حاليًا.';color:#999}
+@keyframes hhxFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes hhxModalRise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes hhxCheckPop{0%{opacity:0;transform:scale(.55) rotate(-20deg)}70%{transform:scale(1.12) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes hhxDrawCheck{to{stroke-dashoffset:0}}
+@media(max-width:800px){#hhx-vertical-nav{margin-inline:2px;gap:4px!important}#hhx-vertical-nav .hhx-nav-arrow{width:31px!important;height:31px!important;font-size:18px!important}.hh-nav-end{gap:4px}.hhx-modal-panel{border-radius:19px}.hhx-modal #reviewsList{max-height:58vh}}
+@media(prefers-reduced-motion:reduce){.hhx-modal,.hhx-modal-panel,.hhx-success-mark,.hhx-success-mark svg{animation:none!important}.hhx-success-mark svg{stroke-dashoffset:0}}
+/* Keep project descriptions out of the image cards; they remain available via the description modal. */
+.work-card .live-description{display:none!important}
+.work-card .work-visual{position:relative;z-index:1}
+#lightboxProjectDescription{display:block!important;white-space:pre-wrap;overflow-wrap:anywhere;line-height:2}
+</style>
+<script id="hhx-premium-modals-and-inline-arrows">
+(function(){
+'use strict';
+function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn()}
+ready(function(){
+  var nav=document.getElementById('hhx-vertical-nav');
+  var navEnd=document.querySelector('.hh-nav-end');
+  if(nav&&navEnd){navEnd.insertBefore(nav,navEnd.firstChild);nav.setAttribute('aria-label','التنقل بين أقسام الموقع');}
+  var lang=document.documentElement.lang==='en'||document.documentElement.dir==='ltr';
+  function makeModal(id,title,subtitle,extraClass){
+    var modal=document.createElement('div');modal.className='hhx-modal';modal.id=id;modal.setAttribute('aria-hidden','true');
+    var panel=document.createElement('section');panel.className='hhx-modal-panel '+(extraClass||'');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby',id+'Title');
+    var close=document.createElement('button');close.type='button';close.className='hhx-modal-close';close.setAttribute('aria-label',lang?'Close':'إغلاق');close.textContent='×';
+    var h=document.createElement('h2');h.className='hhx-modal-title';h.id=id+'Title';h.textContent=title;
+    var sub=document.createElement('p');sub.className='hhx-modal-subtitle';sub.textContent=subtitle||'';
+    panel.append(close,h,sub);modal.appendChild(panel);document.body.appendChild(modal);
+    function hide(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+    function show(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';close.focus();}
+    close.addEventListener('click',hide);modal.addEventListener('click',function(e){if(e.target===modal)hide()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))hide()});
+    return {modal:modal,panel:panel,body:panel,show:show,hide:hide,close:close,subtitle:sub,title:h};
+  }
+  var reviewModal=makeModal('hhxReviewsModal',lang?'Client reviews':'آراء العملاء',lang?'Approved reviews from visitors':'آراء العملاء المعتمدة — كل الآراء في مكان واحد');
+  var reviewList=document.getElementById('reviewsList');
+  var reviewLayout=document.querySelector('#reviews .reviews-layout');
+  var reviewForm=document.getElementById('reviewForm');
+  if(reviewList&&reviewLayout){
+    var openReviews=document.createElement('button');openReviews.type='button';openReviews.id='hhx-review-open';openReviews.textContent=lang?'✦  View reviews':'✦  عرض الآراء';
+    openReviews.addEventListener('click',function(){reviewModal.show()});
+    if(reviewLayout&&reviewLayout.parentNode)reviewLayout.parentNode.insertBefore(openReviews,reviewLayout);
+    reviewModal.body.appendChild(reviewList);
+  }
+  var notice=makeModal('hhxNoticeModal',lang?'Message':'تم بنجاح','', 'hhx-modal-panel--notice');
+  notice.title.style.textAlign='center';notice.subtitle.style.display='none';
+  var mark=document.createElement('div');mark.className='hhx-success-mark';mark.setAttribute('aria-hidden','true');
+  mark.innerHTML='<svg viewBox="0 0 48 48"><path d="M10 25l9 9L38 14"/></svg>';
+  var message=document.createElement('div');message.className='hhx-modal-message';
+  notice.body.appendChild(mark);notice.body.appendChild(message);
+  var lastNotice='';
+  function showNotice(raw){
+    var value=String(raw||'').replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+    if(!value||value===lastNotice)return;lastNotice=value;
+    var success=/تم|success|thank|review|مراجعة|بنجاح/i.test(value);
+    mark.style.borderColor=success?'#f5d76e':'#e9b86d';mark.style.color=success?'#f5d76e':'#e9b86d';
+    mark.innerHTML=success?'<svg viewBox="0 0 48 48"><path d="M10 25l9 9L38 14"/></svg>':'<span aria-hidden="true">!</span>';
+    message.textContent=value;
+    notice.title.textContent=success?(lang?'Sent successfully':'تم بنجاح'):(lang?'Please check':'تنبيه');
+    notice.show();
+  }
+  ['reviewStatus','hhoStatus'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var seen='';
+    new MutationObserver(function(){
+      var v=(el.innerText||el.textContent||'').trim();
+      if(v&&v!==seen){seen=v;showNotice(v)}
+    }).observe(el,{subtree:true,childList:true,characterData:true});
+  });
+  // Keep the review form compact: approved reviews only appear in the modal.
+
+});
+})();
+</script>
+
+<style id="hhx-project-description-modal-style">
+.hhx-project-description-trigger{display:inline-flex;align-items:center;justify-content:center;gap:7px;margin:10px 8px 0 0;padding:9px 13px;border:1px solid #f5d76e70;border-radius:10px;background:#080808e8;color:#f5d76e;font:700 13px Cairo,sans-serif;cursor:pointer;transition:background .25s,border-color .25s,transform .25s;position:relative;z-index:4}
+.hhx-project-description-trigger:hover{background:#f5d76e18;border-color:#f5d76e;transform:translateY(-1px)}
+.hhx-project-description-overlay{position:fixed;inset:0;z-index:10050;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px)}
+.hhx-project-description-overlay.is-open{display:grid;animation:hhxFadeIn .22s ease both}
+.hhx-project-description-panel{position:relative;width:min(680px,96vw);max-height:min(82vh,780px);overflow:auto;padding:clamp(22px,5vw,38px);border:1px solid #f5d76e70;border-radius:20px;background:linear-gradient(145deg,#151515,#070707 75%);box-shadow:0 24px 90px #000b,0 0 35px #f5d76e0b;animation:hhxModalRise .28s cubic-bezier(.2,.8,.2,1) both;text-align:right}
+.hhx-project-description-close{position:absolute;top:14px;left:14px;width:38px;height:38px;border:1px solid #ffffff25;border-radius:50%;background:#ffffff08;color:#fff;font-size:23px;cursor:pointer}
+.hhx-project-description-kicker{margin:0 0 8px;color:#f5d76e;font-size:12px;letter-spacing:1.5px}
+.hhx-project-description-heading{margin:0 45px 18px 0;color:#f5d76e;font-size:clamp(21px,4vw,29px);line-height:1.6}
+.hhx-project-description-text{color:#f0f0f0;font-size:clamp(16px,2.8vw,20px);line-height:2.15;white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:plaintext}
+.hhx-project-description-text:empty:before{content:'لا يوجد وصف إضافي لهذا المشروع حاليًا.';color:#999}
+@media(prefers-reduced-motion:reduce){.hhx-project-description-overlay,.hhx-project-description-panel{animation:none!important}}
+
+/* Keep the project-description modal synced with the visitor's selected site palette. */
+.hhx-project-description-trigger{border-color:var(--hho-acc,#f5d76e)!important;color:var(--hho-acc,#f5d76e)!important;background:color-mix(in srgb,var(--hho-acc,#f5d76e) 7%,transparent)!important}
+.hhx-project-description-trigger:hover{background:color-mix(in srgb,var(--hho-acc,#f5d76e) 14%,transparent)!important;border-color:var(--hho-acc2,var(--hho-acc,#f5d76e))!important}
+.hhx-project-description-panel{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 65%,transparent)!important;background:var(--hho-bg,#0a0a0af2)!important;color:var(--hho-fg,#fff)!important;box-shadow:0 24px 90px #000b,0 0 35px color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent)!important}
+.hhx-project-description-kicker,.hhx-project-description-heading{color:var(--hho-acc,#f5d76e)!important}
+.hhx-project-description-text{color:var(--hho-fg,#f0f0f0)!important}
+.hhx-project-description-close{border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 28%,transparent)!important;color:var(--hho-fg,#fff)!important}
+</style>
+<script id="hhx-project-description-modal">
+(function(){
+'use strict';
+function init(){
+ if(document.getElementById('hhxProjectDescriptionOverlay'))return;
+ var overlay=document.createElement('div');
+ overlay.id='hhxProjectDescriptionOverlay';overlay.className='hhx-project-description-overlay';
+ overlay.setAttribute('aria-hidden','true');
+ overlay.innerHTML='<section class="hhx-project-description-panel" role="dialog" aria-modal="true" aria-labelledby="hhxProjectDescriptionHeading" dir="auto"><button type="button" class="hhx-project-description-close" aria-label="إغلاق الوصف">×</button><p class="hhx-project-description-kicker">تفاصيل المشروع</p><h2 class="hhx-project-description-heading" id="hhxProjectDescriptionHeading"></h2><div class="hhx-project-description-text" id="hhxProjectDescriptionText"></div></section>';
+ document.body.appendChild(overlay);
+ var heading=overlay.querySelector('#hhxProjectDescriptionHeading'),body=overlay.querySelector('#hhxProjectDescriptionText'),close=overlay.querySelector('.hhx-project-description-close'),lastTrigger=null;
+ function hide(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastTrigger&&document.contains(lastTrigger))lastTrigger.focus();}
+ function show(card,trigger){
+   var title=card.querySelector('.work-meta h3')?.textContent?.trim()||'وصف المشروع';
+   var desc=card.querySelector('.live-description')?.textContent?.trim()||'لا يوجد وصف إضافي لهذا المشروع حاليًا.';
+   heading.textContent=title;body.textContent=desc;lastTrigger=trigger;
+   overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';close.focus();
+ }
+ function addButton(card){
+   if(!card||card.querySelector('.hhx-project-description-trigger'))return;
+   var meta=card.querySelector('.work-meta');if(!meta)return;
+   var btn=document.createElement('button');btn.type='button';btn.className='hhx-project-description-trigger';btn.textContent='توضيح الوصف';btn.setAttribute('aria-label','توضيح وصف '+(card.querySelector('h3')?.textContent?.trim()||'المشروع'));
+   meta.appendChild(btn);
+ }
+ document.querySelectorAll('.work-card').forEach(addButton);
+ var grid=document.querySelector('.portfolio-grid');
+ if(grid)new MutationObserver(function(records){records.forEach(function(record){record.addedNodes.forEach(function(node){if(node.nodeType!==1)return;if(node.matches&&node.matches('.work-card'))addButton(node);if(node.querySelectorAll)node.querySelectorAll('.work-card').forEach(addButton);});});}).observe(grid,{childList:true,subtree:true});
+ // Capture this button before the card's regular click handler opens the image viewer.
+ document.addEventListener('click',function(e){
+   var btn=e.target.closest('.hhx-project-description-trigger');if(!btn)return;
+   e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+   show(btn.closest('.work-card'),btn);
+ },true);
+ close.addEventListener('click',hide);
+ overlay.addEventListener('click',function(e){if(e.target===overlay)hide();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('is-open'))hide();});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+
+<style id="hhx-cosmic-portal-navigation">
+:root{--hhx-nav-accent:var(--hho-acc,var(--gold,#f5d76e))}
+.hhx-portal-launcher{position:fixed;z-index:10020;left:22px;bottom:22px;display:flex;align-items:center;gap:10px;padding:9px 15px 9px 10px;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 62%,transparent);border-radius:999px;background:linear-gradient(135deg,#111e,#050505ed);color:#fff;font:700 12px Cairo,sans-serif;box-shadow:0 10px 35px #000a,0 0 28px color-mix(in srgb,var(--hhx-nav-accent) 12%,transparent);backdrop-filter:blur(16px);cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s}
+.hhx-portal-launcher:hover{transform:translateY(-4px);box-shadow:0 14px 42px #000b,0 0 32px color-mix(in srgb,var(--hhx-nav-accent) 26%,transparent)}
+.hhx-portal-orb{position:relative;display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--hhx-nav-accent);border-radius:50%;color:var(--hhx-nav-accent);font:800 21px Montserrat,sans-serif;text-shadow:0 0 12px var(--hhx-nav-accent);box-shadow:inset 0 0 16px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),0 0 16px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent)}
+.hhx-portal-orb:before,.hhx-portal-orb:after{content:"";position:absolute;inset:-5px;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 55%,transparent);border-radius:50%;transform:rotate(-28deg) scaleX(1.45);animation:hhxPortalOrbit 7s linear infinite}
+.hhx-portal-orb:after{inset:-8px;transform:rotate(52deg) scaleX(1.3);border-color:color-mix(in srgb,var(--hhx-nav-accent) 25%,transparent);animation-duration:11s;animation-direction:reverse}
+.hhx-portal-overlay{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% 45%,#10233caa,#020307f5 70%);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s}
+.hhx-portal-overlay.is-open{opacity:1;visibility:visible}
+.hhx-portal-shell{position:relative;width:min(760px,96vw);max-height:min(88vh,820px);overflow:auto;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 50%,transparent);border-radius:28px;padding:clamp(22px,4vw,42px);background:linear-gradient(145deg,#0b1420f5,#040609f7 72%);box-shadow:0 35px 120px #000e,0 0 55px color-mix(in srgb,var(--hhx-nav-accent) 12%,transparent),inset 0 0 55px #58a9ff08;transform:translateY(18px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.hhx-portal-overlay.is-open .hhx-portal-shell{transform:translateY(0) scale(1)}
+.hhx-portal-shell:before{content:"";pointer-events:none;position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 80% 0%,color-mix(in srgb,var(--hhx-nav-accent) 10%,transparent),transparent 34%);mask-image:linear-gradient(#000,transparent 80%)}
+.hhx-portal-close{position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:50%;border:1px solid #ffffff25;background:#ffffff08;color:#fff;font-size:23px;cursor:pointer}
+.hhx-portal-heading{position:relative;margin:0 45px 6px 0;color:#fff;font-size:clamp(24px,4vw,36px)}
+.hhx-portal-subtitle{position:relative;color:#9eacbd;margin:0 0 26px;font-size:13px;line-height:1.8}
+.hhx-portal-grid{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hhx-portal-destination{position:relative;min-height:94px;display:flex;align-items:center;gap:15px;padding:16px;border:1px solid #ffffff17;border-radius:17px;background:linear-gradient(135deg,#ffffff08,#ffffff02);color:#fff;text-align:right;cursor:pointer;overflow:hidden;transition:transform .25s,border-color .25s,background .25s}
+.hhx-portal-destination:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 50%,color-mix(in srgb,var(--hhx-nav-accent) 13%,transparent),transparent 50%);opacity:0;transition:opacity .25s}
+.hhx-portal-destination:hover,.hhx-portal-destination.is-current{transform:translateY(-3px);border-color:color-mix(in srgb,var(--hhx-nav-accent) 68%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--hhx-nav-accent) 12%,#080b10),#ffffff03);box-shadow:0 12px 30px #0006}
+.hhx-portal-destination:hover:before,.hhx-portal-destination.is-current:before{opacity:1}
+.hhx-portal-destination>*{position:relative}
+.hhx-portal-destination-icon{flex:0 0 43px;width:43px;height:43px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--hhx-nav-accent) 42%,transparent);border-radius:14px;color:var(--hhx-nav-accent);font-size:20px;background:#05080dc9;box-shadow:inset 0 0 18px color-mix(in srgb,var(--hhx-nav-accent) 9%,transparent)}
+.hhx-portal-destination strong{display:block;font-size:15px}
+.hhx-portal-destination small{display:block;color:#8c9aab;font-size:11px;margin-top:4px}
+.hhx-portal-footer{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:23px;padding-top:17px;border-top:1px solid #ffffff12;color:#7d8a9a;font-size:11px}
+.hhx-portal-progress{display:flex;align-items:center;gap:6px}
+.hhx-portal-progress i{display:block;width:6px;height:6px;border-radius:50%;background:#ffffff2e;transition:width .25s,background .25s}
+.hhx-portal-progress i.is-current{width:22px;border-radius:8px;background:var(--hhx-nav-accent);box-shadow:0 0 12px color-mix(in srgb,var(--hhx-nav-accent) 45%,transparent)}
+/* Subtle dimensional polish that keeps the existing black-and-gold identity. */
+.home-logo,.bigH{filter:drop-shadow(0 7px 0 #7a4a0c) drop-shadow(0 0 28px color-mix(in srgb,var(--hhx-nav-accent) 42%,transparent))}
+.hbox{perspective:900px;background:radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),transparent 40%),#07090d}
+.hbox .bigH{transform:translateZ(35px) skew(-12deg)}
+.work-card{transform-style:preserve-3d;box-shadow:inset 0 0 0 1px #ffffff03,0 14px 35px #0004}
+.work-card:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hhx-nav-accent) 18%,transparent),0 22px 45px #0008,0 0 26px color-mix(in srgb,var(--hhx-nav-accent) 9%,transparent)}
+.contact-card,.hhx-project-description-panel{backdrop-filter:blur(18px)}
+@keyframes hhxPortalOrbit{to{transform:rotate(332deg) scaleX(1.45)}}
+@media(max-width:600px){.hhx-portal-launcher{left:12px;bottom:12px;padding:7px 11px 7px 8px;font-size:11px}.hhx-portal-orb{width:34px;height:34px}.hhx-portal-grid{grid-template-columns:1fr;gap:9px}.hhx-portal-destination{min-height:75px;padding:12px}.hhx-portal-shell{border-radius:22px}.hhx-portal-subtitle{margin-bottom:18px}.hhx-portal-footer{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.hhx-portal-launcher,.hhx-portal-orb:before,.hhx-portal-orb:after,.hhx-portal-shell,.hhx-portal-destination{animation:none!important;transition:none!important}}
+</style>
+<script id="hhx-cosmic-portal-navigation-script">
+(function(){
+'use strict';
+function init(){
+ if(document.getElementById('hhxCosmicPortalOverlay'))return;
+ var isEnglish=function(){return document.documentElement.lang==='en'||document.documentElement.dir==='ltr';};
+ var pages=[
+  {id:'home',ar:'الرئيسية',en:'Home',icon:'✦',descAr:'بوابة البداية',descEn:'Start your journey'},
+  {id:'about',ar:'من أنا',en:'About me',icon:'◈',descAr:'الحكاية وراء التصميم',descEn:'The story behind the work'},
+  {id:'work',ar:'المشاريع',en:'Projects',icon:'✧',descAr:'اكتشف الأعمال المختارة',descEn:'Explore selected work'},
+  {id:'services',ar:'الخدمات',en:'Services',icon:'⌘',descAr:'ما يمكنني تقديمه',descEn:'What I can create'},
+  {id:'reviews',ar:'التقييمات',en:'Reviews',icon:'✺',descAr:'آراء وتجارب الزوار',descEn:'Visitor feedback'},
+  {id:'orders',ar:'طلب تصميم',en:'Order a design',icon:'◇',descAr:'ابدأ فكرتك الجديدة',descEn:'Start your next idea'},
+  {id:'contact',ar:'تواصل معي',en:'Contact',icon:'◎',descAr:'خلينا نتكلم عن فكرتك',descEn:'Let’s talk about your idea'}
+ ];
+ var launch=document.createElement('button');launch.type='button';launch.className='hhx-portal-launcher';launch.setAttribute('aria-haspopup','dialog');launch.setAttribute('aria-expanded','false');
+ launch.innerHTML='<span class="hhx-portal-orb" aria-hidden="true">H</span><span class="hhx-portal-launcher-label">التنقل بين العوالم</span>';
+ var overlay=document.createElement('div');overlay.id='hhxCosmicPortalOverlay';overlay.className='hhx-portal-overlay';overlay.setAttribute('aria-hidden','true');
+ overlay.innerHTML='<section class="hhx-portal-shell" role="dialog" aria-modal="true" aria-labelledby="hhxPortalHeading" dir="auto"><button type="button" class="hhx-portal-close" aria-label="إغلاق القائمة">×</button><h2 class="hhx-portal-heading" id="hhxPortalHeading">اختر وجهتك</h2><p class="hhx-portal-subtitle" id="hhxPortalSubtitle">تنقّل بين أقسام الموقع كأنك تعبر بوابات فضائية — من غير أسهم تقليدية.</p><div class="hhx-portal-grid"></div><div class="hhx-portal-footer"><span class="hhx-portal-hint">اسحب يمينًا أو يسارًا للتنقل بين الأقسام</span><span class="hhx-portal-progress" aria-hidden="true"></span></div></section>';
+ document.body.appendChild(launch);document.body.appendChild(overlay);
+ var grid=overlay.querySelector('.hhx-portal-grid'),close=overlay.querySelector('.hhx-portal-close'),progress=overlay.querySelector('.hhx-portal-progress'),launcherLabel=launch.querySelector('.hhx-portal-launcher-label'),lastFocus=null;
+ pages=pages.filter(function(p){return !!document.getElementById(p.id);});
+ pages.forEach(function(p,i){var b=document.createElement('button');b.type='button';b.className='hhx-portal-destination';b.dataset.page=p.id;b.innerHTML='<span class="hhx-portal-destination-icon" aria-hidden="true">'+p.icon+'</span><span><strong></strong><small></small></span>';b.querySelector('strong').textContent=p.ar;b.querySelector('small').textContent=p.descAr;b.addEventListener('click',function(){goTo(p.id);hide();});grid.appendChild(b);var dot=document.createElement('i');progress.appendChild(dot);});
+ function localized(){var en=isEnglish();overlay.querySelector('#hhxPortalHeading').textContent=en?'Choose your destination':'اختار وجهتك';overlay.querySelector('#hhxPortalSubtitle').textContent=en?'Move through the portfolio like passing through cosmic portals — no old-fashioned arrows.':'تنقّل بين أقسام الموقع كأنك بتعبر بوابات فضائية — من غير أسهم تقليدية.';launcherLabel.textContent=en?'Explore sections':'التنقل بين العوالم';overlay.querySelector('.hhx-portal-hint').textContent=en?'Swipe left or right to move between sections':'اسحب يمين أو شمال للتنقل بين الأقسام';close.setAttribute('aria-label',en?'Close navigation':'إغلاق القائمة');pages.forEach(function(p){var b=grid.querySelector('[data-page="'+p.id+'"]');if(!b)return;b.querySelector('strong').textContent=en?p.en:p.ar;b.querySelector('small').textContent=en?p.descEn:p.descAr;});}
+ function currentIndex(){var id=typeof currentPage!=='undefined'?currentPage:null;if(!id){var marker=Math.min(innerHeight*.32,250);pages.forEach(function(p){var el=document.getElementById(p.id);if(el&&el.getBoundingClientRect().top<=marker)id=p.id;});}var idx=pages.findIndex(function(p){return p.id===id;});return idx<0?0:idx;}
+ function update(){var idx=currentIndex();grid.querySelectorAll('.hhx-portal-destination').forEach(function(b,i){var active=i===idx;b.classList.toggle('is-current',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});Array.from(progress.children).forEach(function(d,i){d.classList.toggle('is-current',i===idx);});}
+ function goTo(id){var el=document.getElementById(id);if(!el)return;if(typeof currentPage!=='undefined')currentPage=id;el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});if(typeof window.syncPollers==='function')window.syncPollers();update();}
+ function show(){lastFocus=document.activeElement;localized();update();overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');launch.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';close.focus();}
+ function hide(){overlay.classList.remove('is-open');overlay.setAttribute('aria-hidden','true');launch.setAttribute('aria-expanded','false');document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+ launch.addEventListener('click',show);close.addEventListener('click',hide);overlay.addEventListener('click',function(e){if(e.target===overlay)hide();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('is-open'))hide();if(overlay.classList.contains('is-open')&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){var idx=currentIndex()+(e.key==='ArrowLeft'?1:-1);if(idx>=0&&idx<pages.length){goTo(pages[idx].id);}}});
+ var startX=0,startY=0,startTarget=null;
+ document.addEventListener('touchstart',function(e){if(overlay.classList.contains('is-open')||e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY;startTarget=e.target;},{passive:true});
+ document.addEventListener('touchend',function(e){if(overlay.classList.contains('is-open')||!startTarget||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;var target=startTarget.closest&&startTarget.closest('input,textarea,select,button,a,[contenteditable="true"],.lightbox,.hhx-project-description-overlay');startTarget=null;if(target||Math.abs(dx)<85||Math.abs(dx)<Math.abs(dy)*1.35)return;var idx=currentIndex()+(dx<0?1:-1);if(idx>=0&&idx<pages.length)goTo(pages[idx].id);},{passive:true});
+ var lastLang=document.documentElement.lang;new MutationObserver(function(){if(document.documentElement.lang!==lastLang){lastLang=document.documentElement.lang;localized();}}).observe(document.documentElement,{attributes:true,attributeFilter:['lang','dir']});
+ window.addEventListener('scroll',function(){if(!overlay.classList.contains('is-open'))update();},{passive:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+
+<style id="hhx-reference-match-cosmic-3d">
+/* Bring the live hero closer to the approved 3D space concept: a larger dimensional H, layered orbital paths, and blue/gold planetary lighting. */
+#home.home-modern{isolation:isolate;background:radial-gradient(ellipse at 50% 43%,#10304a42 0,transparent 28%),radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent) 0,transparent 48%),#020308!important}
+#home .home-modern-glow{width:clamp(420px,78vw,900px);background:radial-gradient(ellipse at 50% 48%,#3b91df27 0,#f5d76e1a 28%,#f5d76e08 48%,transparent 70%);filter:blur(2px)}
+#home .home-modern-ring{width:clamp(370px,65vw,730px);border:1px solid #62baff22;border-top-color:#8dcfff99;border-bottom-color:#f5d76e77;box-shadow:0 0 28px #1685c51a,inset 0 0 35px #1685c50b;transform:translate(-50%,-55%) rotateX(64deg) rotate(-18deg);animation:hxRingIn 1.2s ease-out .2s backwards,hhxHeroOrbit 24s linear 1.4s infinite}
+#home .hx-stage{width:clamp(245px,min(34vw,40vh),370px);aspect-ratio:1;isolation:isolate;perspective:900px;filter:drop-shadow(0 0 25px #f5d76e7a) drop-shadow(0 0 70px #168bd833)}
+#home .hx-stage:before,#home .hx-stage:after{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:50%;width:148%;height:62%;border:1px solid #65baff70;border-radius:50%;transform:translate(-50%,-50%) rotate(-24deg) rotateX(62deg);box-shadow:0 0 16px #168bd822,inset 0 0 14px #168bd81a;animation:hhxOrbitDrift 12s ease-in-out infinite}
+#home .hx-stage:after{width:166%;height:76%;border-color:#f5d76e80;transform:translate(-50%,-50%) rotate(28deg) rotateX(66deg);box-shadow:0 0 20px #f5d76e18,inset 0 0 18px #f5d76e0d;animation-duration:16s;animation-direction:reverse}
+#home .hx-svg{position:relative;z-index:2;filter:drop-shadow(0 8px 0 #704a0e) drop-shadow(0 0 8px #fff7c6);transform:skewX(-9deg) rotateY(-8deg) rotateX(3deg)}
+#home .hx-fat{stroke-width:34}
+#home .hx-core{stroke:#fffbe6;stroke-width:6;opacity:.82}
+#home .hx-sp{z-index:3;box-shadow:0 0 9px 2px #f5d76e,0 0 22px 5px #f5d76e88,0 0 35px 4px #168bd855}
+#home .hx-name{letter-spacing:clamp(3px,.8vw,9px);text-shadow:0 2px 0 #6e4a0e,0 4px 0 #3a2b0d,0 0 22px #f5d76e66,0 0 52px #168bd833}
+#home .hx-nameWrap{margin-top:35px}
+#home .home-modern-sub{color:var(--hho-acc2,var(--hho-acc,#f5d76e));text-shadow:0 0 18px color-mix(in srgb,var(--hho-acc,#f5d76e) 30%,transparent)}
+/* Add a dimensional glow and orbital depth to the existing monogram panel without replacing the original H mark. */
+.about-visual .hbox{overflow:visible;isolation:isolate;background:radial-gradient(ellipse at 50% 44%,#147ac529 0,#f5d76e10 35%,transparent 68%),linear-gradient(145deg,#0b1420,#050608 72%);box-shadow:inset 0 0 85px #168bd80b,0 30px 80px #000,0 0 36px #168bd812;transform-style:preserve-3d}
+.about-visual .hbox:before,.about-visual .hbox:after{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:125%;height:44%;border:1px solid #65baff70;border-radius:50%;transform:translate(-50%,-50%) rotate(-22deg) rotateX(62deg);box-shadow:0 0 22px #168bd822;pointer-events:none;animation:hhxOrbitDrift 13s ease-in-out infinite}
+.about-visual .hbox:after{width:142%;height:58%;border-color:#f5d76e55;transform:translate(-50%,-50%) rotate(34deg) rotateX(65deg);animation-duration:17s;animation-direction:reverse}
+.about-visual .bigH{position:relative;z-index:1;color:#f7dc7b;background:linear-gradient(100deg,#8f6819 0%,#fff2b0 24%,#d8a72f 47%,#fff0a3 66%,#9b6c14 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 7px 0 #5a3c0b) drop-shadow(0 0 22px #f5d76e66) drop-shadow(0 0 38px #168bd833);transform:translateZ(34px) skew(-12deg)}
+/* Lift the project cards into the same restrained holographic visual language. */
+.work-card{position:relative;isolation:isolate;overflow:hidden;border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 24%,transparent);background:linear-gradient(145deg,#101722,#07080b 65%);transition:transform .38s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+.work-card:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 100% 0%,#168bd818,transparent 46%),linear-gradient(135deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 6%,transparent),transparent 45%);opacity:.75}
+.work-card:hover{transform:translateY(-7px) perspective(900px) rotateX(1.5deg);border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 60%,transparent);box-shadow:0 22px 48px #0009,0 0 28px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)}
+.work-card>*{position:relative;z-index:1}
+.hhx-portal-launcher{background:linear-gradient(135deg,#102236f2,#050609f5);border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 60%,#65baff55);box-shadow:0 12px 38px #000c,0 0 28px #168bd81c,0 0 18px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)}
+.hhx-portal-orb{background:radial-gradient(circle at 30% 25%,#fff7c8,#f5d76e 25%,#986a13 72%,#07101b 74%);color:#10131b;border:1px solid #fff0ad;box-shadow:inset -6px -7px 12px #0009,0 0 18px #f5d76e55}
+@keyframes hhxHeroOrbit{from{transform:translate(-50%,-55%) rotateX(64deg) rotate(-18deg)}to{transform:translate(-50%,-55%) rotateX(64deg) rotate(342deg)}}
+@keyframes hhxOrbitDrift{0%,100%{filter:brightness(.88);margin-top:0}50%{filter:brightness(1.35);margin-top:-7px}}
+@media(max-width:600px){#home .hx-stage{width:clamp(235px,68vw,310px)}#home .home-modern-ring{width:clamp(320px,92vw,440px)}#home .hx-nameWrap{margin-top:28px}.about-visual{min-width:0}.about-visual .hbox:before{width:115%}.about-visual .hbox:after{width:130%}}
+@media(prefers-reduced-motion:reduce){#home .home-modern-ring,#home .hx-stage:before,#home .hx-stage:after,.about-visual .hbox:before,.about-visual .hbox:after{animation:none!important}}
+</style>
+
+
+<!-- Cosmic reference layout: persistent icon rail + full-site visual system -->
+<nav class="hhx-cosmic-rail" aria-label="تنقل سريع">
+  <a class="hhx-rail-brand" href="#home" aria-label="الرئيسية">H</a>
+  <a href="#home" data-section="home" aria-label="الرئيسية" title="الرئيسية"><span>⌂</span></a>
+  <a href="#about" data-section="about" aria-label="من أنا" title="من أنا"><span>◈</span></a>
+  <a href="#work" data-section="work" aria-label="المشاريع" title="المشاريع"><span>▣</span></a>
+  <a href="#services" data-section="services" aria-label="الخدمات" title="الخدمات"><span>✧</span></a>
+  <a href="#reviews" data-section="reviews" aria-label="التقييمات" title="التقييمات"><span>☆</span></a>
+  <a href="#orders" data-section="orders" aria-label="طلب تصميم" title="طلب تصميم"><span>✎</span></a>
+  <a href="#contact" data-section="contact" aria-label="تواصل معي" title="تواصل معي"><span>⌁</span></a>
+  <i aria-hidden="true"></i>
+</nav>
+<style id="hhx-full-cosmic-reference">
+:root{--cosmic-gold:#f5d76e;--cosmic-blue:#168bd8;--cosmic-glass:rgba(5,12,22,.78);--cosmic-edge:rgba(112,183,229,.34)}
+html{scroll-padding-top:96px;scroll-behavior:smooth}
+body{background-color:#02040a;background-image:radial-gradient(ellipse at 50% 12%,rgba(15,65,105,.18),transparent 42%),radial-gradient(ellipse at 88% 55%,rgba(245,215,110,.055),transparent 34%)}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(115deg,transparent 0 48%,rgba(30,105,165,.025) 49%,transparent 51%),radial-gradient(circle at 15% 28%,#fff8 0 1px,transparent 1.7px),radial-gradient(circle at 80% 72%,#9bd9ff77 0 1px,transparent 1.7px);background-size:auto,190px 170px,230px 210px}
+.top-nav{background:linear-gradient(180deg,rgba(2,6,13,.96),rgba(3,7,14,.82));border-bottom:1px solid rgba(245,215,110,.22);box-shadow:0 8px 32px #0007,0 1px 0 rgba(84,169,227,.12);backdrop-filter:blur(18px)}
+.top-nav-inner{max-width:1480px;min-height:76px;gap:clamp(12px,2vw,30px)}
+.top-logo{color:#f5d76e;text-shadow:0 0 18px #f5d76e55}
+.top-links{gap:clamp(10px,1.65vw,26px)}
+.top-links a{position:relative;padding:11px 0;color:#d7deeb;transition:color .25s,text-shadow .25s}
+.top-links a:after{content:"";position:absolute;bottom:2px;left:0;right:0;height:1px;transform:scaleX(0);background:linear-gradient(90deg,transparent,#f5d76e,transparent);transition:transform .25s}
+.top-links a:hover,.top-links a:focus-visible{color:#ffe89a;text-shadow:0 0 16px #f5d76e55}
+.top-links a:hover:after,.top-links a:focus-visible:after{transform:scaleX(1)}
+.page-section{position:relative;isolation:isolate}
+.page-section:not(#home){overflow:clip}
+.page-section:not(#home):before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:0;background:radial-gradient(ellipse at 0% 15%,rgba(22,139,216,.075),transparent 34%),radial-gradient(ellipse at 100% 90%,rgba(245,215,110,.055),transparent 38%)}
+.page-section:not(#home):after{content:"";position:absolute;z-index:-1;pointer-events:none;top:0;left:7%;right:7%;height:1px;background:linear-gradient(90deg,transparent,rgba(94,178,235,.3),rgba(245,215,110,.42),transparent)}
+.section{padding-top:clamp(76px,9vw,124px);padding-bottom:clamp(76px,9vw,124px)}
+.section h2,.section-title,.services-intro h2{letter-spacing:.02em;text-shadow:0 0 28px rgba(22,139,216,.15)}
+.section h2:after,.section-title:after{filter:drop-shadow(0 0 8px #f5d76e66)}
+.work-card,.service-item,.review-card,.contact-card,.order-card,.about-visual .hbox,.review-form,.contact-form,.order-form{border:1px solid rgba(111,177,220,.3);background:linear-gradient(145deg,rgba(12,24,39,.94),rgba(4,7,13,.96) 70%);box-shadow:inset 0 1px rgba(255,255,255,.035),0 18px 44px rgba(0,0,0,.28)}
+.work-card,.service-item,.review-card,.contact-card{border-radius:18px}
+.service-item{position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.service-item:before,.review-card:before,.contact-card:before{content:"";position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(22,139,216,.12),transparent 60%);opacity:.85}
+.service-item:hover{transform:translateY(-5px);border-color:rgba(245,215,110,.6);box-shadow:0 22px 48px #0008,0 0 24px #168bd81c}
+.service-icon{filter:drop-shadow(0 0 12px rgba(245,215,110,.28))}
+.review-card,.contact-card{position:relative;overflow:hidden}
+button,.btn,.button,.order-submit,.review-submit{transition:transform .22s,box-shadow .22s,border-color .22s}
+button:hover,.btn:hover,.button:hover,.order-submit:hover,.review-submit:hover{box-shadow:0 0 22px rgba(245,215,110,.2)}
+input,textarea,select{background:rgba(2,8,16,.78)!important;border-color:rgba(107,172,216,.34)!important}
+input:focus,textarea:focus,select:focus{border-color:#f5d76e!important;box-shadow:0 0 0 3px rgba(245,215,110,.1),0 0 18px rgba(22,139,216,.13)!important}
+footer{border-top:1px solid rgba(245,215,110,.2);background:linear-gradient(180deg,rgba(4,8,15,.55),rgba(2,4,9,.96))}
+.hhx-cosmic-rail{position:fixed;z-index:1000;left:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;padding:10px 7px;border:1px solid rgba(110,178,224,.25);border-radius:30px;background:linear-gradient(180deg,rgba(4,12,22,.9),rgba(2,5,11,.86));box-shadow:0 14px 40px #0009,0 0 24px rgba(22,139,216,.09);backdrop-filter:blur(16px)}
+.hhx-cosmic-rail a{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:#c4d0e1;text-decoration:none;border:1px solid transparent;font-size:18px;transition:color .2s,background .2s,border-color .2s,box-shadow .2s,transform .2s}
+.hhx-cosmic-rail a:hover,.hhx-cosmic-rail a.is-active{color:#ffe89a;border-color:rgba(245,215,110,.58);background:linear-gradient(145deg,rgba(245,215,110,.18),rgba(22,139,216,.12));box-shadow:0 0 18px rgba(245,215,110,.13);transform:scale(1.06)}
+.hhx-cosmic-rail .hhx-rail-brand{font-family:Georgia,serif;font-size:23px;font-weight:700;color:#f5d76e;border:1px solid rgba(245,215,110,.68);box-shadow:inset 0 0 14px rgba(245,215,110,.12),0 0 18px rgba(245,215,110,.14);margin-bottom:7px}
+.hhx-cosmic-rail i{width:18px;height:1px;background:linear-gradient(90deg,transparent,#f5d76e,transparent);margin:3px 0}
+.hhx-portal-launcher{z-index:999}
+@media(min-width:1500px){.top-nav-inner{max-width:1580px}.page-section:not(#home){padding-left:clamp(70px,8vw,130px);padding-right:clamp(70px,8vw,130px)}}
+@media(max-width:760px){.hhx-cosmic-rail{left:9px;top:auto;bottom:12px;transform:none;flex-direction:row;gap:3px;padding:5px 7px;border-radius:24px;max-width:calc(100vw - 18px);overflow-x:auto}.hhx-cosmic-rail a{width:30px;height:30px;min-width:30px;font-size:15px}.hhx-cosmic-rail .hhx-rail-brand{font-size:20px;margin:0 4px 0 0}.hhx-cosmic-rail i{display:none}.top-nav-inner{min-height:64px}.top-links{gap:10px}.top-links a{font-size:12px}.section{padding-top:68px;padding-bottom:68px}}
+@media(max-width:430px){.top-links{gap:7px}.top-links a{font-size:10px}.hhx-cosmic-rail{left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 14px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+</style>
+<script>
+(function(){
+ var rail=document.querySelector('.hhx-cosmic-rail');if(!rail)return;
+ var links=[].slice.call(rail.querySelectorAll('[data-section]'));
+ function mark(){var marker=Math.min(window.innerHeight*.42,300),active='home';links.forEach(function(a){var el=document.getElementById(a.dataset.section);if(el&&el.getBoundingClientRect().top<=marker)active=el.id;});links.forEach(function(a){var yes=a.dataset.section===active;a.classList.toggle('is-active',yes);if(yes)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});}
+ links.forEach(function(a){a.addEventListener('click',function(e){var target=document.getElementById(a.dataset.section);if(target){e.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});history.replaceState(null,'','#'+a.dataset.section);}});});
+ window.addEventListener('scroll',mark,{passive:true});window.addEventListener('resize',mark);mark();
+})();
+</script>
+
 </body>
 </html>
