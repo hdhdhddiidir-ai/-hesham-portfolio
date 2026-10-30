@@ -4068,5 +4068,77 @@ html.hh-reduce-motion #hhPageTransitionFx{display:none!important;animation:none!
 @media(prefers-reduced-motion:reduce){#hhPageTransitionFx{display:none!important;animation:none!important}}
 </style>
 
+
+<style id="hhx-grand-section-transition">
+/* Grand, polished section handoff — theme-aware, lightweight, and limited to navigation transitions. */
+#hhPageTransitionFx{
+  inset:0!important;
+  background:
+    radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--hho-acc,#f5d76e) 13%,transparent),transparent 54%),
+    linear-gradient(108deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 3%,transparent) 26%,color-mix(in srgb,var(--hho-acc,#f5d76e) 15%,transparent) 48%,#f4f8ff12 51%,color-mix(in srgb,var(--hho-acc,#f5d76e) 7%,transparent) 58%,transparent 78%)!important;
+  mix-blend-mode:screen!important;
+  filter:drop-shadow(0 0 22px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent));
+}
+#hhPageTransitionFx:before{
+  background-image:
+    radial-gradient(1px 1px at 9% 24%,#ffffffc9 50%,transparent 100%),
+    radial-gradient(2px 2px at 22% 68%,color-mix(in srgb,var(--hho-acc,#f5d76e) 90%,white) 50%,transparent 100%),
+    radial-gradient(1px 1px at 39% 42%,#ffffffbd 50%,transparent 100%),
+    radial-gradient(2px 2px at 58% 19%,#ffffffc9 50%,transparent 100%),
+    radial-gradient(1px 1px at 74% 72%,color-mix(in srgb,var(--hho-acc,#f5d76e) 80%,white) 50%,transparent 100%),
+    radial-gradient(1px 1px at 91% 34%,#ffffffb8 50%,transparent 100%)!important;
+}
+#hhPageTransitionFx:after{
+  top:50%!important;height:2px!important;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--hho-acc,#f5d76e) 82%,white),#fff,color-mix(in srgb,var(--hho-acc,#f5d76e) 82%,white),transparent)!important;
+  box-shadow:0 0 9px color-mix(in srgb,var(--hho-acc,#f5d76e) 60%,transparent),0 0 28px color-mix(in srgb,var(--hho-acc,#f5d76e) 32%,transparent)!important;
+}
+#hhPageTransitionFx.hh-play{animation:hhxGrandCurtain 1.16s cubic-bezier(.76,0,.18,1) both!important}
+#hhPageTransitionFx.hh-play:before{animation:hhxGrandStardust 1.16s cubic-bezier(.2,.7,.2,1) both!important}
+#hhPageTransitionFx.hh-play:after{animation:hhxGrandGlint 1.16s cubic-bezier(.18,.72,.18,1) both!important}
+html body.page-mode .page-section.hh-section-entering{
+  animation:hhxGrandArrival 1.08s cubic-bezier(.2,.78,.18,1) both!important;
+  transform-origin:50% 42%!important;
+  backface-visibility:hidden;
+}
+@keyframes hhxGrandCurtain{
+  0%{opacity:0;transform:translateX(-112%) scaleX(.88)}
+  14%{opacity:.48}
+  42%{opacity:.86;transform:translateX(-4%) scaleX(1)}
+  62%{opacity:.62}
+  100%{opacity:0;transform:translateX(112%) scaleX(.96)}
+}
+@keyframes hhxGrandStardust{
+  0%{opacity:0;transform:scale(.9) translate3d(-2%,1%,0)}
+  30%{opacity:.72}
+  68%{opacity:.42;transform:scale(1.02) translate3d(1%,-1%,0)}
+  100%{opacity:0;transform:scale(1.08) translate3d(3%,-1%,0)}
+}
+@keyframes hhxGrandGlint{
+  0%,12%{opacity:0;transform:scaleX(.08)}
+  38%{opacity:.82;transform:scaleX(1)}
+  64%{opacity:.38;transform:scaleX(.72)}
+  100%{opacity:0;transform:scaleX(.12)}
+}
+@keyframes hhxGrandArrival{
+  0%{opacity:.12;transform:perspective(1200px) translate3d(0,34px,-24px) scale(.976);filter:blur(10px)}
+  34%{opacity:.68;filter:blur(3px)}
+  72%{opacity:1;transform:perspective(1200px) translate3d(0,-2px,0) scale(1.002);filter:blur(0)}
+  100%{opacity:1;transform:perspective(1200px) translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@media(max-width:600px){
+  #hhPageTransitionFx.hh-play{animation-duration:.94s!important}
+  #hhPageTransitionFx.hh-play:before,#hhPageTransitionFx.hh-play:after{animation-duration:.94s!important}
+  html body.page-mode .page-section.hh-section-entering{animation-duration:.88s!important}
+}
+html.hh-reduce-motion #hhPageTransitionFx,
+html.hh-reduce-motion #hhPageTransitionFx.hh-play{display:none!important;animation:none!important}
+html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
+@media(prefers-reduced-motion:reduce){
+  #hhPageTransitionFx,#hhPageTransitionFx.hh-play{display:none!important;animation:none!important}
+  html body.page-mode .page-section.hh-section-entering{animation:none!important;transform:none!important;filter:none!important}
+}
+</style>
+
 </body>
 </html>
