@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hesham-portfolio-hdhdhddiidir-3326.vercel.app/sitemap.xml
