@@ -4424,7 +4424,7 @@ html body #topNav .top-links{gap:clamp(2px,.45vw,8px)!important}
 .hhx-size-number{display:flex;align-items:baseline;justify-content:center;gap:4px;color:var(--hho-acc,#f5d76e);font-weight:900;font-size:24px;font-variant-numeric:tabular-nums}
 .hhx-size-number small{font-size:11px;color:var(--hho-mut,#aaa)}
 .hhx-size-control input[type=range]{grid-column:1/-1}
-.hhx-font-choice{font-family:var(--choice-font,sans-serif)!important}
+/* Each font button keeps its own inline preview font. */
 @media(prefers-reduced-motion:reduce){html body #topNav.top-nav:before,html body #topNav .top-logo>.hhx-brand-mark:before{animation:none!important}}
 </style>
 <script id="hhx-settings-correction-v4">
@@ -4516,6 +4516,14 @@ html body #topNav.top-nav:before{inset:0!important;border-radius:inherit!importa
 .hhx-type-controls-v5 .hhx-font-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 .hhx-type-controls-v5 .hhx-font-choice{min-width:0;min-height:42px;padding:8px 6px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff07;color:var(--hho-fg,#eee);font-size:12px;font-weight:700}
 .hhx-type-controls-v5 .hhx-font-choice[aria-pressed=true]{border-color:var(--hho-acc,#f5d76e);color:var(--hho-acc,#f5d76e);background:color-mix(in srgb,var(--hho-acc,#f5d76e) 14%,#111);box-shadow:0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 17%,transparent)}
+
+/* Final typography application: change the family everywhere without touching sizes. */
+html body :is(*):not(svg):not(svg *){font-family:var(--hhx-user-font,Cairo,sans-serif)!important}
+html body .hhx-font-choice{font-family:inherit!important}
+html body #topNav.top-nav{overflow:visible!important;isolation:isolate!important}
+html body #topNav .top-nav-inner{position:relative!important;z-index:2!important}
+html body #topNav.top-nav:before{z-index:0!important;inset:-1px!important;padding:2px!important;border-radius:inherit!important;pointer-events:none!important;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--hho-acc,#f5d76e) 70%,transparent)) drop-shadow(0 0 12px color-mix(in srgb,var(--hho-acc,#f5d76e) 35%,transparent))!important}
+html body #topNav.top-nav{box-shadow:0 0 20px color-mix(in srgb,var(--hho-acc,#f5d76e) 35%,transparent),0 0 42px color-mix(in srgb,var(--hho-acc,#f5d76e) 18%,transparent)!important}
 </style>
 
 <script id="hhx-translation-complete-v5">
