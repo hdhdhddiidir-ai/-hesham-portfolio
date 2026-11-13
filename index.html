@@ -4367,13 +4367,31 @@ html.hhx-font-small{--hhx-user-size:14px}html.hhx-font-medium{--hhx-user-size:16
 </script>
 <script id="hhx-live-translation">
 (function(){
- var loaded=false,loading=false,desired='ar';
+ var loaded=false,loading=false,desired='ar',attempt=0,timer=null;
+ function applyWhenReady(){
+  if(desired==='ar'){
+   var combo=document.querySelector('.goog-te-combo');if(combo){combo.value='ar';combo.dispatchEvent(new Event('change'))}
+   return;
+  }
+  var combo=document.querySelector('.goog-te-combo');
+  if(combo){combo.value='en';combo.dispatchEvent(new Event('change'));attempt=0;return}
+  if(attempt++<24){timer=setTimeout(applyWhenReady,300)}
+ }
  window.hhxTranslateTo=function(lang){
-  desired=lang;
-  if(!loaded&&!loading){loading=true;window.googleTranslateElementInit=function(){try{new google.translate.TranslateElement({pageLanguage:'ar',includedLanguages:'ar,en',autoDisplay:false,layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element')}catch(e){}loaded=true;loading=false;window.setTimeout(function(){window.hhxTranslateTo(desired)},350)};var sc=document.createElement('script');sc.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';sc.async=true;sc.onerror=function(){loading=false};document.head.appendChild(sc);return}
-  if(!loaded||!window.google||!google.translate||!google.translate.TranslateElement)return;
-  var combo=document.querySelector('.goog-te-combo');if(!combo)return;
-  combo.value=lang==='en'?'en':'ar';combo.dispatchEvent(new Event('change'));
+  desired=lang==='en'?'en':'ar';attempt=0;clearTimeout(timer);
+  if(desired==='ar'){applyWhenReady();return}
+  if(!loaded&&!loading){
+   loading=true;
+   window.googleTranslateElementInit=function(){
+    try{new google.translate.TranslateElement({pageLanguage:'ar',includedLanguages:'ar,en',autoDisplay:false,layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element')}catch(e){}
+    loaded=true;loading=false;applyWhenReady();
+   };
+   if(!document.querySelector('script[data-hhx-google-translate]')){
+    var sc=document.createElement('script');sc.dataset.hhxGoogleTranslate='1';sc.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';sc.async=true;sc.onerror=function(){loading=false};document.head.appendChild(sc);
+   }
+   return;
+  }
+  if(loaded)applyWhenReady();
  };
 })();
 </script>
