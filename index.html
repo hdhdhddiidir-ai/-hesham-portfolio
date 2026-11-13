@@ -2158,6 +2158,7 @@ function buildSettingsMenu() {
   var reset=document.createElement('button'); reset.type='button'; reset.className='hhx-opt'; reset.textContent=T('resetVisuals');
   reset.addEventListener('click',function(){Object.keys(visualPrefs).forEach(function(k){visualPrefs[k]=false;});applyVisualPrefs(true);closeSettingsMenu();applyTheme('gold',true);});
   settingsMenu.appendChild(reset);
+  if (window.hhxBuildTypeControls) window.hhxBuildTypeControls();
 }
 function closeSettingsMenu(){settingsMenu.classList.remove('open');settingsBtn.setAttribute('aria-expanded','false');}
 function buildMenu() {
@@ -4471,6 +4472,83 @@ html body #topNav.top-nav{animation:hhxNavPulse 3.6s ease-in-out infinite!import
   });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',connect,{once:true});else connect();
+})();
+</script>
+
+<style id="hhx-translation-complete-v5">
+/* stronger moving light on the navigation bar */
+html body #topNav.top-nav{position:relative!important;overflow:hidden!important;border-color:color-mix(in srgb,var(--hho-acc,#f5d76e) 68%,transparent)!important;box-shadow:0 0 22px color-mix(in srgb,var(--hho-acc,#f5d76e) 35%,transparent),0 0 48px color-mix(in srgb,var(--hho-acc,#f5d76e) 17%,transparent),inset 0 0 22px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)!important}
+html body #topNav.top-nav:before{inset:0!important;border-radius:inherit!important;padding:2px!important;background:linear-gradient(110deg,transparent 0%,transparent 28%,#fff5c9 43%,var(--hho-acc,#f5d76e) 49%,transparent 60%,transparent 100%)!important;background-size:260% 100%!important;animation:hhxNavSweepFinal 3.2s linear infinite!important;opacity:1!important}
+@keyframes hhxNavSweepFinal{0%{background-position:160% 0}100%{background-position:-100% 0}}
+.hhx-type-controls-v5{display:grid;gap:10px;width:100%}
+.hhx-type-controls-v5 .hhx-type-title{margin:12px 2px 2px}
+.hhx-type-controls-v5 .hhx-size-line{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;gap:9px}
+.hhx-type-controls-v5 .hhx-size-step{height:38px;border:1px solid color-mix(in srgb,var(--hho-acc,#f5d76e) 55%,transparent);border-radius:11px;background:#ffffff08;color:var(--hho-acc,#f5d76e);font-size:20px;font-weight:900}
+.hhx-type-controls-v5 .hhx-size-value{text-align:center;color:var(--hho-acc,#f5d76e);font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.hhx-type-controls-v5 .hhx-size-value small{font-size:10px;color:var(--hho-mut,#aaa);margin-inline-start:3px}
+.hhx-type-controls-v5 input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--hho-acc,#f5d76e)}
+.hhx-type-controls-v5 .hhx-font-group{display:grid;gap:7px}
+.hhx-type-controls-v5 .hhx-font-group-title{font-size:12px;font-weight:800;color:var(--hho-acc,#f5d76e)}
+.hhx-type-controls-v5 .hhx-font-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.hhx-type-controls-v5 .hhx-font-choice{min-width:0;min-height:42px;padding:8px 6px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff07;color:var(--hho-fg,#eee);font-size:12px;font-weight:700}
+.hhx-type-controls-v5 .hhx-font-choice[aria-pressed=true]{border-color:var(--hho-acc,#f5d76e);color:var(--hho-acc,#f5d76e);background:color-mix(in srgb,var(--hho-acc,#f5d76e) 14%,#111);box-shadow:0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 17%,transparent)}
+</style>
+
+<script id="hhx-translation-complete-v5">
+(function(){
+'use strict';
+var arabicFonts=[['IBM Plex Sans Arabic','آي بي إم بليكس'],['Alexandria','أليكسندريا'],['Tajawal','تجوال'],['Noto Sans Arabic','نوتو عربي'],['Readex Pro','ريديكس برو'],['Changa','تشانجا'],['Cairo','القاهرة'],['Almarai','المراعي'],['Lalezar','ليلزار'],['El Messiri','المسيري']];
+var englishFonts=['Montserrat','Poppins','Inter','Roboto','Lato','Nunito Sans','Playfair Display','Oswald'];
+var size=16,font='IBM Plex Sans Arabic',pending=0;
+try{size=Number(localStorage.getItem('hh_user_font_size'))||16;font=localStorage.getItem('hh_user_font')||font}catch(e){}
+function en(){return document.documentElement.lang==='en'||(window.HH_getLang&&window.HH_getLang()==='en')}
+function addTitle(parent,text){var el=document.createElement('b');el.className='hhx-type-title';el.textContent=text;parent.appendChild(el)}
+window.hhxBuildTypeControls=function(){
+ var menu=document.getElementById('hhxSettingsMenu');if(!menu)return;
+ menu.querySelectorAll('.hhx-type-controls-v5,.hhx-type-title,.hhx-type-row,.hhx-font-groups').forEach(function(n){n.remove()});
+ var wrap=document.createElement('div');wrap.className='hhx-type-controls-v5';
+ addTitle(wrap,en()?'Font size':'حجم الخط');
+ var row=document.createElement('div');row.className='hhx-setting hhx-size-line';
+ var dec=document.createElement('button');dec.type='button';dec.className='hhx-size-step';dec.textContent='−';dec.setAttribute('aria-label',en()?'Decrease font size':'تصغير الخط');
+ var val=document.createElement('div');val.className='hhx-size-value';var n=document.createElement('span');var unit=document.createElement('small');unit.textContent='px';val.append(n,unit);
+ var inc=document.createElement('button');inc.type='button';inc.className='hhx-size-step';inc.textContent='+';inc.setAttribute('aria-label',en()?'Increase font size':'تكبير الخط');
+ var range=document.createElement('input');range.type='range';range.min='12';range.max='24';range.step='1';range.value=String(size);range.setAttribute('aria-label',en()?'Font size':'حجم الخط');
+ function update(v){size=Math.max(12,Math.min(24,v));range.value=String(size);n.textContent=String(size);document.documentElement.style.setProperty('--hhx-user-size',size+'px');try{localStorage.setItem('hh_user_font_size',String(size))}catch(e){}}
+ dec.addEventListener('click',function(){update(size-1)});inc.addEventListener('click',function(){update(size+1)});range.addEventListener('input',function(){update(Number(range.value))});
+ row.append(dec,val,inc,range);wrap.appendChild(row);update(size);
+ addTitle(wrap,en()?'Font style':'شكل الخط');
+ function group(label,items,isArabic){
+  var box=document.createElement('section');box.className='hhx-font-group';
+  var h=document.createElement('div');h.className='hhx-font-group-title';h.textContent=label;box.appendChild(h);
+  var grid=document.createElement('div');grid.className='hhx-font-grid';
+  items.forEach(function(item){var key=item[0],display=item[1];var b=document.createElement('button');b.type='button';b.className='hhx-font-choice';b.textContent=display;b.style.fontFamily='"'+key+'",sans-serif';b.setAttribute('aria-pressed',font===key?'true':'false');b.addEventListener('click',function(){font=key;document.documentElement.style.setProperty('--hhx-user-font','"'+font+'",sans-serif');try{localStorage.setItem('hh_user_font',font)}catch(e){}grid.parentElement.parentElement.parentElement.querySelectorAll('.hhx-font-choice').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})});grid.appendChild(b)});
+  box.appendChild(grid);wrap.appendChild(box);
+ }
+ group(en()?'Arabic fonts':'الخطوط العربية',arabicFonts,true);
+ group(en()?'English fonts':'الخطوط الإنجليزية',englishFonts.map(function(x){return [x,x]}),false);
+ menu.appendChild(wrap);
+ document.documentElement.style.setProperty('--hhx-user-font','"'+font+'",sans-serif');
+};
+function syncUi(){
+ var english=en();
+ var set=function(sel,text){document.querySelectorAll(sel).forEach(function(el){el.textContent=text})};
+ set('#hhx-review-open',english?'✦  View reviews':'✦  عرض الآراء');
+ var rm=document.querySelector('#hhxReviewsModal');
+ if(rm){var title=rm.querySelector('.hhx-modal-title'),sub=rm.querySelector('.hhx-modal-subtitle'),close=rm.querySelector('.hhx-modal-close');if(title)title.textContent=english?'Client reviews':'آراء العملاء';if(sub)sub.textContent=english?'Approved reviews from visitors':'آراء العملاء المعتمدة — كل الآراء في مكان واحد';if(close)close.setAttribute('aria-label',english?'Close':'إغلاق')}
+ set('.hhx-project-description-trigger',english?'View description':'توضيح الوصف');
+ var overlay=document.getElementById('hhxProjectDescriptionOverlay');
+ if(overlay){var k=overlay.querySelector('.hhx-project-description-kicker'),c=overlay.querySelector('.hhx-project-description-close');if(k)k.textContent=english?'PROJECT DETAILS':'تفاصيل المشروع';if(c)c.setAttribute('aria-label',english?'Close description':'إغلاق الوصف');var p=overlay.querySelector('.hhx-project-description-text');if(p)p.setAttribute('dir','auto')}
+ var palette=document.querySelector('#hhxMenu .hhx-palette-head');
+ if(palette){var b=palette.querySelector('b'),sm=palette.querySelector('small'),cl=palette.querySelector('button');if(b)b.textContent=english?'Choose your site colors':'اختار ألوان موقعك';if(sm)sm.textContent=english?'Choose a color for the whole site':'اختار اللون اللي يغيّر هوية الموقع بالكامل';if(cl)cl.setAttribute('aria-label',english?'Close':'إغلاق')}
+ var theme=document.getElementById('hhxTheme'),settings=document.getElementById('hhxSettings'),tour=document.getElementById('hhxTour');
+ [[theme,english?'Site colors':'ألوان الموقع'],[settings,english?'Settings':'الإعدادات'],[tour,english?'Guided tour':'الجولة التعريفية']].forEach(function(pair){if(pair[0]){var span=pair[0].querySelector('span');if(span)span.textContent=pair[1];pair[0].setAttribute('aria-label',pair[1]);pair[0].setAttribute('title',pair[1])}});
+ if(window.hhxBuildTypeControls){var menu=document.getElementById('hhxSettingsMenu');if(menu&&menu.querySelector('.hhx-type-controls-v5'))window.hhxBuildTypeControls()}
+}
+window.addEventListener('hhx:languagechange',function(){syncUi();scheduleTranslate()});
+function scheduleTranslate(){if(!window.hhxTranslateTo)return;clearTimeout(pending);pending=setTimeout(function(){window.hhxTranslateTo(en()?'en':'ar')},900)}
+var observer=new MutationObserver(function(){if(document.documentElement.lang==='en')scheduleTranslate();if(document.getElementById('hhxSettingsMenu')&&!document.getElementById('hhxSettingsMenu').querySelector('.hhx-type-controls-v5')&&window.hhxBuildTypeControls){var m=document.getElementById('hhxSettingsMenu');if(m.children.length)window.hhxBuildTypeControls()}});
+observer.observe(document.body,{subtree:true,childList:true});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncUi,{once:true});else syncUi();
 })();
 </script>
 </body>
