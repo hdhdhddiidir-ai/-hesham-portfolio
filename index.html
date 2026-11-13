@@ -747,46 +747,7 @@ html body #home{isolation:isolate}
 </head>
 <body class="hh-welcome-on">
 
-<div id="hhPullRefresh" aria-hidden="true"><div class="hh-pull-core"><span class="hh-pull-ring"></span><span class="hh-pull-ring two"></span><span class="hh-pull-h">H</span></div></div>
-<script id="hh-pull-refresh-script">
-(function(){
- var indicator=document.getElementById('hhPullRefresh');if(!indicator)return;
- var startY=0,drag=0,active=false,refreshing=false;
- var threshold=92,maxPull=132;
- function paint(value){
-  drag=Math.max(0,Math.min(maxPull,value));
-  indicator.style.transform='translate(-50%,'+(-76+drag*.72)+'px)';
-  indicator.classList.toggle('hh-pull-visible',drag>4);
-  indicator.classList.toggle('hh-pull-ready',drag>=threshold);
- }
- window.addEventListener('touchstart',function(e){
-  if(refreshing||!e.touches||e.touches.length!==1||window.scrollY>0)return;
-  startY=e.touches[0].clientY;active=startY<100;
- },{passive:true});
- window.addEventListener('touchmove',function(e){
-  if(!active||refreshing||!e.touches||e.touches.length!==1)return;
-  var delta=e.touches[0].clientY-startY;
-  if(delta<=0){active=false;paint(0);return}
-  if(window.scrollY>0){active=false;paint(0);return}
-  if(delta>8){e.preventDefault();paint(delta*.72)}
- },{passive:false});
- function finish(){
-  if(!active)return;
-  active=false;
-  if(drag>=threshold&&!refreshing){
-   refreshing=true;indicator.classList.add('hh-pull-loading');
-   indicator.classList.add('hh-pull-visible');
-   indicator.style.transform='translate(-50%,18px)';
-   setTimeout(function(){window.location.reload()},180);
-  }else{
-   indicator.classList.remove('hh-pull-ready');
-   paint(0);
-  }
- }
- window.addEventListener('touchend',finish,{passive:true});
- window.addEventListener('touchcancel',function(){active=false;paint(0)},{passive:true});
-})();
-</script>
+
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
 <script>(function(){var l=window.__hhMaintenanceLang||'ar';document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-maint-ar]').forEach(function(e){e.textContent=e.getAttribute('data-maint-'+l)||e.getAttribute('data-maint-ar')})})();</script>
 <canvas id="hhSky" aria-hidden="true"></canvas>
