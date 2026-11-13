@@ -739,7 +739,8 @@ html body #home{isolation:isolate}
 .top-logo{color:var(--hhx-header-accent)!important;text-shadow:0 0 18px color-mix(in srgb,var(--hhx-header-accent) 32%,transparent)!important}
 .top-logo span{color:#eee!important}
 .top-nav-inner .top-logo:not(span){transition:color .25s,filter .25s}
-</style></head>
+</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+</head>
 <body class="hh-welcome-on">
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
 <script>(function(){var l=window.__hhMaintenanceLang||'ar';document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-maint-ar]').forEach(function(e){e.textContent=e.getAttribute('data-maint-'+l)||e.getAttribute('data-maint-ar')})})();</script>
@@ -4146,5 +4147,129 @@ html.hh-reduce-motion body.page-mode .page-section.hh-section-entering{animation
 }
 </style>
 
+
+<style id="hhx-global-type-polish">
+/* Site-wide typography and restrained premium finish; preserves the existing star-field identity and navigation. */
+:root{
+  --hhx-midnight:#090D18;
+  --hhx-deep-blue:#202A3C;
+  --hhx-silver:#D8DCE5;
+  --hhx-champagne:#D6AD63;
+  --hhx-heading:"Alexandria","Cairo",sans-serif;
+  --hhx-arabic:"IBM Plex Sans Arabic","Cairo",sans-serif;
+  --hhx-latin:"Space Grotesk","Montserrat",sans-serif;
+}
+html body{
+  font-family:var(--hhx-arabic)!important;
+  background-color:var(--hhx-midnight);
+  color:var(--hhx-silver);
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+html body :is(h1,h2,h3,h4,.hero h1,.home-modern-name,.home-name,.about-title){
+  font-family:var(--hhx-heading)!important;
+  font-weight:700;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+html body :is(button,.btn,input,textarea,select,.service-item p,.work-intro,.services-intro,.about-copy>p,.review-card p,.contact p){
+  font-family:var(--hhx-arabic)!important;
+}
+html body :is(.kicker,.eyebrow,.about-eyebrow,.work-meta small,.service-item>b,.side-links .num,.home-modern-sub,.home-sub,.top-logo,.brand b,.brand small,.about-stats b,.process b){
+  font-family:var(--hhx-latin)!important;
+  letter-spacing:.075em;
+}
+html body :is(.section h2,.about-title,.hero h1,.home-modern-name,.home-name){
+  line-height:1.25;
+}
+html body :is(.section p,.about-copy>p,.services-intro,.work-intro,.review-card p){
+  color:color-mix(in srgb,var(--hhx-silver) 78%,#778197)!important;
+  line-height:1.95;
+}
+html body :is(.service-item,.work-card,.review-card,.contact-card,.about-stats>div,.case-study-item){
+  border-color:color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 17%,#ffffff10);
+  transition:transform .32s cubic-bezier(.2,.75,.2,1),border-color .32s ease,box-shadow .32s ease,background-color .32s ease;
+}
+html body :is(.service-item,.work-card,.review-card,.contact-card):hover{
+  border-color:color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 52%,transparent);
+  box-shadow:0 16px 42px #0006,0 0 26px color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 8%,transparent);
+}
+html body :is(.service-item,.contact-card):hover{transform:translateY(-4px)}
+html body :is(.btn,.home-whatsapp,.case-study-wa,.portfolio-filter,.filter){
+  transition:transform .28s ease,box-shadow .28s ease,background-color .28s ease,border-color .28s ease,color .28s ease;
+}
+html body :is(.btn,.home-whatsapp,.case-study-wa):hover{
+  box-shadow:0 9px 28px color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 18%,transparent);
+}
+html body :is(.about-tag,.portfolio-filter,.filter):focus-visible,
+html body :is(a,button,input,textarea,select):focus-visible{
+  outline:2px solid color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 72%,white);
+  outline-offset:3px;
+}
+html body .about-title em,
+html body :is(.kicker,.eyebrow,.service-icon,.work-meta small){
+  color:var(--hho-acc,var(--hhx-champagne));
+}
+html body .hbox{
+  background-color:var(--hhx-midnight);
+  box-shadow:inset 0 0 70px #202A3C55,0 18px 60px #0005;
+}
+html body .hbox:before,html body .hbox:after{
+  border-color:color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 24%,transparent);
+}
+html body .home-page{
+  background-color:var(--hhx-midnight);
+}
+html body .home-page:before{
+  border-color:color-mix(in srgb,var(--hho-acc,var(--hhx-champagne)) 16%,transparent);
+}
+html body .section{
+  isolation:isolate;
+}
+html body .section .wrap>.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+html body .section .wrap>.kicker:after{
+  content:"";
+  width:34px;
+  height:1px;
+  background:linear-gradient(90deg,var(--hho-acc,var(--hhx-champagne)),transparent);
+  opacity:.8;
+}
+html body .service-item,.html body .review-form,.html body .contact-card{
+  backdrop-filter:blur(8px);
+}
+@keyframes hhxSoftRise{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+  html body .service-item:hover .service-icon{transform:rotate(-5deg) scale(1.06)}
+  html body .service-icon{transition:transform .3s ease}
+  html body .work-card:hover .work-meta h3{color:var(--hho-acc,var(--hhx-champagne))}
+}
+@media(max-width:760px){
+  html body :is(.section h2,.about-title){letter-spacing:-.025em}
+  html body .section{padding-bottom:76px}
+}
+html.hh-reduce-motion *,
+html.hh-reduce-motion *:before,
+html.hh-reduce-motion *:after{
+  animation-duration:.01ms!important;
+  animation-iteration-count:1!important;
+  scroll-behavior:auto!important;
+  transition-duration:.01ms!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html body *,html body *:before,html body *:after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
 </body>
 </html>
