@@ -1894,6 +1894,7 @@ function applyTexts() {
   document.getElementById('hhtX').setAttribute('aria-label', T('tDone'));
   fillServices(); syncServicePicker(); buildMenu(); buildSettingsMenu(); if (tourOn) renderStep();
 }
+window.addEventListener('hhx:languagechange', function(){ applyTexts(); });
 
 var form = document.getElementById('hhoForm');
 var statusEl = document.getElementById('hhoStatus');
@@ -4430,6 +4431,46 @@ html body #topNav .top-links{gap:clamp(2px,.45vw,8px)!important}
   });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+<style id="hhx-nav-glow-and-translation-fix">
+html body #topNav.top-nav:before{
+ content:""!important;position:absolute!important;inset:0!important;z-index:1!important;
+ border:1px solid transparent!important;border-radius:inherit!important;padding:0!important;
+ background:linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--hho-acc,#f5d76e) 18%,transparent) 35%,#fff4c8 49%,var(--hho-acc,#f5d76e) 56%,transparent 75%)!important;
+ background-size:240% 100%!important;background-position:200% 0!important;
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+ -webkit-mask-composite:xor!important;mask-composite:exclude!important;
+ animation:hhxNavSweep 4.8s ease-in-out infinite!important;pointer-events:none!important;opacity:1!important
+}
+@keyframes hhxNavSweep{0%{background-position:200% 0}100%{background-position:-40% 0}}
+html body #topNav.top-nav{animation:hhxNavPulse 3.6s ease-in-out infinite!important}
+@keyframes hhxNavPulse{0%,100%{box-shadow:0 0 16px color-mix(in srgb,var(--hho-acc,#f5d76e) 23%,transparent),0 0 34px color-mix(in srgb,var(--hho-acc,#f5d76e) 10%,transparent),inset 0 -1px 16px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)!important}50%{box-shadow:0 0 25px color-mix(in srgb,var(--hho-acc,#f5d76e) 48%,transparent),0 0 55px color-mix(in srgb,var(--hho-acc,#f5d76e) 20%,transparent),inset 0 -1px 22px color-mix(in srgb,var(--hho-acc,#f5d76e) 22%,transparent)!important}}
+@media(prefers-reduced-motion:reduce){html body #topNav.top-nav,html body #topNav.top-nav:before{animation:none!important}}
+</style>
+<script id="hhx-language-sync-fix">
+(function(){
+ function connect(){
+  if(window.__hhxLangSyncReady)return;window.__hhxLangSyncReady=true;
+  if(typeof window.HH_setLang==='function'){
+   var original=window.HH_setLang;
+   window.HH_setLang=function(language){
+    var result=original.call(this,language);
+    window.dispatchEvent(new CustomEvent('hhx:languagechange',{detail:{language:language}}));
+    return result;
+   };
+  }
+  window.addEventListener('hhx:languagechange',function(){
+   window.setTimeout(function(){
+    var tour=document.getElementById('hhxTour'),settings=document.getElementById('hhxSettings');
+    if(window.HH_t){
+     if(tour){tour.setAttribute('aria-label',window.HH_t('tourAria'));var t=tour.querySelector('span');if(t)t.textContent=window.HH_getLang()==='en'?'Guided tour':'الجولة التعريفية';}
+     if(settings){settings.setAttribute('aria-label',window.HH_t('settingsAria'));var st=settings.querySelector('span');if(st)st.textContent=window.HH_getLang()==='en'?'Settings':'الإعدادات';}
+    }
+   },0);
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',connect,{once:true});else connect();
 })();
 </script>
 </body>
