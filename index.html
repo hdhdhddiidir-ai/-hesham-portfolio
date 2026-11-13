@@ -4359,7 +4359,7 @@ html.hhx-font-small{--hhx-user-size:14px}html.hhx-font-medium{--hhx-user-size:16
   var fonts={ar:[['IBM Plex Sans Arabic','IBM Plex Sans Arabic'],['Alexandria','Alexandria'],['Tajawal','Tajawal'],['Noto Sans Arabic','Noto Sans Arabic'],['Readex Pro','Readex Pro'],['Changa','Changa'],['Cairo','Cairo'],['Almarai','Almarai'],['Lalezar','Lalezar'],['El Messiri','El Messiri']],en:[['Montserrat','Montserrat'],['Poppins','Poppins'],['Inter','Inter'],['Roboto','Roboto'],['Lato','Lato'],['Nunito Sans','Nunito Sans'],['Playfair Display','Playfair Display'],['Oswald','Oswald']]};
   var font='Cairo',sizeValue=16,hasCustomFont=false,hasCustomSize=false;
   try{var savedFont=localStorage.getItem('hh_user_font'),savedSize=localStorage.getItem('hh_user_font_size');if(savedFont){font=savedFont;hasCustomFont=true;}if(savedSize){sizeValue=Number(savedSize)||16;hasCustomSize=true;}}catch(e){}
-  function applyFont(){root.style.setProperty('--hhx-user-font','"'+font+'",sans-serif');root.style.setProperty('--hhx-user-size',sizeValue+'px');root.classList.remove('hhx-font-small','hhx-font-medium','hhx-font-large','hhx-font-xlarge');root.classList.add(sizeValue<=14?'hhx-font-small':sizeValue<=16?'hhx-font-medium':sizeValue<=18?'hhx-font-large':'hhx-font-xlarge');}
+  function applyFont(){root.style.setProperty('--hhx-user-font','"'+font+'",sans-serif');root.style.setProperty('--hhx-user-size',sizeValue+'px');root.classList.toggle('hhx-font-custom',hasCustomFont);root.classList.remove('hhx-font-small','hhx-font-medium','hhx-font-large','hhx-font-xlarge');if(hasCustomSize)root.classList.add(sizeValue<=14?'hhx-font-small':sizeValue<=16?'hhx-font-medium':sizeValue<=18?'hhx-font-large':'hhx-font-xlarge');}
   function title(t){var el=document.createElement('b');el.className='hhx-type-title';el.textContent=t;menu.appendChild(el)}
   title('حجم الخطوط');
   var row=document.createElement('div');row.className='hhx-setting hhx-type-row';
@@ -4463,7 +4463,7 @@ html body #topNav .top-links{gap:clamp(2px,.45vw,8px)!important}
    var range=old.querySelector('input[type=range]');range.min='12';range.max='24';range.step='1';range.setAttribute('aria-label','حجم الخط');
    row.append(minus,number,plus,range);old.replaceWith(row);
    var val=Number(range.value)||16;
-   function update(v){val=Math.max(12,Math.min(24,v));range.value=String(val);num.textContent=String(val);document.documentElement.style.setProperty('--hhx-user-size',val+'px');try{localStorage.setItem('hh_user_font_size',String(val))}catch(e){}}
+   function update(v){val=Math.max(12,Math.min(24,v));hasCustomSize=true;range.value=String(val);num.textContent=String(val);document.documentElement.style.setProperty('--hhx-user-size',val+'px');try{localStorage.setItem('hh_user_font_size',String(val))}catch(e){}}
    minus.addEventListener('click',function(){update(val-1)});plus.addEventListener('click',function(){update(val+1)});range.addEventListener('input',function(){update(Number(range.value))});update(val);
   }
   var arabicNames={'IBM Plex Sans Arabic':'آي بي إم بليكس','Alexandria':'الإسكندرية','Tajawal':'تجوال','Noto Sans Arabic':'نوتو عربي','Readex Pro':'ريديكس برو','Changa':'تشانجا','Cairo':'القاهرة','Almarai':'المراعي','Lalezar':'ليلزار','El Messiri':'المسيري'};
