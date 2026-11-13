@@ -1309,6 +1309,7 @@ function renderWorks(force) {
   workNodes.forEach((rec, id) => { if (!seen.has(id)) { rec.el.remove(); workNodes.delete(id); } });
   renderedWorksSig = lastWorksSig;
   applyPortfolioFilters();
+  window.dispatchEvent(new Event('hhx:content-rendered'));
 }
 
 async function loadWorks() {
@@ -1360,6 +1361,7 @@ function renderReviews(force) {
   } else reviewsBox.replaceChildren(...lastReviews.map(buildReviewCard));
   reviewsBox.scrollTop = top;
   renderedReviewsSig = lastReviewsSig;
+  window.dispatchEvent(new Event('hhx:content-rendered'));
 }
 
 async function loadReviews() {
@@ -4566,15 +4568,10 @@ function syncUi(){
 window.addEventListener('hhx:languagechange',function(){syncUi();scheduleTranslate()});
 window.addEventListener('hhx:content-rendered',scheduleTranslate);
 function scheduleTranslate(){if(!window.hhxTranslateTo)return;clearTimeout(pending);pending=setTimeout(function(){window.hhxTranslateTo(en()?'en':'ar')},900)}
-var observer=new MutationObserver(function(records){
- if(document.documentElement.lang==='en'){
-  var dynamic=records.some(function(r){var t=r.target;return !!(t.closest&&t.closest('#portfolioGrid,#reviewsList,#hhxProjectDescriptionOverlay'))});
-  if(dynamic)scheduleTranslate();
- }
- if(document.getElementById('hhxSettingsMenu')&&!document.getElementById('hhxSettingsMenu').querySelector('.hhx-type-controls-v5')&&window.hhxBuildTypeControls){var m=document.getElementById('hhxSettingsMenu');if(m.children.length)window.hhxBuildTypeControls()}
+var baseObserver=new MutationObserver(function(){
+ var m=document.getElementById('hhxSettingsMenu');
+ if(m&&!m.querySelector('.hhx-type-controls-v5')&&m.children.length)window.hhxBuildTypeControls();
 });
-['portfolioGrid','reviewsList','hhxProjectDescriptionOverlay'].forEach(function(id){var el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})});
-var baseObserver=new MutationObserver(function(){var m=document.getElementById('hhxSettingsMenu');if(m&&!m.querySelector('.hhx-type-controls-v5')&&m.children.length)window.hhxBuildTypeControls()});
 baseObserver.observe(document.body,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncUi,{once:true});else syncUi();
 })();
