@@ -2168,13 +2168,17 @@ function buildSettingsMenu() {
     try {
       localStorage.setItem('hh_visual_settings',JSON.stringify(visualPrefs));
       localStorage.setItem('hh_theme','gold');
-      localStorage.setItem('hh_user_font','Cairo');
-      localStorage.setItem('hh_user_font_size','16');
+      /* Remove personal typography overrides so the site's authored fonts and sizes return. */
+      localStorage.removeItem('hh_user_font');
+      localStorage.removeItem('hh_user_font_size');
       localStorage.removeItem('hh_custom_color');
     } catch(e) {}
     closeSettingsMenu();
-    /* Reload reapplies the original gold CSS snapshot and rebuilds all controls
-       from the restored defaults, including typography and motion preferences. */
+    /* Restore the original gold palette, authored typography, original sizing,
+       stars, glow and motion; then rebuild the page from its clean defaults. */
+    document.documentElement.classList.remove('hhx-font-custom','hhx-font-small','hhx-font-medium','hhx-font-large','hhx-font-xlarge');
+    document.documentElement.style.removeProperty('--hhx-user-font');
+    document.documentElement.style.removeProperty('--hhx-user-size');
     applyTheme('gold',true);
     applyVisualPrefs(true);
     window.location.reload();
@@ -4353,8 +4357,8 @@ html.hhx-font-small{--hhx-user-size:14px}html.hhx-font-medium{--hhx-user-size:16
   var menu=document.getElementById('hhxSettingsMenu');if(!menu||menu.dataset.typeControlsReady==='v3')return;menu.dataset.typeControlsReady='v3';
   var root=document.documentElement;
   var fonts={ar:[['IBM Plex Sans Arabic','IBM Plex Sans Arabic'],['Alexandria','Alexandria'],['Tajawal','Tajawal'],['Noto Sans Arabic','Noto Sans Arabic'],['Readex Pro','Readex Pro'],['Changa','Changa'],['Cairo','Cairo'],['Almarai','Almarai'],['Lalezar','Lalezar'],['El Messiri','El Messiri']],en:[['Montserrat','Montserrat'],['Poppins','Poppins'],['Inter','Inter'],['Roboto','Roboto'],['Lato','Lato'],['Nunito Sans','Nunito Sans'],['Playfair Display','Playfair Display'],['Oswald','Oswald']]};
-  var font='IBM Plex Sans Arabic',sizeValue=16;
-  try{font=localStorage.getItem('hh_user_font')||font;sizeValue=Number(localStorage.getItem('hh_user_font_size'))||16}catch(e){}
+  var font='Cairo',sizeValue=16,hasCustomFont=false,hasCustomSize=false;
+  try{var savedFont=localStorage.getItem('hh_user_font'),savedSize=localStorage.getItem('hh_user_font_size');if(savedFont){font=savedFont;hasCustomFont=true;}if(savedSize){sizeValue=Number(savedSize)||16;hasCustomSize=true;}}catch(e){}
   function applyFont(){root.style.setProperty('--hhx-user-font','"'+font+'",sans-serif');root.style.setProperty('--hhx-user-size',sizeValue+'px');root.classList.remove('hhx-font-small','hhx-font-medium','hhx-font-large','hhx-font-xlarge');root.classList.add(sizeValue<=14?'hhx-font-small':sizeValue<=16?'hhx-font-medium':sizeValue<=18?'hhx-font-large':'hhx-font-xlarge');}
   function title(t){var el=document.createElement('b');el.className='hhx-type-title';el.textContent=t;menu.appendChild(el)}
   title('حجم الخطوط');
@@ -4364,14 +4368,14 @@ html.hhx-font-small{--hhx-user-size:14px}html.hhx-font-medium{--hhx-user-size:16
   top.append(label,value,bigger);
   var range=document.createElement('input');range.type='range';range.min='12';range.max='24';range.step='1';range.value=String(Math.max(12,Math.min(24,sizeValue)));range.setAttribute('aria-label','حجم الخط');
   function paintRange(){value.textContent=sizeValue+'px';range.style.background='linear-gradient(90deg,var(--hho-acc,#f5d76e) '+((sizeValue-12)/12*100)+'%,#555 '+((sizeValue-12)/12*100)+'%)'}
-  range.addEventListener('input',function(){sizeValue=Number(range.value);applyFont();paintRange();try{localStorage.setItem('hh_user_font_size',String(sizeValue))}catch(e){}});
+  range.addEventListener('input',function(){sizeValue=Number(range.value);hasCustomSize=true;applyFont();paintRange();try{localStorage.setItem('hh_user_font_size',String(sizeValue))}catch(e){}});
   row.append(top,range);menu.appendChild(row);paintRange();
   title('شكل الخطوط');
   var groups=document.createElement('div');groups.className='hhx-font-groups';
   [['الخطوط العربية',fonts.ar],['English fonts',fonts.en]].forEach(function(group){
    var section=document.createElement('section');var heading=document.createElement('div');heading.className='hhx-font-group-title';heading.textContent=group[0];
    var grid=document.createElement('div');grid.className='hhx-font-grid';
-   group[1].forEach(function(item){var btn=document.createElement('button');btn.type='button';btn.className='hhx-font-choice';btn.textContent=item[1];btn.style.fontFamily='"'+item[0]+'",sans-serif';btn.setAttribute('aria-pressed',font===item[0]?'true':'false');btn.addEventListener('click',function(){font=item[0];applyFont();groups.querySelectorAll('.hhx-font-choice').forEach(function(b){b.setAttribute('aria-pressed',b===btn?'true':'false')});try{localStorage.setItem('hh_user_font',font)}catch(e){}});grid.appendChild(btn)});
+   group[1].forEach(function(item){var btn=document.createElement('button');btn.type='button';btn.className='hhx-font-choice';btn.textContent=item[1];btn.style.fontFamily='"'+item[0]+'",sans-serif';btn.setAttribute('aria-pressed',font===item[0]?'true':'false');btn.addEventListener('click',function(){font=item[0];hasCustomFont=true;applyFont();groups.querySelectorAll('.hhx-font-choice').forEach(function(b){b.setAttribute('aria-pressed',b===btn?'true':'false')});try{localStorage.setItem('hh_user_font',font)}catch(e){}});grid.appendChild(btn)});
    section.append(heading,grid);groups.appendChild(section);
   });
   menu.appendChild(groups);applyFont();
@@ -4536,8 +4540,12 @@ html body #topNav.top-nav:before{inset:0!important;border-radius:inherit!importa
 .hhx-type-controls-v5 .hhx-font-choice{min-width:0;min-height:42px;padding:8px 6px;border:1px solid #ffffff20;border-radius:11px;background:#ffffff07;color:var(--hho-fg,#eee);font-size:12px;font-weight:700}
 .hhx-type-controls-v5 .hhx-font-choice[aria-pressed=true]{border-color:var(--hho-acc,#f5d76e);color:var(--hho-acc,#f5d76e);background:color-mix(in srgb,var(--hho-acc,#f5d76e) 14%,#111);box-shadow:0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 17%,transparent)}
 
+
+/* Original-appearance restore control: deliberately anchored as the final settings item. */
+.hhx-restore-original{order:999!important;justify-content:center!important;width:100%!important;min-height:43px!important;margin-top:8px!important;padding:10px 12px!important;border:1px solid color-mix(in srgb,var(--hho-acc,#f5d76e) 62%,transparent)!important;border-radius:12px!important;background:linear-gradient(135deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 17%,transparent),#ffffff08)!important;color:var(--hho-acc,#f5d76e)!important;font-weight:800!important;text-align:center!important;box-shadow:0 0 16px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)!important}
+.hhx-restore-original:hover,.hhx-restore-original:focus-visible{background:color-mix(in srgb,var(--hho-acc,#f5d76e) 22%,transparent)!important;outline:2px solid color-mix(in srgb,var(--hho-acc,#f5d76e) 55%,transparent)!important;outline-offset:2px!important}
 /* Final typography application: change the family everywhere without touching sizes. */
-html body :is(*):not(svg):not(svg *){font-family:var(--hhx-user-font,Cairo,sans-serif)!important}
+html.hhx-font-custom body :is(*):not(svg):not(svg *){font-family:var(--hhx-user-font,Cairo,sans-serif)!important}
 html body .hhx-font-choice{font-family:inherit!important}
 html body #topNav.top-nav{overflow:visible!important;isolation:isolate!important}
 html body #topNav .top-nav-inner{position:relative!important;z-index:2!important}
