@@ -2157,10 +2157,29 @@ function buildSettingsMenu() {
     var span=document.createElement('span'); span.textContent=T(item[1]); label.append(input,span); settingsMenu.appendChild(label);
   });
   var note=document.createElement('div'); note.className='hhx-settings-note'; note.textContent=T('settingsNote'); settingsMenu.appendChild(note);
-  var reset=document.createElement('button'); reset.type='button'; reset.className='hhx-opt'; reset.textContent=T('resetVisuals');
-  reset.addEventListener('click',function(){Object.keys(visualPrefs).forEach(function(k){visualPrefs[k]=false;});applyVisualPrefs(true);closeSettingsMenu();applyTheme('gold',true);});
-  settingsMenu.appendChild(reset);
   if (window.hhxBuildTypeControls) window.hhxBuildTypeControls();
+  /* Full appearance reset is deliberately the final item in this menu. */
+  var reset=document.createElement('button');
+  reset.type='button'; reset.className='hhx-opt hhx-restore-original';
+  reset.textContent='استعادة الشكل الأصلي للموقع';
+  reset.setAttribute('aria-label','استعادة الشكل الأصلي للموقع');
+  reset.addEventListener('click',function(){
+    Object.keys(visualPrefs).forEach(function(k){visualPrefs[k]=false;});
+    try {
+      localStorage.setItem('hh_visual_settings',JSON.stringify(visualPrefs));
+      localStorage.setItem('hh_theme','gold');
+      localStorage.setItem('hh_user_font','Cairo');
+      localStorage.setItem('hh_user_font_size','16');
+      localStorage.removeItem('hh_custom_color');
+    } catch(e) {}
+    closeSettingsMenu();
+    /* Reload reapplies the original gold CSS snapshot and rebuilds all controls
+       from the restored defaults, including typography and motion preferences. */
+    applyTheme('gold',true);
+    applyVisualPrefs(true);
+    window.location.reload();
+  });
+  settingsMenu.appendChild(reset);
 }
 function closeSettingsMenu(){settingsMenu.classList.remove('open');settingsBtn.setAttribute('aria-expanded','false');}
 function buildMenu() {
@@ -4588,5 +4607,18 @@ baseObserver.observe(document.body,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncUi,{once:true});else syncUi();
 })();
 </script>
+
+<style id="hhx-restore-original-control-style">
+#hhxSettingsMenu .hhx-restore-original{
+  order:999!important;width:100%!important;min-height:46px!important;margin-top:12px!important;
+  justify-content:center!important;text-align:center!important;white-space:normal!important;
+  border:1px solid color-mix(in srgb,var(--hho-acc,#f5d76e) 62%,transparent)!important;
+  border-radius:12px!important;color:var(--hho-acc,#f5d76e)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--hho-acc,#f5d76e) 13%,transparent),#ffffff05)!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--hho-acc,#f5d76e) 12%,transparent)!important;
+  font-weight:800!important
+}
+#hhxSettingsMenu .hhx-restore-original:active{transform:scale(.985)}
+</style>
 </body>
 </html>
