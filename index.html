@@ -2460,6 +2460,7 @@ function init(){
    var title=card.querySelector('.work-meta h3')?.textContent?.trim()||'وصف المشروع';
    var desc=card.querySelector('.live-description')?.textContent?.trim()||'لا يوجد وصف إضافي لهذا المشروع حاليًا.';
    heading.textContent=title;body.textContent=desc;lastTrigger=trigger;
+   window.dispatchEvent(new Event('hhx:content-rendered'));
    overlay.classList.add('is-open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';close.focus();
  }
  function addButton(card){
