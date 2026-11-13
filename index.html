@@ -740,8 +740,75 @@ html body #home{isolation:isolate}
 .top-logo span{color:#eee!important}
 .top-nav-inner .top-logo:not(span){transition:color .25s,filter .25s}
 </style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<style id="hh-refresh-loader-style">
+/* HESHAM HANE refresh identity */
+#hhRefreshLoader{position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#30240b 0%,#100e09 34%,#050505 76%);opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}
+#hhRefreshLoader.hh-refresh-done{opacity:0;visibility:hidden;pointer-events:none}
+#hhRefreshLoader:before{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 22%,#fff 50%,transparent 100%),radial-gradient(2px 2px at 79% 18%,#f5d76e 50%,transparent 100%),radial-gradient(1px 1px at 68% 76%,#fff 50%,transparent 100%),radial-gradient(1px 1px at 25% 82%,#f5d76e 50%,transparent 100%);opacity:.62}
+.hh-refresh-core{position:relative;width:min(66vw,270px);aspect-ratio:1;display:grid;place-items:center;border:1px solid #f5d76e25;border-radius:32px;background:linear-gradient(145deg,#ffffff0b,#f5d76e05);box-shadow:inset 0 0 65px #f5d76e0b,0 25px 90px #0009;backdrop-filter:blur(9px)}
+.hh-refresh-letter{position:relative;z-index:2;font:900 clamp(130px,26vw,205px)/1 Montserrat,Arial,sans-serif;letter-spacing:-.1em;padding-right:.1em;transform:skew(-12deg);color:#f5d76e;background:linear-gradient(110deg,#9c711f 5%,#fff0a0 28%,#f5d76e 48%,#fff8ce 62%,#b88727 82%);background-size:220% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 13px #f5d76e88) drop-shadow(0 0 42px #f5d76e42);animation:hhRefreshGold 2.8s ease-in-out infinite}
+.hh-refresh-orbit{position:absolute;inset:50%;width:132%;height:43%;border:1px solid #e9c45a9c;border-radius:50%;transform:translate(-50%,-50%) rotate(-27deg);box-shadow:0 0 12px #f5d76e25,inset 0 0 9px #f5d76e18;animation:hhRefreshOrbit 4.8s linear infinite}
+.hh-refresh-orbit.orbit-two{width:136%;height:47%;transform:translate(-50%,-50%) rotate(55deg);border-color:#fff0a05c;animation-duration:6.2s;animation-direction:reverse}
+.hh-refresh-orbit:after{content:"";position:absolute;top:7%;left:12%;width:7px;height:7px;border-radius:50%;background:#fff0a0;box-shadow:0 0 9px 3px #f5d76eaa}
+.hh-refresh-caption{position:absolute;top:calc(100% + 34px);left:0;right:0;text-align:center;color:#d6bd79;font:700 10px Montserrat,sans-serif;letter-spacing:.34em;white-space:nowrap;text-shadow:0 0 14px #f5d76e66}
+@keyframes hhRefreshOrbit{to{rotate:333deg}}
+@keyframes hhRefreshGold{0%,100%{background-position:100% 50%;transform:skew(-12deg) scale(.98)}50%{background-position:0 50%;transform:skew(-12deg) scale(1.025)}}
+@media(max-width:600px){.hh-refresh-core{width:190px;border-radius:26px}.hh-refresh-caption{font-size:9px;letter-spacing:.25em}}
+/* Restore readable Arabic scale and the original Arabic typeface; keep the existing layout. */
+html body .about-title{font-family:Cairo,sans-serif!important;font-size:clamp(42px,5.1vw,66px)!important;line-height:1.28!important;letter-spacing:0!important}
+html body .about-copy>p{font-family:Cairo,sans-serif!important;font-size:clamp(16px,1.35vw,18px)!important;line-height:2.05!important}
+html body .about-stats span{font-size:clamp(16px,1.25vw,19px)!important}
+html body .about-stats small{font-size:13px!important}
+html body .about-quote{font-size:clamp(16px,1.35vw,19px)!important}
+html body .about-tag{font-size:12px!important}
+html body .section h2{font-family:Cairo,sans-serif!important;letter-spacing:0!important;line-height:1.25!important}
+html body .section p,html body .work-intro,html body .services-intro{font-family:Cairo,sans-serif!important}
+@media(max-width:760px){
+ html body .about-title{font-size:clamp(35px,7vw,48px)!important;line-height:1.35!important}
+ html body .about-copy>p{font-size:16px!important;line-height:2!important}
+ html body .about-stats span{font-size:16px!important}
+ html body .about-quote{font-size:16px!important}
+}
+/* A restrained gold light sweep through headings and primary actions. */
+html body .about-title,html body .section h2,html body .home-modern-name{
+ background-image:linear-gradient(105deg,currentColor 0%,currentColor 38%,#fff3b2 48%,var(--hho-acc,#f5d76e) 53%,currentColor 66%,currentColor 100%);
+ background-size:240% 100%;background-position:100% 50%;
+ background-clip:text;-webkit-background-clip:text;
+ animation:hhTextShimmer 5.8s ease-in-out infinite;
+}
+html body .about-title em{color:var(--hho-acc,#f5d76e)!important}
+html body .btn.primary{position:relative;isolation:isolate;overflow:hidden}
+html body .btn.primary:after{content:"";position:absolute;inset:-40% auto -40% -55%;width:38%;transform:skewX(-22deg);background:linear-gradient(90deg,transparent,#fff9d6a8,transparent);filter:blur(2px);animation:hhButtonShimmer 4.6s ease-in-out infinite;pointer-events:none}
+@keyframes hhTextShimmer{0%,18%{background-position:100% 50%}72%,100%{background-position:0 50%}}
+@keyframes hhButtonShimmer{0%,38%{left:-55%;opacity:0}48%{opacity:.8}72%,100%{left:125%;opacity:0}}
+html.hh-reduce-motion #hhRefreshLoader .hh-refresh-letter,html.hh-reduce-motion #hhRefreshLoader .hh-refresh-orbit,html.hh-reduce-motion .about-title,html.hh-reduce-motion .section h2,html.hh-reduce-motion .home-modern-name,html.hh-reduce-motion .btn.primary:after{animation:none!important}
+@media(prefers-reduced-motion:reduce){#hhRefreshLoader .hh-refresh-letter,#hhRefreshLoader .hh-refresh-orbit,html body .about-title,html body .section h2,html body .home-modern-name,html body .btn.primary:after{animation:none!important}}
+</style>
 </head>
 <body class="hh-welcome-on">
+
+<div id="hhRefreshLoader" role="status" aria-label="Loading HESHAM HANE DESIGNER">
+ <div class="hh-refresh-core" aria-hidden="true">
+  <span class="hh-refresh-orbit"></span><span class="hh-refresh-orbit orbit-two"></span>
+  <span class="hh-refresh-letter">H</span>
+  <span class="hh-refresh-caption">HESHAM HANE · DESIGNER</span>
+ </div>
+</div>
+<script id="hh-refresh-loader-script">
+(function(){
+ var loader=document.getElementById('hhRefreshLoader');if(!loader)return;
+ var started=Date.now(),closed=false;
+ function close(){
+  if(closed)return;closed=true;
+  var wait=Math.max(0,850-(Date.now()-started));
+  setTimeout(function(){loader.classList.add('hh-refresh-done');setTimeout(function(){if(loader.parentNode)loader.parentNode.removeChild(loader)},650)},wait);
+ }
+ if(document.readyState==='complete')close();
+ else window.addEventListener('load',close,{once:true});
+ setTimeout(close,3200);
+})();
+</script>
 <div id="maintenancePage" role="status" aria-live="polite"><div class="hh-maint-content"><div class="hh-maint-brand">HESHAM HANE · DIGITAL STUDIO</div><div class="hh-maint-emblem" aria-hidden="true"><div class="hh-maint-ring"></div><div class="hh-maint-core"><span class="hh-maint-wrench">✦</span></div></div><div class="hh-maint-kicker" data-maint-ar="نرجعلك بشكل أقوى" data-maint-en="BACK SOON, BETTER THAN EVER">نرجعلك بشكل أقوى</div><h1 class="hh-maint-title" data-maint-ar="الموقع في وضع الصيانة" data-maint-en="We’re under maintenance">الموقع في وضع الصيانة</h1><p class="hh-maint-desc" data-maint-ar="بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا." data-maint-en="We’re working on improvements to give you a better experience. We’ll be back very soon.">بنشتغل على تحسينات جديدة علشان نقدم لك تجربة أفضل. هنكون راجعين قريب جدًا.</p><div class="hh-maint-divider"></div><div class="hh-maint-status"><span class="hh-maint-dot"></span><span data-maint-ar="جاري تطوير التجربة" data-maint-en="UPGRADING YOUR EXPERIENCE">جاري تطوير التجربة</span></div><div class="hh-maint-footer">THANK YOU FOR YOUR PATIENCE</div></div></div>
 <script>(function(){var l=window.__hhMaintenanceLang||'ar';document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-maint-ar]').forEach(function(e){e.textContent=e.getAttribute('data-maint-'+l)||e.getAttribute('data-maint-ar')})})();</script>
 <canvas id="hhSky" aria-hidden="true"></canvas>
