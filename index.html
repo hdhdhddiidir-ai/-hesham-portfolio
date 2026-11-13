@@ -976,7 +976,7 @@ function t(key, vars) {
   return s;
 }
 
-/* Project descriptions stay in their original language; no automatic translation requests. */
+/* Project and review content is translated after dynamic rendering when English is selected. */
 function applyLang() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -1339,7 +1339,7 @@ function buildReviewCard(x) {
   const name = document.createElement('strong'); name.dir = 'auto'; name.textContent = x.name || '';
   const date = document.createElement('span'); date.className = 'review-date';
   const d = new Date(x.created_at);
-  date.textContent = isNaN(d) ? '' : d.toLocaleDateString('ar-EG');
+  date.textContent = isNaN(d) ? '' : d.toLocaleDateString(lang === 'en' ? 'en-US' : 'ar-EG');
   head.append(name, date);
   const stars = document.createElement('div'); stars.className = 'review-stars';
   stars.setAttribute('role', 'img'); stars.setAttribute('aria-label', t('starsOf5', { n }));
@@ -4515,8 +4515,9 @@ html body #topNav.top-nav:before{inset:0!important;border-radius:inherit!importa
 <script id="hhx-translation-complete-v5">
 (function(){
 'use strict';
-var arabicFonts=[['IBM Plex Sans Arabic','آي بي إم بليكس'],['Alexandria','أليكسندريا'],['Tajawal','تجوال'],['Noto Sans Arabic','نوتو عربي'],['Readex Pro','ريديكس برو'],['Changa','تشانجا'],['Cairo','القاهرة'],['Almarai','المراعي'],['Lalezar','ليلزار'],['El Messiri','المسيري']];
-var englishFonts=['Montserrat','Poppins','Inter','Roboto','Lato','Nunito Sans','Playfair Display','Oswald'];
+var arabicFonts=[['Aref Ruqaa','عارف رقعة'],['Amiri','أميري'],['Reem Kufi','ريم كوفي'],['Rakkas','رقّاص'],['Lemonada','ليمونادة'],['El Messiri','المسيري'],['Lalezar','ليلزار'],['Changa','تشانجا'],['IBM Plex Sans Arabic','آي بي إم بليكس'],['Alexandria','أليكسندريا'],['Tajawal','تجوال'],['Cairo','القاهرة']];
+var englishFonts=['Cinzel Decorative','Great Vibes','Cormorant Garamond','Playfair Display','Marcellus','Oswald','Montserrat','Poppins','Inter','Roboto','Lato','Nunito Sans'];
+(function loadOrnateFonts(){if(document.getElementById('hhx-ornate-fonts'))return;var l=document.createElement('link');l.id='hhx-ornate-fonts';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;700&family=Rakkas&family=Lemonada:wght@400;600;700&family=El+Messiri:wght@400;600;700&family=Lalezar&family=Changa:wght@400;600;700&family=Cinzel+Decorative:wght@400;700;900&family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600;700&family=Marcellus&family=Oswald:wght@400;500;600;700&display=swap';document.head.appendChild(l)})();
 var size=16,font='IBM Plex Sans Arabic',pending=0;
 try{size=Number(localStorage.getItem('hh_user_font_size'))||16;font=localStorage.getItem('hh_user_font')||font}catch(e){}
 function en(){return document.documentElement.lang==='en'||(window.HH_getLang&&window.HH_getLang()==='en')}
@@ -4555,7 +4556,7 @@ function syncUi(){
  if(rm){var title=rm.querySelector('.hhx-modal-title'),sub=rm.querySelector('.hhx-modal-subtitle'),close=rm.querySelector('.hhx-modal-close');if(title)title.textContent=english?'Client reviews':'آراء العملاء';if(sub)sub.textContent=english?'Approved reviews from visitors':'آراء العملاء المعتمدة — كل الآراء في مكان واحد';if(close)close.setAttribute('aria-label',english?'Close':'إغلاق')}
  set('.hhx-project-description-trigger',english?'View description':'توضيح الوصف');
  var overlay=document.getElementById('hhxProjectDescriptionOverlay');
- if(overlay){var k=overlay.querySelector('.hhx-project-description-kicker'),c=overlay.querySelector('.hhx-project-description-close');if(k)k.textContent=english?'PROJECT DETAILS':'تفاصيل المشروع';if(c)c.setAttribute('aria-label',english?'Close description':'إغلاق الوصف');var p=overlay.querySelector('.hhx-project-description-text');if(p)p.setAttribute('dir','auto')}
+ if(overlay){var k=overlay.querySelector('.hhx-project-description-kicker'),c=overlay.querySelector('.hhx-project-description-close');if(k)k.textContent=english?'PROJECT DETAILS':'تفاصيل المشروع';if(c)c.setAttribute('aria-label',english?'Close description':'إغلاق الوصف');var h=overlay.querySelector('.hhx-project-description-heading');if(h)h.setAttribute('dir','auto');var p=overlay.querySelector('.hhx-project-description-text');if(p)p.setAttribute('dir','auto')}
  var palette=document.querySelector('#hhxMenu .hhx-palette-head');
  if(palette){var b=palette.querySelector('b'),sm=palette.querySelector('small'),cl=palette.querySelector('button');if(b)b.textContent=english?'Choose your site colors':'اختار ألوان موقعك';if(sm)sm.textContent=english?'Choose a color for the whole site':'اختار اللون اللي يغيّر هوية الموقع بالكامل';if(cl)cl.setAttribute('aria-label',english?'Close':'إغلاق')}
  var theme=document.getElementById('hhxTheme'),settings=document.getElementById('hhxSettings'),tour=document.getElementById('hhxTour');
@@ -4563,9 +4564,18 @@ function syncUi(){
  if(window.hhxBuildTypeControls){var menu=document.getElementById('hhxSettingsMenu');if(menu&&menu.querySelector('.hhx-type-controls-v5'))window.hhxBuildTypeControls()}
 }
 window.addEventListener('hhx:languagechange',function(){syncUi();scheduleTranslate()});
+window.addEventListener('hhx:content-rendered',scheduleTranslate);
 function scheduleTranslate(){if(!window.hhxTranslateTo)return;clearTimeout(pending);pending=setTimeout(function(){window.hhxTranslateTo(en()?'en':'ar')},900)}
-var observer=new MutationObserver(function(){if(document.documentElement.lang==='en')scheduleTranslate();if(document.getElementById('hhxSettingsMenu')&&!document.getElementById('hhxSettingsMenu').querySelector('.hhx-type-controls-v5')&&window.hhxBuildTypeControls){var m=document.getElementById('hhxSettingsMenu');if(m.children.length)window.hhxBuildTypeControls()}});
-observer.observe(document.body,{subtree:true,childList:true});
+var observer=new MutationObserver(function(records){
+ if(document.documentElement.lang==='en'){
+  var dynamic=records.some(function(r){var t=r.target;return !!(t.closest&&t.closest('#portfolioGrid,#reviewsList,#hhxProjectDescriptionOverlay'))});
+  if(dynamic)scheduleTranslate();
+ }
+ if(document.getElementById('hhxSettingsMenu')&&!document.getElementById('hhxSettingsMenu').querySelector('.hhx-type-controls-v5')&&window.hhxBuildTypeControls){var m=document.getElementById('hhxSettingsMenu');if(m.children.length)window.hhxBuildTypeControls()}
+});
+['portfolioGrid','reviewsList','hhxProjectDescriptionOverlay'].forEach(function(id){var el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})});
+var baseObserver=new MutationObserver(function(){var m=document.getElementById('hhxSettingsMenu');if(m&&!m.querySelector('.hhx-type-controls-v5')&&m.children.length)window.hhxBuildTypeControls()});
+baseObserver.observe(document.body,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncUi,{once:true});else syncUi();
 })();
 </script>
